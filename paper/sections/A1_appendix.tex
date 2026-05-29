@@ -1,5 +1,136 @@
 \appendix
 
+\section{Supplementary Figures and Tables}
+\label{sec:appendix:tables}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{figures/fig1_scaling_curve}
+\caption{Qwen3 family TFR scaling curve, opaque baseline
+$\mathrm{C}_0$, four-distractor probe with target removed. Error bars
+are Clopper--Pearson 95\% CIs; the dashed blue Anthropic 4.x upper bound
+pools all $5$ tested versions. The intra-family non-monotone shape and
+the gap between the open-source $\sim\!2{-}14\,$B band and the Anthropic
+bound is the paper's headline.}
+\label{fig:scaling}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/fig3_rvr_architecture}
+\caption{RVR middleware. An $O(1)$ membership check runs in-process
+on each proposed call. Hits execute. Misses trigger one re-prompt
+with a structured \texttt{tool\_not\_found} envelope (and the sorted
+registry under $\mathrm{C}_1$). The no-violation path adds zero
+provider round-trips; the violation path adds one, bounded to a
+single retry.}
+\label{fig:rvr-arch}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\linewidth]{figures/fig4_distractor_probe}
+\caption{The distractor probe. Starting from a registry where the
+opaque baseline already passes, the real target tool is removed and
+one synthetic distractor is injected in its slot. The four arms vary
+the similarity profile of the distractor.}
+\label{fig:probe}
+\end{figure}
+
+\begin{table}[t]
+\caption{Prior tool-hallucination measurements versus TFR. \emph{Granularity}
+is the denominator each metric divides by; \emph{existence-clean?} asks whether
+the metric isolates registry-membership violations (a called name is absent from
+the offered set) from relevance, argument, and timing errors. \textbf{Not
+apples-to-apples}: the headline numbers come from different denominators,
+different model cohorts, and different elicitation setups (single-turn
+instructions vs.\ multi-turn agentic traces; target-removed probes vs.\ natural
+distributions). They are not directly comparable and we do not claim a ranking;
+the table positions \emph{what each metric counts}, not which model is best.
+TFR is the only per-call rate and the only one that scores existence on
+multi-turn traces with a content-controlled ablation.}
+\label{tab:priorart}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llllc}
+\toprule
+Work & Granularity & Setting & Headline number & Existence-clean? \\
+\midrule
+API-Bank \citep{li2023apibank}
+  & per-task
+  & single-turn API calls
+  & name-mismatch up to $61.4\%$
+  & partial \\
+MetaTool \citep{huang2024metatool}
+  & per-query
+  & single-turn, target removed
+  & Correct Selection Rate
+  & yes \\
+ToolBeHonest \citep{toolbehonest2024}
+  & per-task
+  & multi-level diagnostic
+  & multi-level (no single rate)
+  & partial \\
+Reasoning-Trap \citep{yin2026reasoningtrap}
+  & per-task
+  & no-tool / distractor-only
+  & monotonic in reasoning
+  & yes \\
+Reliability align.\ \citep{cao2025reliability}
+  & composite
+  & training-time, expanded actions
+  & inside reliability score
+  & partial \\
+\midrule
+\textbf{Ours (TFR)}
+  & \textbf{per-call}
+  & \textbf{multi-turn agentic traces}
+  & $\mathbf{0\%}$\textbf{--}$\mathbf{1.87\%}$
+  & \textbf{yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\newcommand{\pmark}{\ensuremath{\bullet}}
+\newcommand{\rmark}{\ensuremath{\circ}}
+\begin{table}[t]
+\caption{Model $\times$ BFCL-split coverage. Cells are no-intervention (C0)
+calls; a glyph marks the experiment design that produced them. \pmark{}: the
+five-distractor probe grid (target removed, per-call existence scored).
+\rmark{}: the regime cell from the main grid. The ``five Anthropic versions
+across eleven months'' claim holds on \textsc{base} only; the three-split regime
+sweep is two production models (Haiku 4.5, Sonnet 4.6) plus one local model
+(Qwen3-8B, base). Anthropic hallucinated $=0$ in every cell; the per-call
+\textsc{tehr} signal is the Qwen3 size sweep on \textsc{base}.}
+\label{tab:coverage}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lccc}
+\toprule
+ & \multicolumn{3}{c}{BFCL split (C0 calls)} \\
+\cmidrule(lr){2-4}
+Model (version) & base & long-ctx & miss-func \\
+\midrule
+\multicolumn{4}{l}{\emph{Anthropic 4.x}} \\
+Sonnet 4.0 \scriptsize(05/2025)   & \pmark\,253 & --          & --          \\
+Sonnet 4.5 \scriptsize(09/2025)   & \pmark\,285 & --          & --          \\
+Sonnet 4.6                        & \pmark\,677 & \rmark\,81  & \rmark\,128 \\
+Opus 4.7                          & \pmark\,293 & --          & --          \\
+Haiku 4.5                         & \pmark\,655 & \rmark\,107 & \rmark\,120 \\
+\midrule
+\multicolumn{4}{l}{\emph{Qwen3 size sweep (4-bit)}} \\
+0.6B   & \pmark\,75   & -- & -- \\
+1.7B   & \pmark\,210  & -- & -- \\
+4B     & \pmark\,226  & -- & -- \\
+8B     & \pmark\,615  & \multicolumn{2}{c}{\rmark\,108 (base regime)} \\
+14B    & \pmark\,268  & -- & -- \\
+32B    & \pmark\,224  & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Pre-Registration and Reproducibility}
 \label{sec:appendix:prereg}
 

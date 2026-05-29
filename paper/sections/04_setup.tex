@@ -19,51 +19,12 @@ using three splits: \texttt{multi\_turn\_base} (aligned registry),
 \texttt{multi\_turn\_long\_context}. The distractor probe runs on
 $N\!=\!15$ \texttt{multi\_turn\_base} tasks where the opaque
 baseline already passes. For each task we remove the real target
-tool and inject one synthetic distractor in its slot.
+tool and inject one synthetic distractor in its slot. Appendix
 Table~\ref{tab:coverage} reconciles which model saw which split: the
 ``five Anthropic versions across eleven months'' breadth lives on
 \textsc{base} only, the three-split regime sweep is two production
 models plus one local model, and the per-cell counts sum to the pooled
 $0/2{,}599$ Anthropic figure.
-
-\newcommand{\pmark}{\ensuremath{\bullet}}
-\newcommand{\rmark}{\ensuremath{\circ}}
-\begin{table}[t]
-\caption{Model $\times$ BFCL-split coverage. Cells are no-intervention (C0)
-calls; a glyph marks the experiment design that produced them. \pmark{}: the
-five-distractor probe grid (target removed, per-call existence scored).
-\rmark{}: the regime cell from the main grid. The ``five Anthropic versions
-across eleven months'' claim holds on \textsc{base} only; the three-split regime
-sweep is two production models (Haiku 4.5, Sonnet 4.6) plus one local model
-(Qwen3-8B, base). Anthropic hallucinated $=0$ in every cell; the per-call
-\textsc{tehr} signal is the Qwen3 size sweep on \textsc{base}.}
-\label{tab:coverage}
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{lccc}
-\toprule
- & \multicolumn{3}{c}{BFCL split (C0 calls)} \\
-\cmidrule(lr){2-4}
-Model (version) & base & long-ctx & miss-func \\
-\midrule
-\multicolumn{4}{l}{\emph{Anthropic 4.x}} \\
-Sonnet 4.0 \scriptsize(05/2025)   & \pmark\,253 & --          & --          \\
-Sonnet 4.5 \scriptsize(09/2025)   & \pmark\,285 & --          & --          \\
-Sonnet 4.6                        & \pmark\,677 & \rmark\,81  & \rmark\,128 \\
-Opus 4.7                          & \pmark\,293 & --          & --          \\
-Haiku 4.5                         & \pmark\,655 & \rmark\,107 & \rmark\,120 \\
-\midrule
-\multicolumn{4}{l}{\emph{Qwen3 size sweep (4-bit)}} \\
-0.6B   & \pmark\,75   & -- & -- \\
-1.7B   & \pmark\,210  & -- & -- \\
-4B     & \pmark\,226  & -- & -- \\
-8B     & \pmark\,615  & \multicolumn{2}{c}{\rmark\,108 (base regime)} \\
-14B    & \pmark\,268  & -- & -- \\
-32B    & \pmark\,224  & -- & -- \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \textbf{Statistics.}~TFR is per parsed tool call. Per-cell rates
 get Clopper--Pearson upper bounds; non-zero cells get a BCa cluster
@@ -71,17 +32,13 @@ bootstrap (10{,}000 resamples, clustered by task). Pooled
 $\mathrm{C}_0$ vs.\ $\mathrm{C}_1$ uses Fisher's exact one-sided.
 Distractor-type effects use Friedman with Nemenyi post-hoc, and
 non-inferiority uses TOST at a 5-pp margin. We apply
-Holm--Bonferroni across the three primary tests. System failures
-(timeout, parse failure, refusal) are excluded from both numerator
-and denominator, and tracked separately.
+Holm--Bonferroni across the three primary tests.
 
 \textbf{Reproducibility.}~A \texttt{repro\_manifest.json} pins the
 BFCL v4 commit, SDK versions, dated model aliases, decoding
-parameters, and random seeds (master seed $42$). Distractor
-injection uses SHA-256 truncation, so reproduction does not depend
-on \texttt{PYTHONHASHSEED}. The supplementary archive at
+parameters, and random seeds (master seed $42$). The supplementary
+archive at
 \href{https://anonymous.4open.science/r/icml-tehr-scale-2026/}{anonymous.4open.science/r/icml-tehr-scale-2026}
-holds the harness, $144$ unit tests, the JSONL trace logs, and
-the aggregation and statistics scripts that regenerate every
-numerical claim in the paper, including Fisher's
-$p\!=\!7.1\!\times\!10^{-5}$.
+holds the harness, $144$ unit tests, the JSONL trace logs, and the
+scripts that regenerate every numerical claim
+(Appendix~\ref{sec:appendix:prereg}).

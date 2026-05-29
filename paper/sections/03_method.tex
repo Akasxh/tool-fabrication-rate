@@ -13,19 +13,7 @@ where $m, b, x$ index model, benchmark, and condition. The denominator is per ca
 \subsection{Registry-Visible Reprompting (RVR)}
 \label{sec:method:rvr}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.85\linewidth]{figures/fig3_rvr_architecture}
-\caption{RVR middleware. An $O(1)$ membership check runs in-process
-on each proposed call. Hits execute. Misses trigger one re-prompt
-with a structured \texttt{tool\_not\_found} envelope (and the sorted
-registry under $\mathrm{C}_1$). The no-violation path adds zero
-provider round-trips; the violation path adds one, bounded to a
-single retry.}
-\label{fig:rvr-arch}
-\end{figure*}
-
-RVR is a single-turn intervention placed between the agent and the tool executor (Figure~\ref{fig:rvr-arch}). On a membership-violating call, it returns a re-prompt that names the offending call and lists the available tools:
+RVR is a single-turn intervention placed between the agent and the tool executor (Appendix Figure~\ref{fig:rvr-arch}). On a membership-violating call, it returns a re-prompt that names the offending call and lists the available tools:
 
 \begin{lstlisting}[language=Python,basicstyle=\ttfamily\footnotesize]
 def rvr(agent_msg, registry):
@@ -56,31 +44,20 @@ isolates structure, $\mathrm{C}_1\!:\!\mathrm{C}_{0.7}$ isolates the presence of
 and $\mathrm{C}_1\!:\!\mathrm{C}_{0.8}$ isolates whether the listed names must be
 \emph{correct}. At scale we report the conservative $\mathrm{C}_1\!:\!\mathrm{C}_0$.
 
-We do not try to localize the effect to a specific cognitive story. The earlier
-draft pre-registered three mechanisms (induction-head copying, metacognitive
-registry-as-cue, message-level rejection) with an asymmetric power-gated
-falsifier. The data do not have the resolution to separate copying from cueing,
-and we drop that apparatus rather than over-read it. What the design \emph{can}
-decide is a single binary: does recovery require the registry \emph{content}, or
-only the rejection \emph{format}? If a wrong list ($\mathrm{C}_{0.8}$) recovers as
-well as the right list ($\mathrm{C}_1$), the content is decorative and the active
-ingredient is the structured rejection signal. If $\mathrm{C}_{0.8}$ fails where
-$\mathrm{C}_1$ succeeds, the model is reading the offered names. The distractor
-probe (Section~\ref{sec:method:probe}) is retained as a descriptive characterization
-of \emph{where} on the scale curve fabrications concentrate, not as a mechanism
-discriminator.
+We do not try to localize the effect to a specific cognitive story. An
+earlier draft pre-registered three mechanisms (induction-head copying,
+registry-as-cue, message-level rejection); the data cannot separate
+copying from cueing, so we drop that apparatus rather than over-read it.
+What the design \emph{can} decide is a single binary: does recovery
+require the registry \emph{content}, or only the rejection \emph{format}?
+If a wrong list ($\mathrm{C}_{0.8}$) recovers as well as the right list
+($\mathrm{C}_1$), the content is decorative; if it fails where
+$\mathrm{C}_1$ succeeds, the model is reading the offered names. The
+distractor probe (Section~\ref{sec:method:probe}) is retained to
+characterize \emph{where} on the scale curve fabrications concentrate,
+not as a mechanism discriminator.
 
 \subsection{Distractor-Type Probe}
 \label{sec:method:probe}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/fig4_distractor_probe}
-\caption{The distractor probe. Starting from a registry where the
-opaque baseline already passes, the real target tool is removed and
-one synthetic distractor is injected in its slot. The four arms vary
-the similarity profile of the distractor.}
-\label{fig:probe}
-\end{figure}
-
-One distractor is injected into $\mathcal{R}$ on tasks where $\mathrm{C}_0$ already passes, with its type varied to characterize which kind of look-alike concentrates fabrications. \textbf{near\_name} draws a string at Levenshtein distance 1 or 2 from a real target. \textbf{synonym} is high embedding-cosine but Levenshtein-far: semantic but not orthographic overlap. \textbf{matched\_random} is lexically random, matched to the real target on description length and arity, controlling for the ``registry-size $+1$'' confound. \textbf{unrelated} is lexically and semantically disjoint, the floor case. To capture the Czapla-style runtime collision, the real target is also removed and the distractor placed in its slot: the agent expects a tool that exists, but the registry offers only a similarly-named substitute.
+One distractor is injected into $\mathcal{R}$ on tasks where $\mathrm{C}_0$ already passes, with its type varied to characterize which kind of look-alike concentrates fabrications (Appendix Figure~\ref{fig:probe}). \textbf{near\_name} draws a string at Levenshtein distance 1 or 2 from a real target. \textbf{synonym} is high embedding-cosine but Levenshtein-far: semantic but not orthographic overlap. \textbf{matched\_random} is lexically random, matched to the real target on description length and arity, controlling for the ``registry-size $+1$'' confound. \textbf{unrelated} is lexically and semantically disjoint, the floor case. To capture the Czapla-style runtime collision, the real target is also removed and the distractor placed in its slot: the agent expects a tool that exists, but the registry offers only a similarly-named substitute.

@@ -11,10 +11,9 @@ reconcile a user goal against a tool catalog. Both report
 \emph{end-to-end task success}, which fuses tool selection with reasoning,
 parsing, and policy errors into one number. Trace-level harnesses
 \citep{appworld2024,reactagent2023} expose more, yet still report
-pass-rate as the headline. We argue this is the wrong granularity for
-the failure we care about, and contribute a per-call diagnostic, the
-Tool Fabrication Rate (TFR), that isolates a portable
-slice of these failures across vendors and benchmarks.
+pass-rate as the headline. This is the wrong granularity for the
+failure we care about; TFR isolates a portable slice of it across
+vendors and benchmarks.
 
 \paragraph{Empirical analysis of agent failures.}
 Practitioners have informally reported that frontier models call tools
@@ -37,91 +36,31 @@ name-mismatch error category, with per-task error rates up to $61.4\%$
 on then-current models. The closest prior measurement to ours is
 \citet{huang2024metatool}, whose MetaTool sub-task~3 deliberately
 removes the correct tool from the registry and tracks the resulting
-fabrication via a per-query Correct Selection Rate. That isolates the
+fabrication through a per-query Correct Selection Rate. That isolates the
 registry-membership phenomenon cleanly, but stays at the per-query
 level on single-turn instructions. \citet{cao2025reliability} name the
-phenomenon directly --- ``tool type hallucination,'' where the model
-fabricates a tool absent from the available set --- but their fix is a
+phenomenon directly (``tool type hallucination,'' where the model
+fabricates a tool absent from the available set), but their fix is a
 training-time \emph{reliability alignment} that expands the action space
 (defer / clarify / switch), and they report it inside a composite
 reliability score rather than as a standalone per-call rate. We share
 their target failure but differ on both axes: a per-call rate, and a
-training-free inference-time intervention. Operationally TFR is the
-complement of a tool-name validity check, and the ``does the called tool
-exist'' question is not itself new --- ToolBeHonest~\citep{toolbehonest2024}
-catalogues a \emph{non-existent tool} error category qualitatively. What is
-new is not the concept but its per-call operationalization across capability
-tiers and vendors, and the content-controlled ablation
-(Section~\ref{sec:mechanism}) it makes possible; we report TFR as a
-measurement instrument, not a redefinition of hallucination.
-BFCL v4's hallucination metric \citep{bfclv4_2025} measures a
-different failure: invoking a tool when none is appropriate. We differ
-on denominator and setting. TFR extends MetaTool's premise from
-\emph{per-query} to \emph{per-call} on multi-turn agentic traces, and
-from controlled removal to the natural distribution of
-registry-membership violations. Per-call is what lets the intervention
-in Section~\ref{sec:method:rvr} be evaluated against a clean ablation:
-$C_1$ versus a content-controlled $C_{0.7}$ structured-error baseline,
-on the strict subset of hallucination-tagged tool calls. Aggregate
-metrics cannot expose that contrast. Table~\ref{tab:priorart} positions
-TFR against these prior measurements by what each one counts; the
-denominators and elicitation setups differ, so the numbers are not
+training-free inference-time intervention. The ``does the called tool
+exist'' question is not itself new: ToolBeHonest~\citep{toolbehonest2024}
+catalogues a \emph{non-existent tool} error category qualitatively, and
+BFCL v4's hallucination metric \citep{bfclv4_2025} measures a different
+failure, invoking a tool when none is appropriate. What is new is the
+per-call operationalization across capability tiers and vendors, and the
+content-controlled ablation (Section~\ref{sec:mechanism}) it makes
+possible: TFR extends MetaTool's premise from \emph{per-query} to
+\emph{per-call} on multi-turn agentic traces, and from controlled
+removal to the natural distribution of registry-membership violations.
+Per-call is what lets the intervention in Section~\ref{sec:method:rvr}
+be evaluated against a content-controlled $C_{0.7}$ baseline, a contrast
+aggregate metrics cannot expose. Appendix Table~\ref{tab:priorart}
+positions TFR against these prior measurements by what each one counts;
+the denominators and elicitation setups differ, so the numbers are not
 directly comparable, but the granularity gap is the point.
-
-\begin{table*}[t]
-\caption{Prior tool-hallucination measurements versus TFR. \emph{Granularity}
-is the denominator each metric divides by; \emph{existence-clean?} asks whether
-the metric isolates registry-membership violations (a called name is absent from
-the offered set) from relevance, argument, and timing errors. \textbf{Not
-apples-to-apples}: the headline numbers come from different denominators,
-different model cohorts, and different elicitation setups (single-turn
-instructions vs.\ multi-turn agentic traces; target-removed probes vs.\ natural
-distributions). They are not directly comparable and we do not claim a ranking;
-the table positions \emph{what each metric counts}, not which model is best.
-TFR is the only per-call rate and the only one that scores existence on
-multi-turn traces with a content-controlled ablation.}
-\label{tab:priorart}
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{llllc}
-\toprule
-Work & Granularity & Setting & Headline number & Existence-clean? \\
-\midrule
-API-Bank \citep{li2023apibank}
-  & per-task
-  & single-turn API calls
-  & name-mismatch up to $61.4\%$
-  & partial \\
-MetaTool \citep{huang2024metatool}
-  & per-query
-  & single-turn, target removed
-  & Correct Selection Rate
-  & yes \\
-ToolBeHonest \citep{toolbehonest2024}
-  & per-task
-  & multi-level diagnostic
-  & multi-level (no single rate)
-  & partial \\
-Reasoning-Trap \citep{yin2026reasoningtrap}
-  & per-task
-  & no-tool / distractor-only
-  & monotonic in reasoning
-  & yes \\
-Reliability align.\ \citep{cao2025reliability}
-  & composite
-  & training-time, expanded actions
-  & inside reliability score
-  & partial \\
-\midrule
-\textbf{Ours (TFR)}
-  & \textbf{per-call}
-  & \textbf{multi-turn agentic traces}
-  & $\mathbf{0\%}$\textbf{--}$\mathbf{1.87\%}$
-  & \textbf{yes} \\
-\bottomrule
-\end{tabular}
-\end{table*}
 
 \paragraph{Constrained decoding and self-correction.}
 A separate line constrains agents at decode time. Grammar-constrained
@@ -164,11 +103,9 @@ evaluated as a paired content-controlled contrast rather than
 observationally.
 
 \paragraph{Adjacent work.}
-\citet{toolbehonest2024} introduces a multi-level hallucination
-diagnostic for tool-augmented LLMs that is closer to our scope but
-operates per-task. \citet{stableTOOLbench2024} targets tool-server
-stability rather than name existence, and production tool-skill
-packaging \citep{anthropicagentskills2025} is orthogonal.
+\citet{stableTOOLbench2024} targets tool-server stability rather than
+name existence, and production tool-skill packaging
+\citep{anthropicagentskills2025} is orthogonal.
 
 \paragraph{Concurrent work on tool hallucination (2026).}
 Three 2026 papers bracket our setting. \citet{yin2026reasoningtrap}
@@ -176,7 +113,7 @@ introduce SimpleToolHalluBench, whose ``no tool available'' and
 ``only distractor tools'' regimes mirror our target-removed probe, and
 report that strengthening reasoning (RL/SFT/prompting) \emph{monotonically}
 amplifies tool hallucination. \citet{qi2026brief} find a \emph{non-monotonic}
-effect on a different axis --- chain-of-thought \emph{budget} at fixed scale
+effect on a different axis, chain-of-thought \emph{budget} at fixed scale
 on Qwen2.5-1.5B function calling. Our axis is orthogonal to both: model
 \emph{scale} at fixed (disabled) thinking, where the non-monotonicity
 appears across the Qwen3 size ladder rather than along a reasoning knob.
@@ -184,25 +121,3 @@ appears across the Qwen3 size ladder rather than along a reasoning knob.
 internal representations in a single forward pass; we work purely
 behaviorally and, rather than detect, \emph{prevent} with a message-level
 re-prompt that needs no logit or activation access.
-
-\paragraph{Our differentiation.}
-Four contributions distinguish this work from the prior art above.
-A per-call TFR diagnostic disaggregates registry-membership errors
-from the relevance, argument, and timing errors that aggregate metrics
-\citep{li2023apibank,cao2025reliability} bundle together. We audit
-five Anthropic 4.x model versions over an $11$-month window and run a
-$6$-point Qwen3 size sweep ($0.6$B--$32$B), surfacing an
-\emph{intra-family non-monotonicity} that single-tier comparisons in
-the prior literature could not have caught. RVR itself is a
-training-free, registry-only, single-turn re-prompt, validated
-end-to-end with a $14 \to 0$ event prevention pattern on every Qwen3
-tier with $\mathrm{TFR}>0$ (no SFT or RL as in
-\citealp{fissiongrpo2026}; no curated examples as in \citealp{licl2026}).
-The content-controlled
-$\mathrm{C}_{0.5}/\mathrm{C}_{0.7}/\mathrm{C}_1$ ablation isolates the
-registry list itself, rather than crediting any retry. The result is
-a tier-separated measurement of the cost-quality trade-off in agentic
-deployments, not a single-model benchmark gain. The TFR scaling
-shape itself ($0.6$B$\to\!14$B rise, $32$B collapse) is a finding
-aggregate metrics could not have produced, with the peak distractor
-type shifting across sizes.

@@ -5,101 +5,84 @@ An agent calls \texttt{search\_flights}. The registry contains
 \texttt{find\_flights}. The call fails. Practitioners hit this mismatch
 in production with Claude, Gemini, and Grok~\citep{czapla2026}, and what
 stings is that the model knew the task, picked something plausible, and
-just got the name wrong. The reflex fix is to hand the model the registry
---- show it the menu and it will order off it. We find the menu is mostly
+just got the name wrong. The reflex fix is to hand the model the registry:
+show it the menu and it will order off it. We find the menu is mostly
 decoration. What clears the failure is the \emph{shape} of the rejection,
 not its contents: a structured \texttt{tool\_not\_found} envelope
 re-grounds the model whether or not it lists a single real tool. We call
 this format-not-content recovery, and it is the spine of this paper.
 
 The framing has a pedigree. Min et al.\ showed that in-context
-demonstrations help even when their labels are wrong --- the format
+demonstrations help even when their labels are wrong: the format
 carries the signal, the content rides along~\citep{min2022rethinking}. We
 report the reactive-recovery analogue: a registry-miss re-prompt fixes
 tool-name fabrication even when the listed registry is empty
 ($\mathrm{C}_{0.7}$) or actively wrong ($\mathrm{C}_{0.8}$). Existing
-benchmarks measure related quantities at the wrong grain.
-API-Bank~\citep{li2023apibank} reports per-task name-mismatch up to
-$61.4\%$ on a 2023-vintage model set;
-MetaTool~\citep{huang2024metatool} isolates fabrication via target
-removal and scores per-query Correct Selection Rate on single-turn
-prompts; RelyToolBench~\citep{cao2025reliability} folds
-non-existent-tool invocations into a composite reliability number. Read
-together, the failure looks architecture-agnostic and uniform. We don't
-think it is, and we don't think the fix is what it looks like either.
+benchmarks measure related quantities at the wrong grain, per-task or
+per-query and folded into composite scores
+(\citealp{li2023apibank,huang2024metatool,cao2025reliability};
+Section~\ref{sec:related}). Read together, the failure looks
+architecture-agnostic and uniform. We don't think it is, and we don't
+think the fix is what it looks like either.
 
-We define the per-call \emph{Tool Fabrication
-Rate} (TFR) and run it over two populations on BFCL
-multi-turn: the Anthropic 4.x family at five versions spanning
-May~2025 to April~2026 (Opus~4.7, Sonnet 4/4.5/4.6, Haiku~4.5), and
-Qwen3-Instruct at six sizes ($0.6$B--$32$B) in 4-bit MLX on
-consumer hardware. Both see three BFCL splits plus a four-distractor
-probe with the real target removed and a synthetic look-alike in
-its slot. BFCL is strictly typed, so this isn't production, but it
-is the closest we could get to Czapla's setting on a benchmark.
-Figure~\ref{fig:scaling} is the headline.
+We define the per-call \emph{Tool Fabrication Rate} (TFR) and run it
+over two populations on BFCL multi-turn: the Anthropic 4.x family at
+five versions spanning May~2025 to April~2026, and Qwen3-Instruct at
+six sizes ($0.6$B--$32$B) in 4-bit MLX on consumer hardware. Both see
+three BFCL splits plus a four-distractor probe with the real target
+removed and a synthetic look-alike in its slot. BFCL is strictly typed,
+so this isn't production, but it is the closest we could get to Czapla's
+setting on a benchmark. The Qwen3 scaling curve (Table~\ref{tab:qwen3-scale}, plotted in Appendix Figure~\ref{fig:scaling}) is the headline.
 
 Why a per-call existence rate matters: a fabricated name is not just a
 failed call, it is an attack surface. \citet{spracklen2025packages}
 audited package hallucinations in code-generating LLMs and found
 open-source models invent non-existent dependencies at $\sim\!21.7\%$
-against $\sim\!5.2\%$ for commercial ones---an open-vs-closed gap that
-mirrors the Qwen-vs-Anthropic split we report, and one an adversary can
+against $\sim\!5.2\%$ for commercial ones, an open-vs-closed gap that
+mirrors the Qwen-vs-Anthropic split we report and that an adversary can
 turn into ``slopsquatting'' by registering the hallucinated name and
 waiting for the model to reach for it. Tool registries are the same
-shape of target: an agent that confidently calls \texttt{find\_flights}
-when only \texttt{search\_flights} exists is, in a registry an attacker
-can write to, one fabrication away from invoking a planted look-alike.
-We do not demonstrate that exploit here and make no exploitation claim;
-we measure existence hallucination at the per-call grain precisely
-because that is the unit at which such a risk would accrue.
+shape of target. We make no exploitation claim, and measure existence
+hallucination at the per-call grain because that is the unit at which
+such a risk would accrue.
 
 The two families don't look alike. Across $2{,}599$ Anthropic calls
 under $\mathrm{C}_0$, zero TFR events (Clopper--Pearson 95\% upper
-bound $\leq\!0.115\%$); the $\mathrm{C}_1$ subset adds $0/678$ at
-$\leq\!0.441\%$. Commercial models across the OpenAI gpt-4.1 and
-gpt-4o tiers also log $0\%$ TFR ($0/404$, $0/408$, $0/409$, $0/419$,
-$0/430$ for gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-4o, gpt-4o-mini;
-per-model upper bounds $\leq\!0.69$--$0.74\%$, $0/2{,}070$ pooled at
-$\leq\!0.14\%$). The split designed to coax fabrication,
-\texttt{multi\_turn\_miss\_func}, didn't bite: the agent chained
-five smaller in-registry calls instead of inventing a one-shot.
-With every Anthropic cell at $0/N$, no temporal slope is fittable;
-the five versions function as a stability check, not a trend.
+bound $\leq\!0.115\%$). The five commercial OpenAI gpt-4.1 and gpt-4o
+tiers also log $0\%$ TFR ($0/2{,}070$ pooled, $\leq\!0.14\%$). The split
+designed to coax fabrication, \texttt{multi\_turn\_miss\_func}, didn't
+bite: the agent chained five smaller in-registry calls instead of
+inventing a one-shot. With every Anthropic cell at $0/N$, no temporal
+slope is fittable; the five versions function as a stability check, not
+a trend.
 
 Qwen3 looks nothing like that. Pooled per-call rates climb from
-$0\%$ at $0.6$B through $0.95\%$, $1.33\%$, $1.46\%$, peak at
-$\mathbf{1.87\%}$ at $14$B, and drop back to $0\%$ at $32$B
-($N\!=\!224$, consistent with any true rate $\leq\!1.33\%$). The
-\emph{type} of distractor that wins also moves: $1.7$B peaks on
-near-name ($3.7\%$); $4$B on matched-random ($5.4\%$); $8$B on
-matched-random ($2.3\%$); $14$B on synonym ($7.2\%$). The bump is not noise. A generative
-tool-name prior that strengthens with scale before a larger model's
-registry-grounding control catches up predicts exactly this shape ---
-a U-shaped capability window~\citep{wei2022ushaped,mckenzie2023inversescaling}.
-The $0\%$ endpoints at $0.6$B and $32$B bracket the $1.87\%$ peak at
-the same 4-bit MLX precision, so quantization is held fixed across the
-arc; the curve is a capability effect, not a compression artifact. Six
-points still isn't a curve, and we say so --- but it is the shape the
-format-not-content account predicts. A cross-family release covering
-six additional open models is in the supplement.
+$0\%$ at $0.6$B, peak at $\mathbf{1.87\%}$ at $14$B, and drop back to
+$0\%$ at $32$B. The bump is not noise. A generative tool-name prior that
+strengthens with scale before a larger model's registry-grounding
+control catches up predicts exactly this shape: a U-shaped capability
+window~\citep{wei2022ushaped,mckenzie2023inversescaling}. The $0\%$
+endpoints at $0.6$B and $32$B bracket the $1.87\%$ peak at the same
+4-bit MLX precision, so quantization is held fixed across the arc; the
+curve is a capability effect, not a compression artifact. Six points
+still isn't a curve, and we say so, but it is the shape the
+format-not-content account predicts.
 
 Registry-Visible Reprompting (RVR) is what we built to fix this.
 The middleware is training-free: intercept the proposed call, check
 the name, and on a miss re-prompt with a structured
 \texttt{tool\_not\_found} envelope listing what is available. Across
-the four Qwen3 tiers with non-zero TFR ($1.7$B, $4$B, $8$B, $14$B),
-RVR clears all fourteen pooled fabrications: Fisher's exact one-sided
-on $14/973$ vs.\ $0/945$ gives $p=7.1\!\times\!10^{-5}$. A
-content-matched ablation ($\mathrm{C}_{0.7}$, $0/448$ on Qwen3-8B,
-$\leq\!0.67\%$), keeping the envelope structure but dropping the registry list, also
-hits zero --- and a decoy that fills the envelope with \emph{wrong}
-names ($\mathrm{C}_{0.8}$) still logs zero. The envelope is doing the
-work, not the listed names. On the Anthropic zero-event regime RVR holds at
-zero, but strict-pass slips (Sonnet $60\!\to\!53/60$; Haiku
-$60\!\to\!56/60$); a Newcombe-hybrid TOST at $N\!=\!60$ is
-underpowered for a $5$-pp non-inferiority margin, so we can't rule
-the cost in or out. We argue for tier-conditional deployment.
+the four Qwen3 tiers with non-zero TFR, RVR clears all fourteen pooled
+fabrications: Fisher's exact one-sided on $14/973$ vs.\ $0/945$ gives
+$p=7.1\!\times\!10^{-5}$. A content-matched ablation that drops the
+registry list ($\mathrm{C}_{0.7}$) also hits zero, and a decoy that
+fills the envelope with \emph{wrong} names ($\mathrm{C}_{0.8}$) still
+logs zero. The envelope is doing the work, not the listed names. On the
+Anthropic zero-event regime RVR holds at zero, but strict-pass slips
+(Sonnet $60\!\to\!53/60$; Haiku $60\!\to\!56/60$); a Newcombe-hybrid
+TOST at $N\!=\!60$ is underpowered for a $5$-pp non-inferiority margin,
+so we can't rule the cost in or out. We argue for tier-conditional
+deployment.
 
 The Anthropic $\mathrm{C}_0$ bound ($\leq\!0.115\%$ at $N=2{,}599$)
 sits an order of magnitude below the Qwen3 point estimates in the
@@ -108,8 +91,8 @@ finding. The intra-family non-monotonic shape on Qwen3 is itself
 descriptive evidence aggregate metrics couldn't have surfaced. What we
 give a deployer is concrete: (i) a per-call diagnostic that exposes
 existence failures production guardrails silently absorb, (ii) the
-format-not-content finding --- recovery rides on the rejection envelope,
-not the registry it echoes --- and (iii) the deployable takeaway that
+format-not-content finding (recovery rides on the rejection envelope,
+not the registry it echoes), and (iii) the deployable takeaway that
 falls out of it: ship the structured envelope, and you need not leak your
 registry to get the fix. We release four artifacts: the per-call TFR
 diagnostic, an eleven-model audit over eleven months, RVR with per-tier

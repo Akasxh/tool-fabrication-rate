@@ -1,0 +1,16 @@
+% Security-motivation paragraph for the introduction.
+% Honest motivation, not a claim of exploitation.
+Why a per-call existence rate matters: a fabricated name is not just a
+failed call, it is an attack surface. \citet{spracklen2025packages}
+audited package hallucinations in code-generating LLMs and found
+open-source models invent non-existent dependencies at $\sim\!21.7\%$
+against $\sim\!5.2\%$ for commercial ones---an open-vs-closed gap that
+mirrors the Qwen-vs-Anthropic split we report, and one an adversary can
+turn into ``slopsquatting'' by registering the hallucinated name and
+waiting for the model to reach for it. Tool registries are the same
+shape of target: an agent that confidently calls \texttt{find\_flights}
+when only \texttt{search\_flights} exists is, in a registry an attacker
+can write to, one fabrication away from invoking a planted look-alike.
+We do not demonstrate that exploit here and make no exploitation claim;
+we measure existence hallucination at the per-call grain precisely
+because that is the unit at which such a risk would accrue.
