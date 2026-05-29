@@ -13,7 +13,7 @@ parsing, and policy errors into one number. Trace-level harnesses
 \citep{appworld2024,reactagent2023} expose more, yet still report
 pass-rate as the headline. We argue this is the wrong granularity for
 the failure we care about, and contribute a per-call diagnostic, the
-Tool-Existence Hallucination Rate (TEHR), that isolates a portable
+Tool Fabrication Rate (TFR), that isolates a portable
 slice of these failures across vendors and benchmarks.
 
 \paragraph{Empirical analysis of agent failures.}
@@ -27,7 +27,7 @@ and find ``API misuse,'' ``API incompatibility,'' and ``Documentation
 Desync'' dominating the root-cause distribution, with the Self-Action
 lifecycle stage hit hardest. Neither line puts a number on the failure
 under controlled conditions. We do, formalizing the unauthorized-tool
-subclass as TEHR and reporting it across five models.
+subclass as TFR and reporting it across five models.
 
 \paragraph{Prior tool-hallucination metrics.}
 Tool-call name errors have been measured under several aggregations,
@@ -46,10 +46,17 @@ training-time \emph{reliability alignment} that expands the action space
 (defer / clarify / switch), and they report it inside a composite
 reliability score rather than as a standalone per-call rate. We share
 their target failure but differ on both axes: a per-call rate, and a
-training-free inference-time intervention.
+training-free inference-time intervention. Operationally TFR is the
+complement of a tool-name validity check, and the ``does the called tool
+exist'' question is not itself new --- ToolBeHonest~\citep{toolbehonest2024}
+catalogues a \emph{non-existent tool} error category qualitatively. What is
+new is not the concept but its per-call operationalization across capability
+tiers and vendors, and the content-controlled ablation
+(Section~\ref{sec:mechanism}) it makes possible; we report TFR as a
+measurement instrument, not a redefinition of hallucination.
 BFCL v4's hallucination metric \citep{bfclv4_2025} measures a
 different failure: invoking a tool when none is appropriate. We differ
-on denominator and setting. TEHR extends MetaTool's premise from
+on denominator and setting. TFR extends MetaTool's premise from
 \emph{per-query} to \emph{per-call} on multi-turn agentic traces, and
 from controlled removal to the natural distribution of
 registry-membership violations. Per-call is what lets the intervention
@@ -57,12 +64,12 @@ in Section~\ref{sec:method:rvr} be evaluated against a clean ablation:
 $C_1$ versus a content-controlled $C_{0.7}$ structured-error baseline,
 on the strict subset of hallucination-tagged tool calls. Aggregate
 metrics cannot expose that contrast. Table~\ref{tab:priorart} positions
-TEHR against these prior measurements by what each one counts; the
+TFR against these prior measurements by what each one counts; the
 denominators and elicitation setups differ, so the numbers are not
 directly comparable, but the granularity gap is the point.
 
 \begin{table*}[t]
-\caption{Prior tool-hallucination measurements versus TEHR. \emph{Granularity}
+\caption{Prior tool-hallucination measurements versus TFR. \emph{Granularity}
 is the denominator each metric divides by; \emph{existence-clean?} asks whether
 the metric isolates registry-membership violations (a called name is absent from
 the offered set) from relevance, argument, and timing errors. \textbf{Not
@@ -71,7 +78,7 @@ different model cohorts, and different elicitation setups (single-turn
 instructions vs.\ multi-turn agentic traces; target-removed probes vs.\ natural
 distributions). They are not directly comparable and we do not claim a ranking;
 the table positions \emph{what each metric counts}, not which model is best.
-TEHR is the only per-call rate and the only one that scores existence on
+TFR is the only per-call rate and the only one that scores existence on
 multi-turn traces with a content-controlled ablation.}
 \label{tab:priorart}
 \centering
@@ -107,7 +114,7 @@ Reliability align.\ \citep{cao2025reliability}
   & inside reliability score
   & partial \\
 \midrule
-\textbf{Ours (TEHR)}
+\textbf{Ours (TFR)}
   & \textbf{per-call}
   & \textbf{multi-turn agentic traces}
   & $\mathbf{0\%}$\textbf{--}$\mathbf{1.87\%}$
@@ -180,7 +187,7 @@ re-prompt that needs no logit or activation access.
 
 \paragraph{Our differentiation.}
 Four contributions distinguish this work from the prior art above.
-A per-call TEHR diagnostic disaggregates registry-membership errors
+A per-call TFR diagnostic disaggregates registry-membership errors
 from the relevance, argument, and timing errors that aggregate metrics
 \citep{li2023apibank,cao2025reliability} bundle together. We audit
 five Anthropic 4.x model versions over an $11$-month window and run a
@@ -189,13 +196,13 @@ $6$-point Qwen3 size sweep ($0.6$B--$32$B), surfacing an
 the prior literature could not have caught. RVR itself is a
 training-free, registry-only, single-turn re-prompt, validated
 end-to-end with a $14 \to 0$ event prevention pattern on every Qwen3
-tier with $\mathrm{TEHR}>0$ (no SFT or RL as in
+tier with $\mathrm{TFR}>0$ (no SFT or RL as in
 \citealp{fissiongrpo2026}; no curated examples as in \citealp{licl2026}).
 The content-controlled
 $\mathrm{C}_{0.5}/\mathrm{C}_{0.7}/\mathrm{C}_1$ ablation isolates the
 registry list itself, rather than crediting any retry. The result is
 a tier-separated measurement of the cost-quality trade-off in agentic
-deployments, not a single-model benchmark gain. The TEHR scaling
+deployments, not a single-model benchmark gain. The TFR scaling
 shape itself ($0.6$B$\to\!14$B rise, $32$B collapse) is a finding
 aggregate metrics could not have produced, with the peak distractor
 type shifting across sizes.

@@ -11,17 +11,17 @@ most plausible account of the Anthropic null
 (Section~\ref{sec:results:trace-inspection}).
 
 % =========================================================================
-\subsection{Regime tests: TEHR is at or near zero across BFCL multi-turn splits}
+\subsection{Regime tests: TFR is at or near zero across BFCL multi-turn splits}
 \label{sec:results:regime}
 % =========================================================================
 
-Per-call TEHR for Sonnet~4.6 and Haiku~4.5 across the three BFCL
+Per-call TFR for Sonnet~4.6 and Haiku~4.5 across the three BFCL
 multi-turn splits under $\mathrm{C}_0$ is in Table~\ref{tab:regime}.
 Every cell in the regime grid is $\boldsymbol{0/N}$. Clopper--Pearson
 $95\%$ per-cell upper bound is $\leq 3.66\%$; pooled, $\leq\!0.39\%$.
 
 \begin{table}[t]
-\caption{Regime-test TEHR by model and BFCL split under $\mathrm{C}_0$.
+\caption{Regime-test TFR by model and BFCL split under $\mathrm{C}_0$.
 Cells are events / parsed calls.}
 \label{tab:regime}
 \centering
@@ -78,7 +78,7 @@ $\leq\!0.441\%$.}
 \setlength{\tabcolsep}{6pt}
 \begin{tabular}{lrc}
 \toprule
-Model & $N$ & TEHR \\
+Model & $N$ & TFR \\
 \midrule
 Opus 4.7        & 293   & 0 \\
 Sonnet 4.6      & 848   & 0 \\
@@ -102,7 +102,7 @@ once you remember that older models had no tool-use post-training
 and that prior benchmarks aggregated per task rather than per call.
 
 % =========================================================================
-\subsection{Qwen3 scaling curve: TEHR is non-monotonic across $0.6$B--$32$B}
+\subsection{Qwen3 scaling curve: TFR is non-monotonic across $0.6$B--$32$B}
 \label{sec:results:scaling}
 % =========================================================================
 
@@ -112,7 +112,7 @@ our probe ($N\!=\!224$, CP $95\%$ upper bound $\leq\!1.34\%$). That
 upper bound is wide enough to overlap the $14$B point estimate, so
 ``collapse'' here should be read as ``not-detected at this $N$,'' not
 as emergent capability. Figure~\ref{fig:scaling} and
-Table~\ref{tab:qwen3-scale} show the pattern. Pooled per-call TEHR
+Table~\ref{tab:qwen3-scale} show the pattern. Pooled per-call TFR
 rises from $0\%$ ($0/75$) at $0.6$B, peaks at $14$B
 ($5/268=1.87\%$), and then collapses back to $0\%$ ($0/224$) at
 $32$B. The per-arm peak shifts across sizes. $1.7$B peaks on
@@ -124,7 +124,7 @@ $32$B. The per-arm peak shifts across sizes. $1.7$B peaks on
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.9\linewidth]{figures/fig1_scaling_curve}
-\caption{Qwen3 family TEHR scaling curve, opaque baseline
+\caption{Qwen3 family TFR scaling curve, opaque baseline
 $\mathrm{C}_0$, four-distractor probe with target removed. Error bars
 are Clopper--Pearson 95\% CIs. Anthropic 4.x upper bound (dashed blue)
 includes all $5$ tested versions over $11$ months. The intra-family
@@ -181,7 +181,7 @@ whichever distractor that scale is best primed to mimic.
 % =========================================================================
 
 We applied the registry-visible re-prompt $\mathrm{C}_1$ on the four
-Qwen3 sizes that produced $\mathrm{TEHR}\!>\!0$ in $\mathrm{C}_0$.
+Qwen3 sizes that produced $\mathrm{TFR}\!>\!0$ in $\mathrm{C}_0$.
 Across $\sim\!944$ matched calls in $\mathrm{C}_1$, RVR prevents
 $\boldsymbol{14}$ of $\boldsymbol{14}$ hallucination events. Zero
 remain. Per-tier prevention is in Table~\ref{tab:rvr-validation}.
@@ -241,7 +241,7 @@ content that follows is decorative on this tier. The practical
 upshot is that a deployer who wants prevention without echoing
 internal tool names can ship $\mathrm{C}_{0.7}$ and lose nothing.
 
-\paragraph{Fisher's exact on the pooled $\mathrm{TEHR}\!>\!0$
+\paragraph{Fisher's exact on the pooled $\mathrm{TFR}\!>\!0$
 subset.} The $\mathrm{C}_0$/$\mathrm{C}_1$ denominators differ per
 tier, so the trials are not paired at the call level; we treat the
 four tiers as independent strata. We report \textbf{Fisher's exact

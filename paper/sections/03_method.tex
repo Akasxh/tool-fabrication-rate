@@ -1,12 +1,12 @@
 \section{Method}
 \label{sec:method}
 
-\subsection{Tool-Existence Hallucination Rate (TEHR)}
+\subsection{Tool Fabrication Rate (TFR)}
 \label{sec:method:tehr}
 
 Let a tool registry $\mathcal{R}$ be a finite set of tool names with JSON schemas, exposed to the agent at episode start. The agent's message stream is parsed into a sequence of tool calls $c$, each carrying a name $c.\mathrm{name}$, and we define
 \[
-\mathrm{TEHR}(m, b, x) = \frac{|\{c : c.\mathrm{name}\notin \mathcal{R}\}|}{|\{c : c \text{ is a parsed tool call}\}|},
+\mathrm{TFR}(m, b, x) = \frac{|\{c : c.\mathrm{name}\notin \mathcal{R}\}|}{|\{c : c \text{ is a parsed tool call}\}|},
 \]
 where $m, b, x$ index model, benchmark, and condition. The denominator is per call, not per task. Per-task aggregation conflates the rate with trace length: on long tool-using episodes, a single bad agent emitting twenty bad calls swings the headline number by an order of magnitude relative to one. Per-call observations inside a task are not assumed i.i.d.; task-level cluster-bootstrap confidence intervals are reported instead. System failures (timeout, refusal, parse-fail) are excluded from numerator and denominator alike.
 

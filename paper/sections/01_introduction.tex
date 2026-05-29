@@ -28,8 +28,8 @@ non-existent-tool invocations into a composite reliability number. Read
 together, the failure looks architecture-agnostic and uniform. We don't
 think it is, and we don't think the fix is what it looks like either.
 
-We define per-call \emph{Tool-Existence
-Hallucination Rate} (TEHR) and run it over two populations on BFCL
+We define the per-call \emph{Tool Fabrication
+Rate} (TFR) and run it over two populations on BFCL
 multi-turn: the Anthropic 4.x family at five versions spanning
 May~2025 to April~2026 (Opus~4.7, Sonnet 4/4.5/4.6, Haiku~4.5), and
 Qwen3-Instruct at six sizes ($0.6$B--$32$B) in 4-bit MLX on
@@ -55,7 +55,7 @@ we measure existence hallucination at the per-call grain precisely
 because that is the unit at which such a risk would accrue.
 
 The two families don't look alike. Across $2{,}599$ Anthropic calls
-under $\mathrm{C}_0$, zero TEHR events (Clopper--Pearson 95\% upper
+under $\mathrm{C}_0$, zero TFR events (Clopper--Pearson 95\% upper
 bound $\leq\!0.115\%$); the $\mathrm{C}_1$ subset adds $0/678$ at
 $\leq\!0.441\%$. The split designed to coax fabrication,
 \texttt{multi\_turn\_miss\_func}, didn't bite: the agent chained
@@ -84,7 +84,7 @@ Registry-Visible Reprompting (RVR) is what we built to fix this.
 The middleware is training-free: intercept the proposed call, check
 the name, and on a miss re-prompt with a structured
 \texttt{tool\_not\_found} envelope listing what is available. Across
-the four Qwen3 tiers with non-zero TEHR ($1.7$B, $4$B, $8$B, $14$B),
+the four Qwen3 tiers with non-zero TFR ($1.7$B, $4$B, $8$B, $14$B),
 RVR clears all fourteen pooled fabrications: Fisher's exact one-sided
 on $14/973$ vs.\ $0/945$ gives $p=7.1\!\times\!10^{-5}$. A
 content-matched ablation ($\mathrm{C}_{0.7}$, $0/253$ on Qwen3-8B),
@@ -107,7 +107,7 @@ existence failures production guardrails silently absorb, (ii) the
 format-not-content finding --- recovery rides on the rejection envelope,
 not the registry it echoes --- and (iii) the deployable takeaway that
 falls out of it: ship the structured envelope, and you need not leak your
-registry to get the fix. We release four artifacts: the per-call TEHR
+registry to get the fix. We release four artifacts: the per-call TFR
 diagnostic, an eleven-model audit over eleven months, RVR with per-tier
 validation, and an open-source harness with $144$ unit tests. Total API
 spend \$$73$; the Qwen3 sweep ran at zero marginal cost on the M5.
