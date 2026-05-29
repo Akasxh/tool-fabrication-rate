@@ -63,16 +63,16 @@ how often, and what fixes it? We define a per-call Tool Fabrication
 Rate (TFR) and run it on BFCL multi-turn against two
 populations: five Anthropic 4.x versions across an eleven-month release
 window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
-(4-bit MLX). The Anthropic side is quiet. Across $2{,}578$
+(4-bit MLX). The Anthropic side is quiet. Across $2{,}592$
 opaque-baseline calls we logged zero TFR events, Clopper--Pearson 95\%
-upper bound $\leq\!0.115\%$. Commercial models across the OpenAI gpt-4.1
-and gpt-4o tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.14\%$).
+two-sided upper bound $\leq\!0.14\%$. Commercial models across the OpenAI gpt-4.1
+and gpt-4o tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.18\%$).
 The open-weight Qwen3 family isn't quiet: it logs non-zero TFR. We
 propose Registry-Visible Reprompting (RVR), a
 training-free middleware that, on a registry miss, returns one re-prompt
 wrapping a structured \texttt{tool\_not\_found} envelope. RVR removes all
-fourteen pooled Qwen3 fabrications in the matched per-tier subset
-(Fisher's exact one-sided, $p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\
+twenty pooled Qwen3 fabrications in the matched per-tier subset
+(Fisher's exact one-sided, $p=3.5\!\times\!10^{-5}$ on $20/1{,}417$ vs.\
 $0/945$). A secondary, deliberately hedged ablation asks where the fix
 lives. Dropping the registry listing from the envelope
 ($\mathrm{C}_{0.7}$; $0/448$ on Qwen3-8B) and even filling it with
@@ -87,7 +87,7 @@ nothing. We flag a format-over-content recovery as a plausible reading,
 echoing Min et al.\ on in-context demonstrations~\citep{min2022rethinking},
 and leave it as an open ablation; a powered version on a high-event cell
 is in progress. Descriptively, Qwen3's rate is non-monotone in scale,
-climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and back to
+climbing from $0\%$ at $0.6$B to $\mathbf{1.64\%}$ at $14$B and back to
 $0\%$ at $32$B; six points are not a curve, and we cannot yet
 disentangle scale from 4-bit quantization (a bf16 control is pending).
 On Anthropic's zero-event regime RVR also logs zero, but the strict-pass

@@ -420,13 +420,13 @@ File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
 File: listings.cfg 2020/03/24 1.8d listings configuration
 ))
 Package: listings 2020/03/24 1.8d (Carsten Heinz)
-LaTeX Font Info:    Trying to load font information for TU+ptm on input line 40
+LaTeX Font Info:    Trying to load font information for TU+ptm on input line 38
 .
-LaTeX Font Info:    No file TUptm.fd. on input line 40.
+LaTeX Font Info:    No file TUptm.fd. on input line 38.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 40.
+(Font)              using `TU/lmr/m/n' instead on input line 38.
 
 (l3backend-xetex.def
 File: l3backend-xetex.def 2022-02-07 L3 backend support: XeTeX
@@ -441,36 +441,36 @@ File: l3backend-xetex.def 2022-02-07 L3 backend support: XeTeX
 ) (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 40.
-LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 4
-0.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 3
+8.
  (ts1cmr.fd
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 40.
-LaTeX Font Info:    ... okay on input line 40.
-LaTeX Info: Redefining \microtypecontext on input line 40.
-Package microtype Info: Applying patch `item' on input line 40.
-Package microtype Info: Applying patch `toc' on input line 40.
-Package microtype Info: Applying patch `eqnum' on input line 40.
-Package microtype Info: Applying patch `footnote' on input line 40.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Info: Redefining \microtypecontext on input line 38.
+Package microtype Info: Applying patch `item' on input line 38.
+Package microtype Info: Applying patch `toc' on input line 38.
+Package microtype Info: Applying patch `eqnum' on input line 38.
+Package microtype Info: Applying patch `footnote' on input line 38.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: No adjustment of tracking.
@@ -488,7 +488,7 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 40.
+Package hyperref Info: Link coloring ON on input line 38.
  (nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 
@@ -499,9 +499,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count321
 )
-LaTeX Info: Redefining \ref on input line 40.
-LaTeX Info: Redefining \pageref on input line 40.
-LaTeX Info: Redefining \nameref on input line 40.
+LaTeX Info: Redefining \ref on input line 38.
+LaTeX Info: Redefining \pageref on input line 38.
+LaTeX Info: Redefining \nameref on input line 38.
  (main.out) (main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
@@ -516,7 +516,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
 (Font)              using `TU/ptm/m/n' instead on input line 56.
 
-\c@@affil@anon=\count323
+\c@@affilaff1=\count323
 (mt-cmr.cfg
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
@@ -535,26 +535,26 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Trying to load font information for TU+pcr on input line 78
-.
-LaTeX Font Info:    No file TUpcr.fd. on input line 78.
 
+Package hyperref Warning: Ignoring empty anchor on input line 58.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/it' undefined
+(Font)              using `TU/ptm/m/n' instead on input line 58.
+
+LaTeX Font Info:    Trying to load font information for TU+pcr on input line 73
+.
+LaTeX Font Info:    No file TUpcr.fd. on input line 73.
 
 LaTeX Font Warning: Font shape `TU/pcr/m/n' undefined
-(Font)              using `TU/lmr/m/n' instead on input line 78.
+(Font)              using `TU/lmr/m/n' instead on input line 73.
 
 (mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
+Underfull \vbox (badness 1496) has occurred while \output is active []
 
-LaTeX Font Warning: Font shape `TU/ptm/m/it' undefined
-(Font)              using `TU/ptm/m/n' instead on input line 84.
-
-
-Underfull \hbox (badness 1024) in paragraph at lines 66--100
-\TU/ptm/b/n/10 middleware that, on a registry miss, re-
- []
 
 (sections/01_introduction
 Package microtype Info: Loading generic protrusion settings for font family
@@ -573,24 +573,25 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 87--104
- \TU/ptm/m/it/10 Closely related interventions. Three concurrent
+ \TU/pcr/m/n/10 Closely related interventions. Three concurrent
  []
 
 
 Underfull \hbox (badness 5970) in paragraph at lines 87--104
-\TU/ptm/m/it/10 ([][]2026[][]) introduce Localized In-Context Learning
+\TU/pcr/m/n/10 ([][]2026[][]) introduce Localized In-Context Learning
  []
 
 
 Underfull \hbox (badness 1478) in paragraph at lines 87--104
-\TU/ptm/m/it/10 (L-ICL) for symbolic planners, locating the first
+\TU/pcr/m/n/10 (L-ICL) for symbolic planners, locating the first
  []
 
-) (sections/03_method [3] (lstlang1.sty
+
+Underfull \vbox (badness 4647) has occurred while \output is active []
+
+ [3])
+(sections/03_method (lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 
@@ -607,41 +608,42 @@ LaTeX Font Warning: Font shape `TU/ptm/m/sc' undefined
 
 ) (sections/05_results
 Underfull \hbox (badness 5288) in paragraph at lines 37--1
-[]\TU/ptm/m/it/10 Reproducibility. A repro_manifest.json pins the
+[]\TU/pcr/m/n/10 Reproducibility. A repro_manifest.json pins the
  []
 
 
 Underfull \hbox (badness 2856) in paragraph at lines 37--1
-\TU/ptm/m/it/10 BFCL v4 commit, SDK versions, dated model
+\TU/pcr/m/n/10 BFCL v4 commit, SDK versions, dated model
  []
 
 
 Underfull \hbox (badness 2261) in paragraph at lines 37--1
-\TU/ptm/m/it/10 aliases, decoding parameters, and random seeds
+\TU/pcr/m/n/10 aliases, decoding parameters, and random seeds
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 37--1
-[][]\TU/ptm/m/it/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
+[][]\TU/pcr/m/n/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [5]
-Underfull \vbox (badness 1910) has occurred while \output is active []
 
+Underfull \vbox (badness 6477) has occurred while \output is active []
+
+ [5]
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
-Underfull \hbox (badness 1253) in paragraph at lines 218--228
-\TU/ptm/m/it/10 ing the registry list on top buys no further re-
+Underfull \hbox (badness 1253) in paragraph at lines 216--226
+\TU/pcr/m/n/10 ing the registry list on top buys no further re-
  []
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 218--228
-\TU/ptm/m/it/10 duction (Newcombe-hybrid 95% CI on $\OT1/cmr/m/n/10 C[]  \OMS/c
-msy/m/n/10 ^^@  \OT1/cmr/m/n/10 C[]$\TU/ptm/m/it/10 :
+Underfull \hbox (badness 1092) in paragraph at lines 216--226
+\TU/pcr/m/n/10 duction (Newcombe-hybrid 95% CI on $\OT1/cmr/m/n/10 C[]  \OMS/cm
+sy/m/n/10 ^^@  \OT1/cmr/m/n/10 C[]$\TU/pcr/m/n/10 :
  []
 
 
@@ -652,27 +654,28 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 1067) has occurred while \output is active []
 
  [7])
-(sections/07_limitations) (main.bbl [8]) (sections/08_llm_disclosure [9])
+(sections/07_limitations) (main.bbl [8]) (sections/08_llm_disclosure)
 (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
-\TU/ptm/m/it/10 with LLM-based assistance under author supervi-
+\TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
 
 
 Underfull \hbox (badness 1087) in paragraph at lines 12--1
-\TU/ptm/m/it/10 sion. All claims, numerical results, methodolog-
+\TU/pcr/m/n/10 sion. All claims, numerical results, methodolog-
  []
 
 
 Underfull \hbox (badness 2626) in paragraph at lines 12--1
-\TU/ptm/m/it/10 ical decisions, and statistical tests (Fisher’s ex-
+\TU/pcr/m/n/10 ical decisions, and statistical tests (Fisher’s ex-
  []
 
 
 Underfull \hbox (badness 4060) in paragraph at lines 12--1
-\TU/ptm/m/it/10 cluster-bootstrap, Friedman+Nemenyi) are repro-
+\TU/pcr/m/n/10 cluster-bootstrap, Friedman+Nemenyi) are repro-
  []
 
+[9]
 File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
 <use figures/fig1_scaling_curve.pdf>
 File: figures/fig3_rvr_architecture.png Graphic file (type bmp)
@@ -686,27 +689,27 @@ Overfull \hbox (312.51326pt too wide) in paragraph at lines 56--93
 
 
 Underfull \hbox (badness 1092) in paragraph at lines 138--150
-[]\TU/ptm/m/it/10 The pre-registered protocol is locked in git com-
+[]\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
 )
-Underfull \hbox (badness 10000) in paragraph at lines 158--115
-[]\TU/ptm/m/it/10 The supplementary repository at
+Underfull \hbox (badness 10000) in paragraph at lines 151--110
+[]\TU/pcr/m/n/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 158--115
-[][]\TU/ptm/m/it/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
+Underfull \hbox (badness 10000) in paragraph at lines 151--110
+[][]\TU/pcr/m/n/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
  []
 
 
-Underfull \hbox (badness 1694) in paragraph at lines 158--115
-\TU/ptm/m/it/10 the aggregator and statistical scripts, the repro-
+Underfull \hbox (badness 1694) in paragraph at lines 151--110
+\TU/pcr/m/n/10 the aggregator and statistical scripts, the repro-
  []
 
 
-Underfull \hbox (badness 1596) in paragraph at lines 158--115
-\TU/ptm/m/it/10 Distractor-injection RNG uses a SHA-256-derived
+Underfull \hbox (badness 1596) in paragraph at lines 151--110
+\TU/pcr/m/n/10 Distractor-injection RNG uses a SHA-256-derived
  []
 
 
@@ -722,4 +725,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (11 pages, 539108 bytes).
+Output written on main.xdv (11 pages, 518240 bytes).

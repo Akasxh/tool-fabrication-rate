@@ -20,10 +20,10 @@
       "condition": "C0",
       "distractor": "near_name",
       "hallucinated": 0,
-      "n_calls": 139,
+      "n_calls": 153,
       "tehr": 0.0,
       "cp_lower": 0.0,
-      "cp_upper": 0.026189644434205576
+      "cp_upper": 0.023821991293435516
     },
     {
       "model": "claude-haiku-4-5",
@@ -312,6 +312,281 @@
       "cp_upper": 0.053569654127096765
     },
     {
+      "model": "gpt-4.1",
+      "model_short": "gpt-4.1",
+      "condition": "C0",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 94,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03848335099752879
+    },
+    {
+      "model": "gpt-4.1",
+      "model_short": "gpt-4.1",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 122,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.029784160061428706
+    },
+    {
+      "model": "gpt-4.1",
+      "model_short": "gpt-4.1",
+      "condition": "C0",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 95,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03808607757001057
+    },
+    {
+      "model": "gpt-4.1",
+      "model_short": "gpt-4.1",
+      "condition": "C0",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 93,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.0388889985342758
+    },
+    {
+      "model": "gpt-4.1-mini",
+      "model_short": "gpt-4.1-mini",
+      "condition": "C0",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 102,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03551932665788406
+    },
+    {
+      "model": "gpt-4.1-mini",
+      "model_short": "gpt-4.1-mini",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 100,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03621669264517641
+    },
+    {
+      "model": "gpt-4.1-mini",
+      "model_short": "gpt-4.1-mini",
+      "condition": "C0",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 106,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03420216727635029
+    },
+    {
+      "model": "gpt-4.1-mini",
+      "model_short": "gpt-4.1-mini",
+      "condition": "C0",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 100,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03621669264517641
+    },
+    {
+      "model": "gpt-4.1-nano",
+      "model_short": "gpt-4.1-nano",
+      "condition": "C0",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 105,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03452221412650563
+    },
+    {
+      "model": "gpt-4.1-nano",
+      "model_short": "gpt-4.1-nano",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 102,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03551932665788406
+    },
+    {
+      "model": "gpt-4.1-nano",
+      "model_short": "gpt-4.1-nano",
+      "condition": "C0",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 103,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03518061757434017
+    },
+    {
+      "model": "gpt-4.1-nano",
+      "model_short": "gpt-4.1-nano",
+      "condition": "C0",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 99,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03657574498347894
+    },
+    {
+      "model": "gpt-4o",
+      "model_short": "gpt-4o",
+      "condition": "C0",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 116,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03130036074328996
+    },
+    {
+      "model": "gpt-4o",
+      "model_short": "gpt-4o",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 117,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.031037031693111575
+    },
+    {
+      "model": "gpt-4o",
+      "model_short": "gpt-4o",
+      "condition": "C0",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 122,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.029784160061428706
+    },
+    {
+      "model": "gpt-4o",
+      "model_short": "gpt-4o",
+      "condition": "C0",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 111,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.032686994023947695
+    },
+    {
+      "model": "gpt-4o-mini",
+      "model_short": "gpt-4o-mini",
+      "condition": "C0",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 107,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.033887999474011485
+    },
+    {
+      "model": "gpt-4o-mini",
+      "model_short": "gpt-4o-mini",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 108,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.033579550218654476
+    },
+    {
+      "model": "gpt-4o-mini",
+      "model_short": "gpt-4o-mini",
+      "condition": "C0",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 111,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.032686994023947695
+    },
+    {
+      "model": "gpt-4o-mini",
+      "model_short": "gpt-4o-mini",
+      "condition": "C0",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 104,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.034848306587674044
+    },
+    {
+      "model": "gpt-5-mini",
+      "model_short": "gpt-5-mini",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 22,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.15437251281557457
+    },
+    {
+      "model": "gpt-5-nano",
+      "model_short": "gpt-5-nano",
+      "condition": "C0",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 68,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.05280304279363979
+    },
+    {
+      "model": "gpt-5-nano",
+      "model_short": "gpt-5-nano",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 54,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.06603151424442182
+    },
+    {
+      "model": "gpt-5-nano",
+      "model_short": "gpt-5-nano",
+      "condition": "C0",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 47,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.07548573369105858
+    },
+    {
+      "model": "gpt-5-nano",
+      "model_short": "gpt-5-nano",
+      "condition": "C0",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 77,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.0467780681604041
+    },
+    {
       "model": "mlx-community/Qwen2.5-7B-Instruct-4bit",
       "model_short": "Qwen2.5-7B",
       "condition": "C0",
@@ -514,11 +789,11 @@
       "model_short": "Qwen3-14B",
       "condition": "C0",
       "distractor": "synonym",
-      "hallucinated": 5,
-      "n_calls": 69,
-      "tehr": 0.07246376811594203,
-      "cp_lower": 0.02394662096870454,
-      "cp_upper": 0.16106174027361295
+      "hallucinated": 6,
+      "n_calls": 167,
+      "tehr": 0.03592814371257485,
+      "cp_lower": 0.013297125433216282,
+      "cp_upper": 0.07655730350160328
     },
     {
       "model": "mlx-community/Qwen3-14B-4bit",
@@ -710,6 +985,39 @@
     {
       "model": "mlx-community/Qwen3-8B-4bit",
       "model_short": "Qwen3-8B",
+      "condition": "A2",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 24,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.14247359772252563
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
+      "condition": "A2",
+      "distractor": "near_name",
+      "hallucinated": 2,
+      "n_calls": 100,
+      "tehr": 0.02,
+      "cp_lower": 0.002431336823942542,
+      "cp_upper": 0.07038393247107011
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
+      "condition": "A2",
+      "distractor": "synonym",
+      "hallucinated": 1,
+      "n_calls": 108,
+      "tehr": 0.009259259259259259,
+      "cp_lower": 0.0002343966728090922,
+      "cp_upper": 0.05051053365674625
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
       "condition": "C0",
       "distractor": "matched_random",
       "hallucinated": 3,
@@ -801,10 +1109,10 @@
       "condition": "C0.7",
       "distractor": "matched_random",
       "hallucinated": 0,
-      "n_calls": 63,
+      "n_calls": 69,
       "tehr": 0.0,
       "cp_lower": 0.0,
-      "cp_upper": 0.05687235233201625
+      "cp_upper": 0.05205805786307967
     },
     {
       "model": "mlx-community/Qwen3-8B-4bit",
@@ -812,10 +1120,10 @@
       "condition": "C0.7",
       "distractor": "near_name",
       "hallucinated": 0,
-      "n_calls": 62,
+      "n_calls": 153,
       "tehr": 0.0,
       "cp_lower": 0.0,
-      "cp_upper": 0.057762634429290936
+      "cp_upper": 0.023821991293435516
     },
     {
       "model": "mlx-community/Qwen3-8B-4bit",
@@ -823,10 +1131,10 @@
       "condition": "C0.7",
       "distractor": "synonym",
       "hallucinated": 0,
-      "n_calls": 62,
+      "n_calls": 160,
       "tehr": 0.0,
       "cp_lower": 0.0,
-      "cp_upper": 0.057762634429290936
+      "cp_upper": 0.022791749455466522
     },
     {
       "model": "mlx-community/Qwen3-8B-4bit",
@@ -838,6 +1146,50 @@
       "tehr": 0.0,
       "cp_lower": 0.0,
       "cp_upper": 0.054358847170121974
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
+      "condition": "C0_8",
+      "distractor": "matched_random",
+      "hallucinated": 0,
+      "n_calls": 107,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.033887999474011485
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
+      "condition": "C0_8",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 97,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.037315636908736065
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
+      "condition": "C0_8",
+      "distractor": "synonym",
+      "hallucinated": 0,
+      "n_calls": 106,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03420216727635029
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-4bit",
+      "model_short": "Qwen3-8B",
+      "condition": "C0_8",
+      "distractor": "unrelated",
+      "hallucinated": 0,
+      "n_calls": 100,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.03621669264517641
     },
     {
       "model": "mlx-community/Qwen3-8B-4bit",
@@ -882,6 +1234,17 @@
       "tehr": 0.0,
       "cp_lower": 0.0,
       "cp_upper": 0.054358847170121974
+    },
+    {
+      "model": "mlx-community/Qwen3-8B-bf16",
+      "model_short": "Qwen3-8B-bf16",
+      "condition": "C0",
+      "distractor": "near_name",
+      "hallucinated": 0,
+      "n_calls": 13,
+      "tehr": 0.0,
+      "cp_lower": 0.0,
+      "cp_upper": 0.24705263800047092
     }
   ],
   "regime_cells": [
@@ -990,10 +1353,10 @@
       "claude-haiku-4-5": {
         "model_short": "claude-haiku-4-5",
         "hallucinated": 0,
-        "n_calls": 777,
+        "n_calls": 791,
         "tehr": 0.0,
         "cp_lower": 0.0,
-        "cp_upper": 0.004736340600951993
+        "cp_upper": 0.004652706885623691
       },
       "claude-opus-4-7": {
         "model_short": "claude-opus-4-7",
@@ -1027,6 +1390,62 @@
         "cp_lower": 0.0,
         "cp_upper": 0.004340645743099045
       },
+      "gpt-4.1": {
+        "model_short": "gpt-4.1",
+        "hallucinated": 0,
+        "n_calls": 404,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.009089329753605267
+      },
+      "gpt-4.1-mini": {
+        "model_short": "gpt-4.1-mini",
+        "hallucinated": 0,
+        "n_calls": 408,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.009000620919689752
+      },
+      "gpt-4.1-nano": {
+        "model_short": "gpt-4.1-nano",
+        "hallucinated": 0,
+        "n_calls": 409,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.008978713603572584
+      },
+      "gpt-4o": {
+        "model_short": "gpt-4o",
+        "hallucinated": 0,
+        "n_calls": 466,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.007884800915976637
+      },
+      "gpt-4o-mini": {
+        "model_short": "gpt-4o-mini",
+        "hallucinated": 0,
+        "n_calls": 430,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.008542096615751608
+      },
+      "gpt-5-mini": {
+        "model_short": "gpt-5-mini",
+        "hallucinated": 0,
+        "n_calls": 22,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.15437251281557457
+      },
+      "gpt-5-nano": {
+        "model_short": "gpt-5-nano",
+        "hallucinated": 0,
+        "n_calls": 246,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.014883573138216514
+      },
       "mlx-community/Qwen2.5-7B-Instruct-4bit": {
         "model_short": "Qwen2.5-7B",
         "hallucinated": 28,
@@ -1053,11 +1472,11 @@
       },
       "mlx-community/Qwen3-14B-4bit": {
         "model_short": "Qwen3-14B",
-        "hallucinated": 5,
-        "n_calls": 527,
-        "tehr": 0.009487666034155597,
-        "cp_lower": 0.003087592835008623,
-        "cp_upper": 0.022001258908614655
+        "hallucinated": 6,
+        "n_calls": 625,
+        "tehr": 0.0096,
+        "cp_lower": 0.003530948511084788,
+        "cp_upper": 0.020777338548799328
       },
       "mlx-community/Qwen3-32B-4bit": {
         "model_short": "Qwen3-32B",
@@ -1077,33 +1496,41 @@
       },
       "mlx-community/Qwen3-8B-4bit": {
         "model_short": "Qwen3-8B",
-        "hallucinated": 10,
-        "n_calls": 1384,
-        "tehr": 0.0072254335260115606,
-        "cp_lower": 0.0034701546976620657,
-        "cp_upper": 0.013247565779512372
+        "hallucinated": 13,
+        "n_calls": 2221,
+        "tehr": 0.00585321927059883,
+        "cp_lower": 0.003120163787674635,
+        "cp_upper": 0.009988384850371398
+      },
+      "mlx-community/Qwen3-8B-bf16": {
+        "model_short": "Qwen3-8B-bf16",
+        "hallucinated": 0,
+        "n_calls": 13,
+        "tehr": 0.0,
+        "cp_lower": 0.0,
+        "cp_upper": 0.24705263800047092
       }
     },
     "anthropic_probe": {
       "hallucinated": 0,
-      "n_calls": 2456,
+      "n_calls": 2470,
       "tehr": 0.0,
       "cp_lower": 0.0,
-      "cp_upper": 0.001500859330847575
+      "cp_upper": 0.0014923587866936933
     },
     "qwen_probe": {
-      "hallucinated": 48,
-      "n_calls": 3533,
-      "tehr": 0.013586187376167564,
-      "cp_lower": 0.010033915853338325,
-      "cp_upper": 0.01797336838400207
+      "hallucinated": 52,
+      "n_calls": 6866,
+      "tehr": 0.007573550830177687,
+      "cp_lower": 0.005661313217466484,
+      "cp_upper": 0.009919981953264191
     },
     "anthropic_probe_plus_regime": {
       "hallucinated": 0,
-      "n_calls": 3237,
+      "n_calls": 3251,
       "tehr": 0.0,
       "cp_lower": 0.0,
-      "cp_upper": 0.0011389491294704194
+      "cp_upper": 0.0011340471783688655
     },
     "regime_grid": {
       "hallucinated": 0,
@@ -1130,11 +1557,11 @@
         "Qwen3-4B",
         "Qwen3-8B"
       ],
-      "c0_hallucinated": 19,
-      "c0_calls": 2405,
+      "c0_hallucinated": 20,
+      "c0_calls": 2517,
       "c1_hallucinated": 0,
       "c1_calls": 1484,
-      "p_one_sided": 0.0001053012037122199
+      "p_one_sided": 9.163940459796693e-05
     },
     "pooled_nonzero_c0_tiers": {
       "tiers": [
@@ -1143,16 +1570,16 @@
         "Qwen3-4B",
         "Qwen3-8B"
       ],
-      "c0_hallucinated": 19,
-      "c0_calls": 1319,
+      "c0_hallucinated": 20,
+      "c0_calls": 1417,
       "c1_hallucinated": 0,
       "c1_calls": 945,
-      "p_one_sided": 3.298545310409072e-05
+      "p_one_sided": 3.454050065098614e-05
     },
     "per_tier": {
       "claude-haiku-4-5": {
         "c0_hallucinated": 0,
-        "c0_calls": 525,
+        "c0_calls": 539,
         "c1_hallucinated": 0,
         "c1_calls": 252,
         "p_one_sided": 1.0,
@@ -1175,11 +1602,11 @@
         "holm_reject": false
       },
       "Qwen3-14B": {
-        "c0_hallucinated": 5,
-        "c0_calls": 268,
+        "c0_hallucinated": 6,
+        "c0_calls": 366,
         "c1_hallucinated": 0,
         "c1_calls": 259,
-        "p_one_sided": 0.033387880790439875,
+        "p_one_sided": 0.039643446410161036,
         "holm_reject": false
       },
       "Qwen3-4B": {
@@ -1236,11 +1663,11 @@
     },
     {
       "size_b": 14.0,
-      "hallucinated": 5,
-      "n_calls": 268,
-      "tehr": 0.018656716417910446,
-      "cp_lower": 0.00608485373142982,
-      "cp_upper": 0.0429990980922628
+      "hallucinated": 6,
+      "n_calls": 366,
+      "tehr": 0.01639344262295082,
+      "cp_lower": 0.006039258562049933,
+      "cp_upper": 0.03533843596439213
     },
     {
       "size_b": 32.0,

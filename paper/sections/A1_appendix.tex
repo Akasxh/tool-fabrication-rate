@@ -86,7 +86,7 @@ Reliability align.\ \citep{cao2025reliability}
 \textbf{Ours (TFR)}
   & \textbf{per-call}
   & \textbf{multi-turn agentic traces}
-  & $\mathbf{0\%}$\textbf{--}$\mathbf{1.87\%}$
+  & $\mathbf{0\%}$\textbf{--}$\mathbf{1.64\%}$
   & \textbf{yes} \\
 \bottomrule
 \end{tabular}
@@ -103,7 +103,7 @@ across eleven months'' claim holds on \textsc{base} only; the three-split regime
 sweep is two production models (Haiku 4.5, Sonnet 4.6) plus one local model
 (Qwen3-8B, base). Anthropic hallucinated $=0$ in every cell; the per-call
 TFR signal is the Qwen3 size sweep on \textsc{base}. Cells sum to the
-pooled Anthropic $\mathrm{C}_0$ total $2{,}578$.}
+pooled Anthropic $\mathrm{C}_0$ total $2{,}592$.}
 \label{tab:coverage}
 \centering
 \small
@@ -119,14 +119,14 @@ Sonnet 4.0 \scriptsize(05/2025)   & \pmark\,253 & --          & --          \\
 Sonnet 4.5 \scriptsize(09/2025)   & \pmark\,285 & --          & --          \\
 Sonnet 4.6                        & \pmark\,677 & \rmark\,81  & \rmark\,128 \\
 Opus 4.7                          & \pmark\,293 & --          & --          \\
-Haiku 4.5                         & \pmark\,634 & \rmark\,107 & \rmark\,120 \\
+Haiku 4.5                         & \pmark\,648 & \rmark\,107 & \rmark\,120 \\
 \midrule
 \multicolumn{4}{l}{\emph{Qwen3 size sweep (4-bit)}} \\
 0.6B   & \pmark\,75   & -- & -- \\
 1.7B   & \pmark\,210  & -- & -- \\
 4B     & \pmark\,226  & -- & -- \\
 8B     & \pmark\,615  & \multicolumn{2}{c}{\rmark\,108 (base regime)} \\
-14B    & \pmark\,268  & -- & -- \\
+14B    & \pmark\,366  & -- & -- \\
 32B    & \pmark\,224  & -- & -- \\
 \bottomrule
 \end{tabular}
@@ -146,18 +146,11 @@ still in collection. $\mathrm{C}_{0.7}$
 was run at scale on Qwen3-8B only, not on Anthropic. Holm--Bonferroni
 correction across the three primary tests (Fisher's exact, Friedman,
 TOST): only Fisher's clears $\alpha\!=\!0.05$ at
-$p_{\mathrm{Holm}} = 2.14\!\times\!10^{-4}$.
-
-% NUMBERS_TODO: the following experiments are still running and are NOT yet
-% in scripts/aggregate_all.py; do not cite numbers until aggregated:
-%   (1) gpt-5 family frontier rows (currently only gpt-5-mini at n=19, preliminary, 0/19);
-%   (2) quantization-control cells: Qwen3-8B-8bit, Qwen3-8B-bf16, Qwen3-14B-8bit;
-%   (3) A2 reflection arm (currently only n=30, preliminary);
-%   (4) Qwen3-14B event-boost cell.
+$p_{\mathrm{Holm}} = 2.1\!\times\!10^{-4}$.
 
 The supplementary repository at
 \href{https://anonymous.4open.science/r/icml-tehr-scale-2026/}{anonymous.4open.science/r/icml-tehr-scale-2026}
-contains the full harness ($144$ unit tests), the JSONL trace logs
+contains the full harness ($153$ unit tests), the JSONL trace logs
 that produce every number in the paper, the aggregator and statistical
 scripts, the reproducibility manifest with dated model aliases, the
 full deviation log, the JSONL trace schema, the headline-number

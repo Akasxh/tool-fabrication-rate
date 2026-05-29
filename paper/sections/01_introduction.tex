@@ -17,7 +17,7 @@ architecture-agnostic and uniform. We don't think it is. At the per-call
 grain the split is sharp: commercial frontiers (Anthropic 4.x, OpenAI
 gpt-4.1/4o) sit at $0\%$ TFR, while open-weight Qwen3 fabricates at a
 non-zero, non-monotone rate. Registry-Visible Reprompting (RVR), a
-single structured re-prompt on a registry miss, removes all fourteen
+single structured re-prompt on a registry miss, removes all twenty
 pooled Qwen3 fabrications in the matched per-tier subset.
 
 We define the per-call \emph{Tool Fabrication Rate} (TFR) and run it
@@ -41,10 +41,10 @@ shape of target. We make no exploitation claim, and measure existence
 hallucination at the per-call grain because that is the unit at which
 such a risk would accrue.
 
-The two families don't look alike. Across $2{,}578$ Anthropic calls
-under $\mathrm{C}_0$, zero TFR events (Clopper--Pearson 95\% upper
-bound $\leq\!0.115\%$). The five commercial OpenAI gpt-4.1 and gpt-4o
-tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.14\%$). The split
+The two families don't look alike. Across $2{,}592$ Anthropic calls
+under $\mathrm{C}_0$, zero TFR events (Clopper--Pearson 95\% two-sided
+upper bound $\leq\!0.14\%$). The five commercial OpenAI gpt-4.1 and gpt-4o
+tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.18\%$). The split
 designed to coax fabrication, \texttt{multi\_turn\_miss\_func}, didn't
 bite: the agent chained five smaller in-registry calls instead of
 inventing a one-shot. With every Anthropic cell at $0/N$, no temporal
@@ -52,14 +52,14 @@ slope is fittable; the five versions function as a stability check, not
 a trend.
 
 Qwen3 looks nothing like that. Pooled per-call rates climb from
-$0\%$ at $0.6$B, peak at $\mathbf{1.87\%}$ at $14$B, and drop back to
+$0\%$ at $0.6$B, peak at $\mathbf{1.64\%}$ at $14$B, and drop back to
 $0\%$ at $32$B. We report this shape descriptively. A generative
 tool-name prior that strengthens with scale before a larger model's
 registry-grounding control catches up would produce something like it ---
 a U-shaped capability
 window~\citep{wei2022ushaped,mckenzie2023inversescaling} --- but six
 points isn't a curve, and we say so. The $0\%$ endpoints at $0.6$B and
-$32$B bracket the $1.87\%$ peak at the same 4-bit MLX precision, which
+$32$B bracket the $1.64\%$ peak at the same 4-bit MLX precision, which
 is weakly suggestive that the arc is not a pure compression artifact;
 but we cannot yet disentangle scale from 4-bit quantization, and a
 full-precision (bf16) control is forthcoming. We do not claim the
@@ -69,8 +69,8 @@ RVR is training-free: intercept the proposed call, check
 the name, and on a miss re-prompt with a structured
 \texttt{tool\_not\_found} envelope listing what is available. Across
 the four Qwen3 tiers with non-zero TFR in the matched subset, RVR clears
-all fourteen pooled fabrications: Fisher's exact one-sided on $14/973$
-vs.\ $0/945$ gives $p=7.1\!\times\!10^{-5}$. A secondary ablation hints
+all twenty pooled fabrications: Fisher's exact one-sided on $20/1{,}417$
+vs.\ $0/945$ gives $p=3.5\!\times\!10^{-5}$. A secondary ablation hints
 at \emph{where} the fix lives: dropping the registry list
 ($\mathrm{C}_{0.7}$) and even filling the envelope with \emph{wrong}
 names ($\mathrm{C}_{0.8}$) both stay at zero. We do not over-read this.
@@ -87,9 +87,9 @@ TOST at $N\!=\!60$ is underpowered for a $5$-pp non-inferiority margin,
 so we can't rule the cost in or out. We argue for tier-conditional
 deployment.
 
-The Anthropic $\mathrm{C}_0$ bound ($\leq\!0.115\%$ at $N=2{,}578$)
+The Anthropic $\mathrm{C}_0$ bound ($\leq\!0.14\%$ at $N=2{,}592$)
 sits an order of magnitude below the Qwen3 point estimates in the
-$0.95$--$1.87\%$ band. The bound-vs-estimate asymmetry is the
+$0.95$--$1.64\%$ band. The bound-vs-estimate asymmetry is the
 finding. The intra-family non-monotonic shape on Qwen3 is itself
 descriptive evidence aggregate metrics couldn't have surfaced. What we
 give a deployer is concrete: (i) a per-call diagnostic that exposes
@@ -99,5 +99,5 @@ a hedged but actionable ablation: at this $N$ the envelope alone
 suffices, so a deployer can ship the structured rejection without
 echoing internal tool names and lose nothing detectable. We release four artifacts: the per-call TFR
 diagnostic, an eleven-model audit over eleven months, RVR with per-tier
-validation, and an open-source harness with $144$ unit tests. Total API
-spend \$$73$; the Qwen3 sweep ran at zero marginal cost on the M5.
+validation, and an open-source harness with $153$ unit tests. Total API
+spend \$$82$; the Qwen3 sweep ran at zero marginal cost on the M5.

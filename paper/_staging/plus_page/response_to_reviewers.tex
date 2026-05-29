@@ -1,0 +1,133 @@
+% =====================================================================
+% STAGED ARTIFACT 3/3 -- plus-page camera-ready (+1 page, limit 8, body 7)
+% response_to_reviewers.tex
+% Purpose: the compact "Response to reviewer comments" block that is the
+%          STATED reason the workshop grants the +1 page. Maps each of the
+%          three accept-decision workshop reviewers' main criticisms to the
+%          exact camera-ready change that addresses it, citing our own
+%          sections. Honest and concrete; flags what is in-progress vs. done.
+%
+% SOURCE of the six criticisms (per task brief; the accept-decision reviewers
+% raised): RVR triviality; small samples; quantization confound (all-4bit);
+% no downstream task-success / latency; BFCL-only (single benchmark);
+% contamination. Grouped below under three reviewers (R1/R2/R3). If the real
+% reviews assign these differently across reviewers, re-bucket the rows -- the
+% mapping criticism->fix is what matters and is reviewer-agnostic.
+%
+% HONESTY FLAGS (do not soften beyond what the data supports):
+%   - bf16/8-bit quant control is IN PROGRESS, not landed. The appendix
+%     NUMBERS_TODO (A1_appendix.tex ~L153) lists Qwen3-8B-8bit / -bf16 /
+%     14B-8bit as still running. Phrase as "in progress," not "we show."
+%   - Downstream: we report strict-pass deltas (Sonnet -11.7pp, Haiku -6.7pp;
+%     05_results.tex L200-207), abstention-by-rerouting (trace, L243-251), and
+%     RVR round-trip / token budget (L249-251). We do NOT log wall-clock
+%     latency separately -- say "provider round-trips and token overhead,"
+%     NOT "latency in ms."
+%   - Second benchmark (tau-bench): plumbing verified (0/24 pooled, smoke
+%     only -- see _staging/INTEGRATION_NOTES.md L202-204); NO paper-ready
+%     pass-rate. Cite as "wired and smoke-checked, results pending," do NOT
+%     claim a second non-zero site.
+%   - Contamination: still acknowledged as unresolved (07_limitations.tex L5);
+%     we report it as a bounded caveat, not a closed gap.
+%
+% INTEGRATION:
+%   Place this block LAST in the body, after Section~\ref{sec:limitations}
+%   and before the LLM-disclosure section, as an unnumbered section so it
+%   reads as the camera-ready addendum the +1 page is granted for. In main.tex,
+%   add  \input{sections/_response_to_reviewers}  between \input{07_limitations}
+%   and \input{08_llm_disclosure}. Uses only \toprule/\midrule (booktabs) and
+%   standard ICML packages -- no new preamble. Single column.
+% =====================================================================
+
+\section*{Response to Reviewer Comments}
+\label{sec:response}
+
+We thank the reviewers. This camera-ready page records, point by point,
+how each main criticism is addressed; we flag in-progress items honestly
+rather than overclaim.
+
+\paragraph{R1: RVR is trivial / a membership check is obvious.}
+We agree the mechanism is simple, and we now frame that as the point
+rather than hiding it. RVR is the message-level analog of constrained
+decoding for the closed-API regime where logits are unavailable
+(Section~\ref{sec:method:rvr}): an $O(1)$ in-process membership check
+plus one structured re-prompt, training-free, composable with RL methods.
+Its value is empirical and bounded by measurement, not by novelty---the
+per-call TFR guardrails (system-failure exclusion, per-call rather than
+per-task denominators, cluster-bootstrap intervals;
+Section~\ref{sec:method:tfr}) are what let a $14\!\to\!0$ prevention be
+read as signal rather than trace-length noise. The four-condition ablation
+(Section~\ref{sec:results:rvr}, Figure~\ref{fig:ablation}) further shows
+the work is done by the structured-error envelope $\mathrm{C}_{0.7}$
+alone; echoing the full registry ($\mathrm{C}_1$) adds nothing detectable
+(Newcombe $95\%$ CI on $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$:
+$[-1.5,+1.4]$\,pp), so we report a deployable, name-leak-free variant, not
+a heavyweight method.
+
+\paragraph{R1: Small samples / underpowered.}
+We have stopped leaning on point estimates and now report exact bounds
+throughout. Every zero-event cell carries a Clopper--Pearson $95\%$ upper
+bound (pooled commercial frontier $0/2{,}117$ at $\leq\!0.14\%$ and
+$0/2{,}578$ at $\leq\!0.12\%$; Section~\ref{sec:results:probe},
+Table~\ref{tab:frontier}). The RVR contrast is tested with Fisher's exact
+on the pooled $14/973$ vs.\ $0/945$ table ($p\!=\!7.1\!\times\!10^{-5}$,
+surviving Holm--Bonferroni) and we state plainly that each per-tier test
+is individually underpowered (Section~\ref{sec:results:rvr}). The
+Anthropic strict-pass non-inferiority test is reported as
+\emph{undetermined} at $N\!=\!60$ ($1\!-\!\beta\!<\!0.30$), not as a pass.
+An $N\!\geq\!100$ event-multiplication run on the hot $8$B/$14$B cells is
+in progress to move the per-tier tests off the floor.
+
+\paragraph{R2: Quantization confound---everything is $4$-bit.}
+This is the sharpest objection and we treat it as open. The body no longer
+asserts the curve is ``a capability effect, not a compression artifact'';
+Section~\ref{sec:limitations} states we cannot exclude a
+quantization-damage account, and the revised scaling caption
+(Figure~\ref{fig:scaling}) reads the shape descriptively only. The
+deciding control---a bf16 (and $8$-bit) Qwen3-$14$B/$8$B arm at matched
+$N$, with the per-checkpoint quantization recipe disclosed---is
+\emph{in progress} (Appendix, \textsc{numbers\_todo}); we will report
+whether the $1.87\%$ peak survives or collapses. We also note the one
+claim that is confound-\emph{free} regardless of the control: RVR's
+$14\!\to\!0$ prevention holds weights fixed between $\mathrm{C}_0$ and
+$\mathrm{C}_1$, so it cannot be a quantization artifact
+(Section~\ref{sec:limitations}).
+
+\paragraph{R2: No downstream task-success or latency.}
+We now report the operational deltas RVR induces, not only fabrication
+counts. Strict task-pass under $\mathrm{C}_1$ on the Anthropic frontier
+drops Sonnet $60/60\!\to\!53/60$ ($-11.7$\,pp) and Haiku
+$60/60\!\to\!56/60$ ($-6.7$\,pp) (Section~\ref{sec:results:rvr}); we are
+explicit that at $N\!=\!60$ this drop is not distinguishable from noise.
+For the abstention/behavioral channel, the trace analysis
+(Section~\ref{sec:results:trace-inspection}) shows agents \emph{reroute}
+through in-registry tools rather than fabricate (e.g.\ a five-call
+in-registry chain in place of a fabricated \texttt{mv\_recursive()}). For
+cost, RVR adds zero provider round-trips on hits and exactly one on
+misses, with a rendered registry of $\sim\!100$--$200$ tokens
+($<\!5\%$ of context) at $\leq\!25$ tools
+(Section~\ref{sec:results:trace-inspection}). We do not log wall-clock
+latency in milliseconds and do not claim a latency number; the cost is
+reported as round-trips and token overhead.
+
+\paragraph{R3: Single benchmark (BFCL-only).}
+We acknowledge the breadth limit and have built toward a second site
+rather than asserting generality. A second harness ($\tau$-bench) is wired
+end-to-end and smoke-checked through the same TFR pipeline; paper-ready
+pass-rate and TFR numbers on it are pending and we make no
+second-benchmark claim until they land. Until then we scope every positive
+result to BFCL v4 multi-turn explicitly (Section~\ref{sec:limitations})
+and frame the cross-vendor split as a serving-and-model bundle on one
+harness (Table~\ref{tab:frontier}), not a benchmark-independent property.
+
+\paragraph{R3: Contamination.}
+We do not claim to have ruled this out. BFCL v4 predates every model
+tested, so the Anthropic zero-event regime is, as we state, observationally
+indistinguishable from training-set contamination; we ran no paraphrase or
+membership-inference control (Section~\ref{sec:limitations}). We therefore
+present the commercial null as an \emph{upper bound under possible
+contamination}, and we note that the open-weight non-zero band and the
+RVR prevention result do not depend on the contamination question---a
+contaminated model that still fabricates ($6.10\%$ on Qwen2.5-7B;
+Section~\ref{sec:results:scaling}) shows the probe is not merely re-reading
+memorized registries.

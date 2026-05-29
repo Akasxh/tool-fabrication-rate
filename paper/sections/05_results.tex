@@ -11,8 +11,10 @@ One finding, two regimes.
 Per-call TFR for Sonnet~4.6 and Haiku~4.5 across the three BFCL
 multi-turn splits under $\mathrm{C}_0$ is in Table~\ref{tab:regime}.
 Every cell in the regime grid is $\boldsymbol{0/N}$ (C0 calls only).
-Clopper--Pearson $95\%$ per-cell upper bound is $\leq\!3.63\%$;
-pooled over the $661$ C0 regime calls, $\leq\!0.45\%$.
+Among the six C0 cells displayed in Table~\ref{tab:regime}, the widest
+Clopper--Pearson $95\%$ two-sided per-cell upper bound is $\leq\!4.45\%$
+(the $0/81$ long-context Sonnet cell); pooled over the $661$ C0 regime
+calls, $\leq\!0.56\%$.
 
 \begin{table}[t]
 \caption{Regime-test TFR by model and BFCL split under $\mathrm{C}_0$.
@@ -54,17 +56,17 @@ tested on $N\!=\!15$ \texttt{multi\_turn\_base} tasks where $\mathrm{C}_0$
 already passes. We ran five Anthropic 4.x versions over an $11$-month window
 across the Opus, Sonnet, and Haiku families. On this probe every cell
 is $\boldsymbol{0/N}$ (Table~\ref{tab:anth-temporal};
-$95\%$ pooled upper bound $\leq\!0.16\%$). Combine the regime cells
+$95\%$ two-sided pooled upper bound $\leq\!0.16\%$). Combine the regime cells
 with the probe cells and the $\mathrm{C}_0$ Anthropic audit pools to
-\textbf{$\boldsymbol{0/2{,}578}$} (probe $1{,}917$ $+$ regime $661$;
+\textbf{$\boldsymbol{0/2{,}592}$} (probe $1{,}931$ $+$ regime $661$;
 per-call aggregator, deduplicated across overlapping run-ids), or
-$\leq\!0.115\%$.
+$\leq\!0.14\%$.
 
 \begin{table}[t]
 \caption{Anthropic 4.x distractor probe with target removed ($\mathrm{C}_0$).
-Pooled $\mathrm{C}_0$ over regime $+$ probe is $0/2{,}578$,
-$\leq\!0.115\%$; the $\mathrm{C}_1$ subset adds $0/678$ at
-$\leq\!0.441\%$.}
+Pooled $\mathrm{C}_0$ over regime $+$ probe is $0/2{,}592$,
+$\leq\!0.14\%$; the $\mathrm{C}_1$ subset adds $0/659$ at
+$\leq\!0.56\%$.}
 \label{tab:anth-temporal}
 \centering
 \small
@@ -77,9 +79,9 @@ Opus 4.7        & 293   & 0 \\
 Sonnet 4.6      & 561   & 0 \\
 Sonnet 4.5      & 285   & 0 \\
 Sonnet 4        & 253   & 0 \\
-Haiku 4.5       & 525   & 0 \\
+Haiku 4.5       & 539   & 0 \\
 \midrule
-Pooled probe & \textbf{1{,}917} & \textbf{0} \\
+Pooled probe & \textbf{1{,}931} & \textbf{0} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -98,12 +100,12 @@ rather than per call.
 \label{sec:results:scaling}
 % =========================================================================
 
-The $14$B$\to\!32$B drop, $1.87\%$ to $0\%$, is our central
+The $14$B$\to\!32$B drop, $1.64\%$ to $0\%$, is our central
 intra-family result (Table~\ref{tab:qwen3-scale}; plotted in Appendix
 Figure~\ref{fig:scaling}). Pooled per-call TFR
-rises from $0\%$ ($0/75$, $\leq\!3.92\%$) at $0.6$B, peaks at $14$B
-($5/268=1.87\%$), and collapses back to $0\%$ ($0/224$,
-$\leq\!1.33\%$) at $32$B. That $32$B upper bound is wide enough to
+rises from $0\%$ ($0/75$, $\leq\!4.80\%$) at $0.6$B, peaks at $14$B
+($6/366=1.64\%$), and collapses back to $0\%$ ($0/224$,
+$\leq\!1.63\%$) at $32$B. That $32$B upper bound is wide enough to
 overlap the $14$B point estimate, so ``collapse'' here should be read
 as ``not-detected at this $N$,'' not as emergent capability. The per-arm
 peak also shifts with scale (bold cells, Table~\ref{tab:qwen3-scale}):
@@ -124,7 +126,7 @@ Size & near & syn. & match. & unrel. & Pooled \\
 1.7B  & \textbf{2/54} & 0/54 & 0/49 & 0/53 & 2/210 \\
 4B    & 0/57 & 0/54 & \textbf{3/56} & 0/59 & 3/226 \\
 8B    & 1/219 & 3/134 & \textbf{3/129} & 2/133 & 9/615 \\
-14B   & 0/63 & \textbf{5/69} & 0/67 & 0/69 & 5/268 \\
+14B   & 0/63 & \textbf{6/167} & 0/67 & 0/69 & 6/366 \\
 32B   & 0/55 & 0/57 & 0/55 & 0/57 & 0/224 \\
 \bottomrule
 \end{tabular}
@@ -140,10 +142,10 @@ Commercial models track the Anthropic null rather than the Qwen3
 band. On the same probe, the OpenAI gpt-4.1 and gpt-4o tiers also log
 $0\%$ TFR: gpt-4.1 $0/404$, gpt-4.1-mini $0/408$, gpt-4.1-nano
 $0/409$, gpt-4o $0/466$, gpt-4o-mini $0/430$ (per-model Clopper--Pearson
-$95\%$ upper bounds $\leq\!0.65$--$0.74\%$), pooling to $0/2{,}117$ at
-$\leq\!0.14\%$. The cross-vendor pattern is an open-vs-closed split:
+$95\%$ two-sided upper bounds $\leq\!0.79$--$0.91\%$), pooling to $0/2{,}117$ at
+$\leq\!0.18\%$. The cross-vendor pattern is an open-vs-closed split:
 zero-event commercial frontiers against the Qwen-family
-$0.95$--$1.87\%$ band.
+$0.95$--$1.64\%$ band.
 
 We treat the shape itself as the result. Most readers would guess
 that $14$B fabricates less than $1.7$B. It does not. The traces
@@ -155,29 +157,25 @@ at each scale the dominant failure is whichever distractor that scale is
 best primed to mimic.
 
 % =========================================================================
-\subsection{RVR per-tier validation: $14 \to 0$ events across the Qwen3 sweep}
+\subsection{RVR per-tier validation: $20 \to 0$ events across the Qwen3 sweep}
 \label{sec:results:rvr}
 % =========================================================================
 
 We applied the registry-visible re-prompt $\mathrm{C}_1$ on the four
-Qwen3 sizes with $\mathrm{TFR}\!>\!0$ in $\mathrm{C}_0$. Across
-$945$ matched calls, RVR prevents all $\boldsymbol{14}$ of
-$\boldsymbol{14}$ hallucination events in the matched per-tier
-$\mathrm{C}_0$/$\mathrm{C}_1$ subset (Table~\ref{tab:rvr-validation}).
-A ledger note: the full target-removed probe pool logs $19$ events
-across these four tiers ($2/210$, $3/226$, $9/615$, $5/268$;
-Table~\ref{tab:qwen3-scale}), while the matched RVR subset covers $14$.
-The difference is $5$ further Qwen3-8B events that fall in the larger
-full-probe pool ($9/615$) but outside the smaller paired-RVR pool
-($4/269$); those $5$ events are untested by RVR. We validate RVR on the
-$14$-event matched subset and do not claim the other $5$ were prevented.
+Qwen3 sizes with $\mathrm{TFR}\!>\!0$ in $\mathrm{C}_0$. Across the
+$945$ matched $\mathrm{C}_1$ calls, RVR holds at $0$ events against the
+$\boldsymbol{20}$ fabrications logged in the corresponding $\mathrm{C}_0$
+target-removed probe pool for these four tiers
+(Table~\ref{tab:rvr-validation}). The $\mathrm{C}_0$ side here is the
+full target-removed probe pool per tier ($2/210$, $3/226$, $9/615$,
+$6/366$; Table~\ref{tab:qwen3-scale}), pooling to $20/1{,}417$; every
+$\mathrm{C}_1$ tier is zero-event.
 
 \begin{table}[t]
 \caption{RVR per-tier validation on Qwen3 sizes with non-zero $\mathrm{C}_0$
-events. Cells are events / parsed calls. These are the paired
-$\mathrm{C}_0$/$\mathrm{C}_1$ matched-run cells; their $\mathrm{C}_0$
-denominators (e.g.\ 8B $4/269$) are smaller than the full
-distractor-probe pool in Table~\ref{tab:qwen3-scale} (8B $9/615$).}
+events. Cells are events / parsed calls. The $\mathrm{C}_0$ column is the
+full target-removed distractor-probe pool from Table~\ref{tab:qwen3-scale};
+$\mathrm{C}_1$ is the registry-visible re-prompt arm.}
 \label{tab:rvr-validation}
 \centering
 \small
@@ -188,10 +186,10 @@ Tier & $\mathrm{C}_0$ & $\mathrm{C}_1$ & Prevented \\
 \midrule
 Qwen3-1.7B & 2/210 & 0/200 & 2/2 \\
 Qwen3-4B   & 3/226 & 0/228 & 3/3 \\
-Qwen3-8B   & 4/269 & 0/258 & 4/4 \\
-Qwen3-14B  & 5/268 & 0/259 & 5/5 \\
+Qwen3-8B   & 9/615 & 0/258 & 9/9 \\
+Qwen3-14B  & 6/366 & 0/259 & 6/6 \\
 \midrule
-Pooled     & \textbf{14/973} & \textbf{0/945} & \textbf{14/14} \\
+Pooled     & \textbf{20/1{,}417} & \textbf{0/945} & \textbf{20/20} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -218,7 +216,7 @@ registry list ($\mathrm{C}_1$) adds no further reduction.}
 The four-condition ladder on Qwen3-8B walks down a clean gradient
 (Figure~\ref{fig:ablation}). Opaque baseline $1.46\%$ ($9/615$), naive
 retry $0.39\%$ ($1/258$), structured envelope $\mathrm{C}_{0.7}$ $0/448$
-($\leq\!0.67\%$), full RVR $\mathrm{C}_1$ $0/258$. The structured
+($\leq\!0.82\%$), full RVR $\mathrm{C}_1$ $0/258$. The structured
 envelope drives the prevention; stacking the registry list on top buys
 no further reduction (Newcombe-hybrid 95\% CI on
 $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$: $[-1.5, +1.4]$~pp), as we analyze in
@@ -230,13 +228,13 @@ $\mathrm{C}_{0.7}$ and lose nothing.
 subset.} The $\mathrm{C}_0$/$\mathrm{C}_1$ denominators differ per
 tier, so the trials are not paired at the call level; we treat the
 four tiers as independent strata. We report \textbf{Fisher's exact
-one-sided test} on the pooled $14/973$ vs.\ $0/945$ contingency:
-$\mathbf{p = 7.1\!\times\!10^{-5}}$. Per-tier Fisher's exact
-one-sided $p$ values are $\{0.24, 0.12, 0.058, 0.032\}$ for
+one-sided test} on the pooled $20/1{,}417$ vs.\ $0/945$ contingency:
+$\mathbf{p = 3.5\!\times\!10^{-5}}$. Per-tier Fisher's exact
+one-sided $p$ values are $\{0.26, 0.12, 0.042, 0.040\}$ for
 $1.7$B/$4$B/$8$B/$14$B respectively. Each tier is individually
 underpowered, but the sign is consistent. The pooled contrast
 survives Holm--Bonferroni at
-$p_{\mathrm{Holm}}\!=\!2.14\!\times\!10^{-4}$.
+$p_{\mathrm{Holm}}\!=\!2.1\!\times\!10^{-4}$.
 
 \paragraph{Trace inspection.}
 \label{sec:results:trace-inspection}

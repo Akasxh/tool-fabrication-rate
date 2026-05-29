@@ -1,0 +1,234 @@
+\begin{thebibliography}{31}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Anthropic}(2024)]{anthropictools2024}
+{Anthropic}.
+\newblock Tool use with {Claude}.
+\newblock Anthropic API Documentation, 2024.
+\newblock URL
+  \url{https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview}.
+
+\bibitem[{Anthropic}(2025)]{anthropicagentskills2025}
+{Anthropic}.
+\newblock Equipping agents for the real world with {Agent} {Skills}.
+\newblock Anthropic engineering blog, October 2025.
+\newblock URL
+  \url{https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills}.
+
+\bibitem[Chen et~al.(2023)Chen, Lin, Sch{\"a}rli, and Zhou]{selfdebug2023}
+Chen, X., Lin, M., Sch{\"a}rli, N., and Zhou, D.
+\newblock Teaching large language models to self-debug, 2023.
+\newblock URL \url{https://arxiv.org/abs/2304.05128}.
+
+\bibitem[Czapla(2026)]{czapla2026}
+Czapla, P.
+\newblock The unauthorized tool call problem.
+\newblock Answer.AI blog, February 2026.
+\newblock URL \url{https://www.answer.ai/posts/2026-01-20-toolcalling.html}.
+\newblock Accessed 2026-04-29.
+
+\bibitem[Engl{\"a}nder et~al.(2026)Engl{\"a}nder, Althammer, {\"U}st{\"u}n,
+  Gall{\'e}, and Sherborne]{englander2026}
+Engl{\"a}nder, L., Althammer, S., {\"U}st{\"u}n, A., Gall{\'e}, M., and
+  Sherborne, T.
+\newblock Agents explore but agents ignore: {LLM}s lack environmental
+  curiosity, 2026.
+\newblock URL \url{https://arxiv.org/abs/2604.17609}.
+
+\bibitem[Gou et~al.(2024)Gou, Shao, Gong, Shen, Yang, Duan, and
+  Chen]{gou2024critic}
+Gou, Z., Shao, Z., Gong, Y., Shen, Y., Yang, Y., Duan, N., and Chen, W.
+\newblock {CRITIC}: Large language models can self-correct with
+  tool-interactive critiquing.
+\newblock In \emph{ICLR}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2305.11738}.
+
+\bibitem[Guo et~al.(2024)Guo, Cheng, Wang, Liang, Qin, Li, Liu, Sun, and
+  Liu]{stableTOOLbench2024}
+Guo, Z., Cheng, S., Wang, H., Liang, S., Qin, Y., Li, P., Liu, Z., Sun, M., and
+  Liu, Y.
+\newblock {StableToolBench}: Towards stable large-scale benchmarking on tool
+  learning of large language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2403.07714}.
+
+\bibitem[Healy et~al.(2026)Healy, Srinivasan, Madathil, and
+  Wu]{healy2026internal}
+Healy, K., Srinivasan, B., Madathil, V., and Wu, J.
+\newblock Internal representations as indicators of hallucinations in agent
+  tool selection, 2026.
+\newblock URL \url{https://arxiv.org/abs/2601.05214}.
+
+\bibitem[Huang et~al.(2024)Huang, Shi, Li, Fan, Wu, Zhang, Liu, Zhou, Wan,
+  Gong, and Sun]{huang2024metatool}
+Huang, Y., Shi, J., Li, Y., Fan, C., Wu, S., Zhang, Q., Liu, Y., Zhou, P., Wan,
+  Y., Gong, N.~Z., and Sun, L.
+\newblock {MetaTool} benchmark for large language models: Deciding whether to
+  use tools and which to use.
+\newblock In \emph{ICLR}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2310.03128}.
+
+\bibitem[Kumar \& Cohen(2026)Kumar and Cohen]{licl2026}
+Kumar, A. and Cohen, W.~W.
+\newblock Localizing and correcting errors for {LLM}-based planners, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.00276}.
+
+\bibitem[Li et~al.(2023)Li, Zhao, Yu, Song, Li, Yu, Li, Huang, and
+  Li]{li2023apibank}
+Li, M., Zhao, Y., Yu, B., Song, F., Li, H., Yu, H., Li, Z., Huang, F., and Li,
+  Y.
+\newblock {API-Bank}: A comprehensive benchmark for tool-augmented {LLM}s.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, pp.\  3102--3116, 2023.
+\newblock URL \url{https://aclanthology.org/2023.emnlp-main.187/}.
+
+\bibitem[{limerickgds}(2025)]{langchain_toolnotfound2025}
+{limerickgds}.
+\newblock Allow graceful handling of `tool not found' errors in {LangGraph}
+  {ToolNode} to enable agent self-correction.
+\newblock LangChain Forum thread \#2427, December 2025.
+\newblock URL
+  \url{https://forum.langchain.com/t/allow-graceful-handling-of-tool-not-found-errors-in-langgraph-toolnode-to-enable-agent-self-correction/2427}.
+\newblock Production-engineer-proposed structured-error pattern (our
+  $\mathrm{C}_{0.7}$); explicitly stops short of listing available tools.
+
+\bibitem[McKenzie et~al.(2023)McKenzie, Lyzhov, Pieler, Parrish, Mueller,
+  Prabhu, McLean, Kirtland, Ross, Liu, et~al.]{mckenzie2023inversescaling}
+McKenzie, I.~R., Lyzhov, A., Pieler, M., Parrish, A., Mueller, A., Prabhu, A.,
+  McLean, E., Kirtland, A., Ross, A., Liu, A., et~al.
+\newblock Inverse scaling: When bigger isn't better.
+\newblock \emph{Transactions on Machine Learning Research}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.09479}.
+
+\bibitem[Min et~al.(2022)Min, Lyu, Holtzman, Artetxe, Lewis, Hajishirzi, and
+  Zettlemoyer]{min2022rethinking}
+Min, S., Lyu, X., Holtzman, A., Artetxe, M., Lewis, M., Hajishirzi, H., and
+  Zettlemoyer, L.
+\newblock Rethinking the role of demonstrations: What makes in-context learning
+  work?
+\newblock In \emph{Proceedings of the 2022 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2202.12837}.
+
+\bibitem[{OpenAI}(2024{\natexlab{a}})]{jsonmode2024}
+{OpenAI}.
+\newblock Structured outputs.
+\newblock OpenAI Platform documentation, 2024{\natexlab{a}}.
+\newblock URL \url{https://platform.openai.com/docs/guides/structured-outputs}.
+
+\bibitem[{OpenAI}(2024{\natexlab{b}})]{openaitools2024}
+{OpenAI}.
+\newblock Function calling.
+\newblock OpenAI Platform documentation, 2024{\natexlab{b}}.
+\newblock URL \url{https://platform.openai.com/docs/guides/function-calling}.
+
+\bibitem[Patil et~al.(2024)Patil, Mao, Yan, Ji, Stoica, and Gonzalez]{bfcl2024}
+Patil, S.~G., Mao, H., Yan, F., Ji, C. C.-J., Stoica, I., and Gonzalez, J.~E.
+\newblock Berkeley function calling leaderboard, 2024.
+\newblock URL
+  \url{https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html}.
+
+\bibitem[Patil et~al.(2025)Patil, Mao, Ji, Yan, Suresh, Stoica, and
+  Gonzalez]{bfclv4_2025}
+Patil, S.~G., Mao, H., Ji, C. C.-J., Yan, F., Suresh, V., Stoica, I., and
+  Gonzalez, J.~E.
+\newblock Berkeley function calling leaderboard ({BFCL}) {V4}, 2025.
+\newblock URL \url{https://gorilla.cs.berkeley.edu/leaderboard.html}.
+\newblock Accessed 2026-04-29.
+
+\bibitem[Qi(2026)]{qi2026brief}
+Qi, X.
+\newblock Brief is better: Non-monotonic chain-of-thought budget effects in
+  function-calling language agents, 2026.
+\newblock URL \url{https://arxiv.org/abs/2604.02155}.
+
+\bibitem[Shinn et~al.(2023)Shinn, Cassano, Berman, Gopinath, Narasimhan, and
+  Yao]{reflexion2023}
+Shinn, N., Cassano, F., Berman, E., Gopinath, A., Narasimhan, K., and Yao, S.
+\newblock {Reflexion}: Language agents with verbal reinforcement learning,
+  2023.
+\newblock URL \url{https://arxiv.org/abs/2303.11366}.
+
+\bibitem[Spracklen et~al.(2025)Spracklen, Wijewickrama, Sakib, Maiti,
+  Viswanath, and Jadliwala]{spracklen2025packages}
+Spracklen, J., Wijewickrama, R., Sakib, A. H. M.~N., Maiti, A., Viswanath, B.,
+  and Jadliwala, M.
+\newblock We have a package for you! a comprehensive analysis of package
+  hallucinations by code generating {LLM}s.
+\newblock In \emph{Proceedings of the 34th USENIX Security Symposium (USENIX
+  Security)}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2406.10279}.
+
+\bibitem[Trivedi et~al.(2024)Trivedi, Khot, Hartmann, Manku, Dong, Li, Gupta,
+  Sabharwal, and Balasubramanian]{appworld2024}
+Trivedi, H., Khot, T., Hartmann, M., Manku, R., Dong, V., Li, E., Gupta, S.,
+  Sabharwal, A., and Balasubramanian, N.
+\newblock {AppWorld}: A controllable world of apps and people for benchmarking
+  interactive coding agents.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2407.18901}.
+
+\bibitem[Wei et~al.(2022)Wei, Kim, Tay, and Le]{wei2022ushaped}
+Wei, J., Kim, N., Tay, Y., and Le, Q.~V.
+\newblock Inverse scaling can become {U}-shaped, 2022.
+\newblock URL \url{https://arxiv.org/abs/2211.02011}.
+
+\bibitem[Willard \& Louf(2023)Willard and Louf]{outlines2023}
+Willard, B.~T. and Louf, R.
+\newblock Efficient guided generation for large language models.
+\newblock \emph{arXiv preprint arXiv:2307.09702}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2307.09702}.
+
+\bibitem[Xu et~al.(2024)Xu, Zhu, Pan, Wang, Zhu, Ma, Cao, Chen, and
+  Yu]{cao2025reliability}
+Xu, H., Zhu, Z., Pan, L., Wang, Z., Zhu, S., Ma, D., Cao, R., Chen, L., and Yu,
+  K.
+\newblock Reducing tool hallucination via reliability alignment, 2024.
+\newblock URL \url{https://arxiv.org/abs/2412.04141}.
+
+\bibitem[Yao et~al.(2023)Yao, Zhao, Yu, Du, Shafran, Narasimhan, and
+  Cao]{reactagent2023}
+Yao, S., Zhao, J., Yu, D., Du, N., Shafran, I., Narasimhan, K., and Cao, Y.
+\newblock {ReAct}: Synergizing reasoning and acting in language models, 2023.
+\newblock URL \url{https://arxiv.org/abs/2210.03629}.
+
+\bibitem[Yao et~al.(2024)Yao, Shinn, Razavi, and Narasimhan]{taubench2024}
+Yao, S., Shinn, N., Razavi, P., and Narasimhan, K.
+\newblock {$\tau$-bench}: A benchmark for tool-agent-user interaction in
+  real-world domains, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.12045}.
+
+\bibitem[Yin et~al.(2025)Yin, Sha, Cui, Meng, and Li]{yin2026reasoningtrap}
+Yin, C., Sha, Z., Cui, S., Meng, C., and Li, Z.
+\newblock The reasoning trap: How enhancing {LLM} reasoning amplifies tool
+  hallucination, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.22977}.
+
+\bibitem[Zhang et~al.(2024)Zhang, Chen, Wang, Liu, Yang, Shi, Zhu, Lin, Wan,
+  Yang, Sakai, Feng, and Yamana]{toolbehonest2024}
+Zhang, Y., Chen, J., Wang, J., Liu, Y., Yang, C., Shi, C., Zhu, X., Lin, Z.,
+  Wan, H., Yang, Y., Sakai, T., Feng, T., and Yamana, H.
+\newblock {ToolBeHonest}: A multi-level hallucination diagnostic benchmark for
+  tool-augmented large language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.20015}.
+
+\bibitem[Zhang et~al.(2026)Zhang, Zhao, Wang, Wang, Liang, Wang, Hu, Cao, and
+  Wong]{fissiongrpo2026}
+Zhang, Z., Zhao, F., Wang, R., Wang, Z., Liang, B., Wang, J., Hu, Y., Cao, S.,
+  and Wong, K.-F.
+\newblock Robust tool use via fission-{GRPO}: Learning to recover from
+  execution errors, 2026.
+\newblock URL \url{https://arxiv.org/abs/2601.15625}.
+
+\bibitem[Zhu et~al.(2026)Zhu, Wu, Zhang, Li, Mu, Zhai, Shen, Fang, and
+  Liu]{bugstudy2026}
+Zhu, X., Wu, J., Zhang, X., Li, T., Mu, Y., Zhai, J., Shen, C., Fang, C., and
+  Liu, Y.
+\newblock An empirical study of bugs in modern {LLM} agent frameworks, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.21806}.
+
+\end{thebibliography}

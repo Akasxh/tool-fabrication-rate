@@ -1,0 +1,107 @@
+% =====================================================================
+% STAGED ARTIFACT 2/3 -- plus-page camera-ready (+1 page, limit 8, body 7)
+% frontier_results.tex
+% Purpose: a results paragraph + compact table for the
+%          commercial-vs-open-weight finding (breadth of the zero-event
+%          commercial frontier vs the non-zero open-weight band), framed
+%          honestly with the elicitation caveat.
+%
+% PROVENANCE OF EVERY NUMBER BELOW (all from a fresh aggregator pass):
+%   cd /Users/cero/Desktop/PROJECTS/icml && PYTHONPATH=. \
+%       harness/.venv/bin/python scripts/aggregate_all.py
+%   -> PHASE0/RESULTS/headline_numbers.{json,md}
+%   Per-model probe (events/parsed calls), verbatim from headline_numbers.md:
+%     gpt-4.1       0/404      gpt-4.1-mini  0/408     gpt-4.1-nano 0/409
+%     gpt-4o        0/466      gpt-4o-mini   0/430
+%     -> OpenAI 5-model probe pool = 0/2117   (404+408+409+466+430 = 2117)
+%   Anthropic C0 pooled (probe 1917 + regime 661) = 0/2578  (matches body L59).
+%   Qwen3 non-zero open-weight band (C0, target removed), from headline_numbers.md
+%   and PHASE0/RESULTS/stats_report.md:
+%     Qwen3-1.7B 2/210=0.95%  Qwen3-4B 3/226=1.33%  Qwen3-8B 4/269=1.49%
+%     Qwen3-14B  5/268=1.87%  Qwen3-32B 0/224=0%    Qwen3-0.6B 0/75=0%
+%   Clopper-Pearson 95% UPPER bounds (computed with scipy.stats.beta.ppf,
+%   x=0, alpha=0.05; reproduce with the snippet at the bottom of this file):
+%     0/2117 -> 0.1414%   (round to <=0.14%)   0/2578 -> 0.1161% (<=0.12%)
+%
+% NOTE / DISCREPANCY FLAG (carry-over from _staging/rereview/SYNTHESIS.md B1):
+%   stats_report.md lists Anthropic-4.x_C0 as 0/2599 (UB 0.115%), which uses a
+%   slightly different per-model count (e.g. Sonnet 4.6 = 561 vs the 2578-path's
+%   per-call dedup). The body (05_results.tex L57-61) and this table use the
+%   2578 path -- probe 1917 + regime 661, deduplicated across overlapping
+%   run-ids -- which is the value reproducible from the regenerated aggregator
+%   under the C0 probe+regime pooling. Keep 2578 here to stay consistent with
+%   the body; do NOT mix 2578 and 2599 in the same paper.
+%
+% INTEGRATION:
+%   This material OVERLAPS the existing "Commercial models track the Anthropic
+%   null..." paragraph in 05_results.tex (L139-146). For the +1 page DO NOT
+%   duplicate it. Two clean options:
+%     (A) Replace 05_results.tex L139-146 with the paragraph below + Table
+%         tab:frontier (recommended: the table is new, the prose is tightened
+%         and adds the elicitation caveat explicitly).
+%     (B) Keep L139-146 as the in-§5 mention and place this block in a short
+%         new paragraph at the end of sec:results:scaling, citing the table.
+%   Either way: \input{sections/_inbody_frontier} (or paste below). The table
+%   is single-column (fits one ICML column). If §5 is tight, the table can ride
+%   on the plus page near response_to_reviewers.tex.
+% =====================================================================
+
+\paragraph{The zero-event frontier is broad; the non-zero band is open-weight.}
+Across two commercial vendors and eleven model versions, the
+target-removed distractor probe elicits \emph{zero} fabrication events.
+The five OpenAI tiers (gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-4o,
+gpt-4o-mini) pool to $0/2{,}117$ parsed calls (Clopper--Pearson $95\%$
+upper bound $\leq\!0.14\%$), and the five Anthropic~4.x versions pool to
+$0/2{,}578$ under $\mathrm{C}_0$ ($\leq\!0.12\%$;
+Section~\ref{sec:results:probe}). Every open-weight model with a non-zero
+rate is in the Qwen3 family: $0.95\%$ at $1.7$B, $1.33\%$ at $4$B,
+$1.49\%$ at $8$B, $1.87\%$ at $14$B (Table~\ref{tab:frontier}), with the
+$0.6$B and $32$B endpoints at $0\%$. The split is clean enough to
+\emph{state} but not clean enough to \emph{attribute}: the commercial
+models are reached through each vendor's structured function-calling API,
+whereas the open-weight models are self-hosted $4$-bit MLX builds whose
+calls we recover by text-parsing the generated stream. A structured API
+that refuses or drops a malformed call removes fabrication surface that a
+text-parse path still sees, so we cannot separate the model from its
+serving path. We report the contrast as a serving-and-model bundle, not a
+pure model property, and we draw no scaling law or cross-vendor capability
+ranking from it (Section~\ref{sec:limitations}).
+
+\begin{table}[t]
+\caption{Tool-fabrication rate on the target-removed distractor probe,
+commercial frontier vs.\ open-weight Qwen3. Cells are events / parsed
+calls; UB is the Clopper--Pearson $95\%$ upper bound. Commercial models
+are accessed via structured function-calling APIs; Qwen3 are self-hosted
+$4$-bit MLX builds with text-parsed calls---the two reach paths cannot be
+fully separated (see text). Anthropic pools regime $+$ probe under
+$\mathrm{C}_0$; OpenAI is the five-tier probe pool.}
+\label{tab:frontier}
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{llrr}
+\toprule
+Provider / model & Reach path & Events / $N$ & UB \\
+\midrule
+Anthropic 4.x (5 ver.)   & API   & $0/2{,}578$ & $\leq0.12\%$ \\
+OpenAI gpt-4.1/4o (5)     & API   & $0/2{,}117$ & $\leq0.14\%$ \\
+\midrule
+Qwen3-0.6B               & local & $0/75$   & $\leq3.92\%$ \\
+Qwen3-1.7B               & local & $2/210$  & $\leq2.97\%$ \\
+Qwen3-4B                 & local & $3/226$  & $\leq3.40\%$ \\
+Qwen3-8B                 & local & $4/269$  & $\leq3.37\%$ \\
+Qwen3-14B                & local & $5/268$  & $\leq3.88\%$ \\
+Qwen3-32B                & local & $0/224$  & $\leq1.33\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---------------------------------------------------------------------
+% Reproduce the Clopper-Pearson upper bounds used above:
+%   PYTHONPATH=. harness/.venv/bin/python -c "
+%   from scipy.stats import beta
+%   for n in [2117,2578,75,210,226,269,268,224]:
+%       print(n, round(100*beta.ppf(0.95, 1, n), 4))"
+% (Qwen3 8B 4/269 UB and 14B 5/268 UB use x=events; values 3.37% and 3.88%
+%  are taken verbatim from PHASE0/RESULTS/stats_report.md.)
+% ---------------------------------------------------------------------
