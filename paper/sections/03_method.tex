@@ -39,12 +39,36 @@ def rvr(agent_msg, registry):
 
 Echoing $\mathcal{R}$ back into the conversation places valid names in the model's recent context, which is what the next decoding step attends to. The intervention uses one re-prompt, a production-realistic budget; it is training-free and assumes no gradient access; it composes with RL-based methods such as Fission-GRPO~\citep{fissiongrpo2026}; and it is the message-level analog of constrained decoding for closed-API regimes without logit access.
 
-\subsection{Conditions and pre-registered mechanism hypotheses}
+\subsection{Conditions and the content-vs-format question}
 \label{sec:method:conditions}
 
-Four conditions are run on a hallucinated call. \textbf{$\mathrm{C}_0$} is the opaque baseline, returning the framework's default error string. \textbf{$\mathrm{C}_{0.5}$} is a naive retry with the literal text ``previous call failed, try again''. \textbf{$\mathrm{C}_{0.7}$} is a structured error, JSON \texttt{\{"error":"tool\_not\_found"\}}, without the registry attached. \textbf{$\mathrm{C}_1$} is RVR proper (Section~\ref{sec:method:rvr}). The active comparator $\mathrm{C}_1\!:\!\mathrm{C}_{0.7}$ isolates the registry list; the secondary $\mathrm{C}_1\!:\!\mathrm{C}_{0.5}$ ablates content. At scale we report $\mathrm{C}_1\!:\!\mathrm{C}_0$, the more conservative comparator. The $\mathrm{C}_{0.5}/\mathrm{C}_{0.7}$ runs were deferred in favor of breadth (Appendix~A).
+Five conditions are run on a hallucinated call. \textbf{$\mathrm{C}_0$} is the
+opaque baseline, returning the framework's default error string.
+\textbf{$\mathrm{C}_{0.5}$} is a naive retry with the literal text ``previous
+call failed, try again''. \textbf{$\mathrm{C}_{0.7}$} is a structured error,
+JSON \texttt{\{"error":"tool\_not\_found"\}}, with no registry attached.
+\textbf{$\mathrm{C}_1$} is RVR proper (Section~\ref{sec:method:rvr}): the
+structured envelope \emph{plus} the sorted real registry. \textbf{$\mathrm{C}_{0.8}$}
+holds the $\mathrm{C}_1$ envelope prose verbatim but swaps the listed tools for a
+count-matched \emph{decoy} set guaranteed absent from the registry. The ladder
+is built so that adjacent steps isolate one factor each: $\mathrm{C}_{0.7}\!:\!\mathrm{C}_{0.5}$
+isolates structure, $\mathrm{C}_1\!:\!\mathrm{C}_{0.7}$ isolates the presence of a list,
+and $\mathrm{C}_1\!:\!\mathrm{C}_{0.8}$ isolates whether the listed names must be
+\emph{correct}. At scale we report the conservative $\mathrm{C}_1\!:\!\mathrm{C}_0$.
 
-Three candidate mechanisms are pre-registered for any RVR effect. \textbf{M-Retrieve} attributes the gain to induction-head copying and predicts a near\_name peak. \textbf{M-Constrain} attributes it to message-level rejection sampling and predicts no distractor-type modulation. \textbf{M-Metacog} attributes it to a registry-as-cue effect and predicts a semantic/synonym peak. The falsifier is asymmetric: support for M-Constrain requires both Friedman non-significance \emph{and} post-hoc power $\geq 0.80$ for a $5$~pp pairwise difference. A null result alone is insufficient.
+We do not try to localize the effect to a specific cognitive story. The earlier
+draft pre-registered three mechanisms (induction-head copying, metacognitive
+registry-as-cue, message-level rejection) with an asymmetric power-gated
+falsifier. The data do not have the resolution to separate copying from cueing,
+and we drop that apparatus rather than over-read it. What the design \emph{can}
+decide is a single binary: does recovery require the registry \emph{content}, or
+only the rejection \emph{format}? If a wrong list ($\mathrm{C}_{0.8}$) recovers as
+well as the right list ($\mathrm{C}_1$), the content is decorative and the active
+ingredient is the structured rejection signal. If $\mathrm{C}_{0.8}$ fails where
+$\mathrm{C}_1$ succeeds, the model is reading the offered names. The distractor
+probe (Section~\ref{sec:method:probe}) is retained as a descriptive characterization
+of \emph{where} on the scale curve fabrications concentrate, not as a mechanism
+discriminator.
 
 \subsection{Distractor-Type Probe}
 \label{sec:method:probe}
@@ -59,4 +83,4 @@ the similarity profile of the distractor.}
 \label{fig:probe}
 \end{figure}
 
-One distractor is injected into $\mathcal{R}$ on tasks where $\mathrm{C}_0$ already passes, with its type varied to separate the three mechanism hypotheses. \textbf{near\_name} draws a string at Levenshtein distance 1 or 2 from a real target. \textbf{synonym} is high embedding-cosine but Levenshtein-far: semantic but not orthographic overlap. \textbf{matched\_random} is lexically random, matched to the real target on description length and arity, controlling for the ``registry-size $+1$'' confound. \textbf{unrelated} is lexically and semantically disjoint, the floor case. To capture the Czapla-style runtime collision, the real target is also removed and the distractor placed in its slot: the agent expects a tool that exists, but the registry offers only a similarly-named substitute. Distractor-type differences are tested with the Friedman omnibus and Nemenyi-corrected pairwise contrasts.
+One distractor is injected into $\mathcal{R}$ on tasks where $\mathrm{C}_0$ already passes, with its type varied to characterize which kind of look-alike concentrates fabrications. \textbf{near\_name} draws a string at Levenshtein distance 1 or 2 from a real target. \textbf{synonym} is high embedding-cosine but Levenshtein-far: semantic but not orthographic overlap. \textbf{matched\_random} is lexically random, matched to the real target on description length and arity, controlling for the ``registry-size $+1$'' confound. \textbf{unrelated} is lexically and semantically disjoint, the floor case. To capture the Czapla-style runtime collision, the real target is also removed and the distractor placed in its slot: the agent expects a tool that exists, but the registry offers only a similarly-named substitute.

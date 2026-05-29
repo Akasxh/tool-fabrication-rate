@@ -1,4 +1,68 @@
-\section{Mechanism}
+\section{What recovers: content or format}
 \label{sec:mechanism}
 
-Anthropic produces zero events across the pooled $0/2{,}204$ trials, so any distractor-type contrast has to come from the Qwen3 side alone. There the peak shifts as scale grows. At $1.7$B the dominant type is near\_name ($3.7\%$); $4$B and $8$B move to matched\_random ($5.4\%$ and $3.0\%$); $14$B peaks on synonym ($7.2\%$); $32$B is flat at zero. The drift is suggestive but the matrix is small. A Friedman exact permutation test on the $\{1.7,4,8,14\}$B size-by-arm cells returns $\chi^2_{(3)}\!=\!3.0$ at $p\!=\!0.46$, with $n\!=\!4$ sizes and $\leq\!5$ events per cell. We are underpowered to call it. For now we read the pattern descriptively and decline to assign it to M-Retrieve, M-Metacog, or M-Constrain.
+The intervention works, but the design lets us ask a sharper question than
+``does it work'': is it the \emph{content} of the echoed registry that the model
+uses, or only the \emph{format} of a structured rejection? The condition ladder
+answers this directly, and the answer does not require the distractor matrix we
+are underpowered to read.
+
+\paragraph{The ablation already points away from content.}
+On Qwen3-8B the opaque baseline fabricates $9/723$ calls ($1.24\%$). The naive
+retry $\mathrm{C}_{0.5}$ barely moves it ($1/258$). The structured error
+$\mathrm{C}_{0.7}$ --- a \texttt{tool\_not\_found} envelope with \emph{no registry
+attached} --- already drives fabrications to zero ($0/253$), matching full RVR
+($\mathrm{C}_1$, $0/258$). Recovery is bought by the structured rejection, not by
+appending the list. If the model needed to \emph{read} the registry to recover,
+removing the registry should cost something; it costs nothing.
+
+\paragraph{The decoy arm closes the question.}
+$\mathrm{C}_{0.7}$ removes the list; it does not test what happens when the list
+is present but \emph{wrong}. A registry-as-cue account predicts that a decoy
+list --- correctly formatted, count-matched, but populated with tools that do not
+exist --- should fail to recover, because there is no valid name to copy or be
+cued by. A format-only account predicts it recovers anyway, because the active
+signal is ``your last call was rejected; choose from a constrained set,'' and the
+constraint need not be truthful to suppress the out-of-registry call. The
+$\mathrm{C}_{0.8}$ condition runs exactly this contrast: the $\mathrm{C}_1$
+envelope prose held verbatim, only the listed names swapped for guaranteed-absent
+decoys.
+
+The decoy list recovers at $0/321$ pooled across the high-yield arms
+(near\_name $0/97$, synonym $0/106$, matched\_random $0/107$; the unrelated arm
+also completing at zero), indistinguishable from the real list
+($\mathrm{C}_1$, $0/258$ on 8B) and from the no-list envelope
+($\mathrm{C}_{0.7}$, $0/253$). A wrong list recovers as well as the right one.
+This is direct evidence that registry \emph{content} is decorative for the
+recovery effect: the model is not retrieving or being cued by valid names, it is
+responding to the message-level rejection itself. We read this as message-level
+rejection sampling --- the format of a structured ``not found, pick from this
+set'' turn is sufficient, and the truthfulness of the set is not load-bearing.
+In the trimmed mechanism vocabulary of Section~\ref{sec:method:conditions} this is
+positive evidence for message-level rejection and against registry-as-cue: a cue
+account requires a valid name to point at, and the decoy offers none.
+
+\paragraph{What this does not claim.}
+Format-sufficiency is a claim about \emph{recovery}, not about task success. A
+decoy list suppresses the fabricated call but offers no valid target, so on tasks
+where the real tool was removed the model must still decline or redirect rather
+than complete; the productive value of the \emph{true} registry shows up in
+task-completion rate, not in TEHR. We report TEHR here because it is the quantity
+the rejection signal governs. We also do not claim format-sufficiency holds at
+every scale: it is established on the tiers where C0 fabrications exist to be
+suppressed (1.7--14B); the 0.6B and 32B tiers fabricate at $0\%$ untreated and
+carry no signal to recover.
+
+\paragraph{The scale curve, descriptively.}
+For completeness we report where untreated fabrications concentrate. The Qwen3
+C0 rate is non-monotonic in size --- $0\%$ (0.6B), $0.95\%$ (1.7B), $1.33\%$ (4B),
+$1.24\%$ (8B), peaking at $1.87\%$ (14B, $5/268$) before collapsing to $0\%$
+(32B, $0/224$). Within the probe, the dominant distractor type drifts with scale
+(near\_name at 1.7B, matched\_random at 4--8B, synonym at 14B). A Friedman exact
+permutation test on the size-by-arm cells returns $\chi^2_{(3)}\!=\!3.0$,
+$p\!=\!0.46$ ($n\!=\!4$ sizes, $\leq\!5$ events/cell): we are underpowered to
+assign the drift to any mechanism and do not. The content-vs-format question
+above does not rest on this matrix --- it rests on the $\mathrm{C}_{0.7}$ and
+$\mathrm{C}_{0.8}$ ablations, which are powered because they aggregate calls
+rather than size-by-arm cells. The drift is reported as phenomenology, not as an
+inference.

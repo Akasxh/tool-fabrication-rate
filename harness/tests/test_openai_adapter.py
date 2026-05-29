@@ -133,7 +133,16 @@ def test_default_base_url_uses_openai_api_key_env(monkeypatch: pytest.MonkeyPatc
     assert a.price_per_1k_in == 0.0004 and a.price_per_1k_out == 0.0016
 
 
-def test_unknown_model_id_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_unknown_model_id_uses_fallback_price(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Contract change: unknown model ids fall back to a conservative default
+    # price instead of raising, so the frontier-model ladder is never blocked.
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
-    with pytest.raises(ValueError):
-        OpenAIAdapter(model_id="gpt-5-not-real")
+    a = OpenAIAdapter(model_id="some-future-model-xyz")
+    assert (a.price_per_1k_in, a.price_per_1k_out) == (0.005, 0.015)
+
+
+def test_reasoning_model_flagged(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    assert OpenAIAdapter(model_id="gpt-5-mini")._is_reasoning is True
+    assert OpenAIAdapter(model_id="o3")._is_reasoning is True
+    assert OpenAIAdapter(model_id="gpt-4.1")._is_reasoning is False

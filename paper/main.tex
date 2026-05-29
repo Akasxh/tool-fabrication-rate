@@ -64,31 +64,40 @@
 
 \begin{abstract}
 Tool-name hallucination is a known failure mode. Who actually does it,
-and how often? We define a per-call Tool-Existence Hallucination Rate
-(TEHR) and run it on BFCL multi-turn against two populations: five
-Anthropic 4.x versions across an eleven-month release window, and the
-Qwen3-Instruct family at six sizes from $0.6$B to $32$B (4-bit MLX).
-The Anthropic side is quiet. Across $2{,}599$ opaque-baseline calls we
-logged zero TEHR events, Clopper--Pearson 95\% upper bound
-$\leq\!0.115\%$. Qwen3 isn't. Its rate is non-monotone in scale,
-climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and back
-to $0\%$ at $32$B; the dominant distractor type shifts too, near-name
-at $1.7$B, matched-random at $4$B/$8$B, synonym at $14$B. The bump in
-the middle is what surprised us. We propose Registry-Visible
-Reprompting (RVR), a training-free middleware that checks each
-proposed call against the runtime registry and, on a miss, returns one
-re-prompt wrapping a structured \texttt{tool\_not\_found} envelope.
-RVR removes all fourteen pooled Qwen3 fabrications (Fisher's exact
-one-sided, $p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\ $0/945$). A
-content-matched ablation that drops the registry listing
-($\mathrm{C}_{0.7}$; $0/253$ on Qwen3-8B, matching $\mathrm{C}_1$) pins
-the effect to envelope shape, not to echoing tool names back at the
-model, so deployers can ship the cheaper signal without leaking
-registry contents. On Anthropic's zero-event regime RVR also logs
-zero, but the strict-pass subset slips at $N\!=\!60$; we recommend
-tier-conditional deployment. Our read: tool-name hallucination here
-looks like a mid-scale Qwen3 phenomenon, and one structured reply
-clears it on the models where it shows up.
+how often, and what fixes it? We define a per-call Tool-Existence
+Hallucination Rate (TEHR) and run it on BFCL multi-turn against two
+populations: five Anthropic 4.x versions across an eleven-month release
+window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
+(4-bit MLX). The Anthropic side is quiet. Across $2{,}599$
+opaque-baseline calls we logged zero TEHR events, Clopper--Pearson 95\%
+upper bound $\leq\!0.115\%$. Qwen3 isn't: its rate is non-monotone in
+scale, climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and
+back to $0\%$ at $32$B. We propose Registry-Visible Reprompting (RVR), a
+training-free middleware that, on a registry miss, returns one re-prompt
+wrapping a structured \texttt{tool\_not\_found} envelope. RVR removes all
+fourteen pooled Qwen3 fabrications (Fisher's exact one-sided,
+$p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\ $0/945$). The surprise is where
+the fix lives. An ablation that keeps the envelope but drops the registry
+listing ($\mathrm{C}_{0.7}$; $0/253$ on Qwen3-8B) already hits zero, and a
+decoy that fills the envelope with \emph{wrong} tool names
+($\mathrm{C}_{0.8}$) does not re-introduce
+fabrications\footnote{The decoy arm logs zero TEHR across all high-yield
+Qwen3 conditions ($0/321$ pooled: near\_name $0/97$, synonym $0/106$,
+matched\_random $0/107$), matching $\mathrm{C}_{0.7}$ ($0/253$) and the
+real list $\mathrm{C}_1$ ($0/258$); registry content is decorative for
+recovery.}. The recovery is format, not content: a single structured
+rejection re-grounds the model regardless of what the registry says,
+echoing the format-over-content effect Min et al.\ found for in-context
+demonstrations~\citep{min2022rethinking}. Read this way, the mid-scale
+bump stops being noise and becomes a predicted signature --- a U-shaped
+capability window~\citep{wei2022ushaped,mckenzie2023inversescaling} in
+the generative tool-name prior, controlled for quantization by the
+$0$-and-$32$B endpoints that bracket it at the same 4-bit precision. On
+Anthropic's zero-event regime RVR also logs zero, but the strict-pass
+subset slips at $N\!=\!60$; we recommend tier-conditional deployment. Our
+read: reactive agent error-recovery is less about telling the model the
+right answer than about re-grounding its output format, and one
+structured reply does it on the models where the failure shows up.
 \end{abstract}
 
 \input{sections/01_introduction}

@@ -56,7 +56,65 @@ registry-membership violations. Per-call is what lets the intervention
 in Section~\ref{sec:method:rvr} be evaluated against a clean ablation:
 $C_1$ versus a content-controlled $C_{0.7}$ structured-error baseline,
 on the strict subset of hallucination-tagged tool calls. Aggregate
-metrics cannot expose that contrast.
+metrics cannot expose that contrast. Table~\ref{tab:priorart} positions
+TEHR against these prior measurements by what each one counts; the
+denominators and elicitation setups differ, so the numbers are not
+directly comparable, but the granularity gap is the point.
+
+\begin{table*}[t]
+\caption{Prior tool-hallucination measurements versus TEHR. \emph{Granularity}
+is the denominator each metric divides by; \emph{existence-clean?} asks whether
+the metric isolates registry-membership violations (a called name is absent from
+the offered set) from relevance, argument, and timing errors. \textbf{Not
+apples-to-apples}: the headline numbers come from different denominators,
+different model cohorts, and different elicitation setups (single-turn
+instructions vs.\ multi-turn agentic traces; target-removed probes vs.\ natural
+distributions). They are not directly comparable and we do not claim a ranking;
+the table positions \emph{what each metric counts}, not which model is best.
+TEHR is the only per-call rate and the only one that scores existence on
+multi-turn traces with a content-controlled ablation.}
+\label{tab:priorart}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llllc}
+\toprule
+Work & Granularity & Setting & Headline number & Existence-clean? \\
+\midrule
+API-Bank \citep{li2023apibank}
+  & per-task
+  & single-turn API calls
+  & name-mismatch up to $61.4\%$
+  & partial \\
+MetaTool \citep{huang2024metatool}
+  & per-query
+  & single-turn, target removed
+  & Correct Selection Rate
+  & yes \\
+ToolBeHonest \citep{toolbehonest2024}
+  & per-task
+  & multi-level diagnostic
+  & multi-level (no single rate)
+  & partial \\
+Reasoning-Trap \citep{yin2026reasoningtrap}
+  & per-task
+  & no-tool / distractor-only
+  & monotonic in reasoning
+  & yes \\
+Reliability align.\ \citep{cao2025reliability}
+  & composite
+  & training-time, expanded actions
+  & inside reliability score
+  & partial \\
+\midrule
+\textbf{Ours (TEHR)}
+  & \textbf{per-call}
+  & \textbf{multi-turn agentic traces}
+  & $\mathbf{0\%}$\textbf{--}$\mathbf{1.87\%}$
+  & \textbf{yes} \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \paragraph{Constrained decoding and self-correction.}
 A separate line constrains agents at decode time. Grammar-constrained

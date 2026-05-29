@@ -28,16 +28,35 @@ from harness.types import ProviderResponse, ToolCall
 
 # Per HARNESS_SPEC §8.1: $/1M divided by 1000 → $/1k tokens.
 _PRICE_PER_1K: dict[str, tuple[float, float]] = {
-    # OpenAI tier
+    # OpenAI gpt-4.1 family (chat-completions; size ladder for cross-vendor test)
     "gpt-4.1": (0.002, 0.008),
     "gpt-4.1-2025-04-14": (0.002, 0.008),
     "gpt-4.1-mini": (0.0004, 0.0016),
     "gpt-4.1-mini-2025-04-14": (0.0004, 0.0016),
-    # xAI tier (deferred to G2; same adapter class, base_url switches provider)
+    "gpt-4.1-nano": (0.0001, 0.0004),
+    # gpt-4o family
+    "gpt-4o": (0.0025, 0.01),
+    "gpt-4o-mini": (0.00015, 0.0006),
+    "gpt-4-turbo": (0.01, 0.03),
+    # gpt-5 family (reasoning; size ladder + frontier)
+    "gpt-5": (0.00125, 0.01),
+    "gpt-5-mini": (0.00025, 0.002),
+    "gpt-5-nano": (0.00005, 0.0004),
+    "gpt-5.5": (0.00125, 0.01),
+    "gpt-5.4": (0.00125, 0.01),
+    "gpt-5-chat-latest": (0.00125, 0.01),
+    # o-series reasoning
+    "o3": (0.002, 0.008),
+    "o4-mini": (0.0011, 0.0044),
+    # xAI tier (same adapter class, base_url switches provider)
     "grok-4": (0.003, 0.015),
     "grok-4-0709": (0.003, 0.015),
     "grok-4-fast": (0.0002, 0.0005),
 }
+
+# Reasoning models: reject temperature/top_p != default and require
+# max_completion_tokens instead of max_tokens.
+_REASONING_PREFIXES = ("gpt-5", "o1", "o3", "o4")
 
 _XAI_BASE_URL = "https://api.x.ai/v1"
 
@@ -71,12 +90,16 @@ class OpenAIAdapter(ModelAdapter):
         self._api_key: Optional[str] = resolved_key
         self._is_xai: bool = is_xai
 
-        if model_id not in _PRICE_PER_1K:
-            raise ValueError(
-                f"OpenAIAdapter: unknown model_id {model_id!r}; "
-                f"expected one of {sorted(_PRICE_PER_1K)}"
-            )
-        self.price_per_1k_in, self.price_per_1k_out = _PRICE_PER_1K[model_id]
+        # Known models get exact pricing; unknown (e.g. dated aliases of the
+        # frontier ladder) fall back to a conservative default so the probe is
+        # never blocked by a missing price entry. Cost tracking is advisory.
+        self.price_per_1k_in, self.price_per_1k_out = _PRICE_PER_1K.get(
+            model_id, (0.005, 0.015)
+        )
+        # Reasoning models (gpt-5*, o*) need a different param surface.
+        self._is_reasoning: bool = any(
+            model_id.startswith(p) for p in _REASONING_PREFIXES
+        )
 
         client_kwargs: dict[str, Any] = {}
         if resolved_key is not None:
@@ -97,26 +120,62 @@ class OpenAIAdapter(ModelAdapter):
         :func:`harness.registry.render_for_openai` upstream). Locked decoding
         params from :mod:`harness.adapters.base` are applied verbatim.
         """
+        # Chat Completions requires tools as {"type":"function","function":{...}}.
+        # The runner passes canonical inner schemas ({name,description,parameters});
+        # wrap any that are not already in function-tool envelope shape.
+        def _wrap(t: dict[str, Any]) -> dict[str, Any]:
+            # Already a function-tool envelope: pass through.
+            if t.get("type") == "function" and "function" in t:
+                return t
+            # Some shapes carry {"type":"function"} with the inner schema fields
+            # flattened alongside (or empty). Prefer an inner "function" dict if
+            # present, else read the bare inner schema fields off the top level.
+            inner = t["function"] if isinstance(t.get("function"), dict) else t
+            return {"type": "function", "function": {
+                "name": inner.get("name", ""),
+                "description": inner.get("description", ""),
+                "parameters": inner.get(
+                    "parameters", {"type": "object", "properties": {}}
+                ),
+            }}
+        wrapped_tools = [_wrap(t) for t in tools] if tools else None
+
         start_ns = time.monotonic_ns()
-        try:
-            response = self._client.chat.completions.create(
-                model=self.model_id,
-                messages=messages,
-                tools=tools if tools else openai.NOT_GIVEN,
-                temperature=LOCKED_TEMPERATURE,
-                top_p=LOCKED_TOP_P,
-                max_tokens=max_tokens,
-            )
-        except (
-            openai.APIError,
-            openai.AuthenticationError,
-            openai.RateLimitError,
-            openai.APIConnectionError,
-            ConnectionError,
-        ) as exc:
-            raise AdapterError(
-                f"OpenAIAdapter dispatch failed for model {self.model_id!r}: {exc!r}"
-            ) from exc
+        create_kwargs: dict[str, Any] = {
+            "model": self.model_id,
+            "messages": messages,
+            "tools": wrapped_tools if wrapped_tools else openai.NOT_GIVEN,
+        }
+        if self._is_reasoning:
+            # gpt-5*/o*: default temperature only, max_completion_tokens.
+            create_kwargs["max_completion_tokens"] = max_tokens
+        else:
+            create_kwargs["temperature"] = LOCKED_TEMPERATURE
+            create_kwargs["top_p"] = LOCKED_TOP_P
+            create_kwargs["max_tokens"] = max_tokens
+        # Retry on rate limits (low org TPM caps throttle the frontier ladder);
+        # bounded backoff so a throttled task degrades gracefully rather than
+        # dropping silently. Other API errors fail fast.
+        response = None
+        for attempt in range(5):
+            try:
+                response = self._client.chat.completions.create(**create_kwargs)
+                break
+            except openai.RateLimitError as exc:
+                if attempt == 4:
+                    raise AdapterError(
+                        f"OpenAIAdapter rate-limited for {self.model_id!r}: {exc!r}"
+                    ) from exc
+                time.sleep(min(30.0, 3.0 * (2 ** attempt)))  # 3,6,12,24,30
+            except (
+                openai.APIError,
+                openai.AuthenticationError,
+                openai.APIConnectionError,
+                ConnectionError,
+            ) as exc:
+                raise AdapterError(
+                    f"OpenAIAdapter dispatch failed for model {self.model_id!r}: {exc!r}"
+                ) from exc
 
         latency_ms = int((time.monotonic_ns() - start_ns) / 1_000_000)
 

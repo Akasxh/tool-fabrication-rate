@@ -48,6 +48,85 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+# τ-bench: the agent talks to the user simulator via a "respond" pseudo-tool
+# (τ-bench RESPOND_ACTION_NAME). It is a first-class, legitimate tool — NOT a
+# hallucination target — so it must be present in both the rendered tool list
+# AND the registry used for hallucination classification. Scoped to tau_bench;
+# BFCL never sees it.
+_TAU_RESPOND_TOOL_NAME = "respond"
+# Canonical-inner shape ({name, description, parameters}) — same shape the
+# adapters and registry layer expect (BFCL uses this; the τ-bench loader emits
+# the OpenAI wrapper {type, function:{...}} which we flatten below).
+_TAU_RESPOND_TOOL_SCHEMA: dict = {
+    "name": _TAU_RESPOND_TOOL_NAME,
+    "description": (
+        "Send a natural-language message to the user. Use this to ask for "
+        "missing information, confirm an action, or deliver a final answer. "
+        "This does not call any backend system."
+    ),
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": "string",
+                "description": "The message to say to the user.",
+            }
+        },
+        "required": ["content"],
+    },
+}
+
+
+def _to_canonical_inner(name: str, schema: dict) -> dict:
+    """Flatten an OpenAI wrapper schema ({"type":"function","function":{...}})
+    to canonical-inner ({name, description, parameters}). Pass through schemas
+    already in canonical-inner shape unchanged."""
+    if schema.get("type") == "function" and isinstance(schema.get("function"), dict):
+        fn = schema["function"]
+        return {
+            "name": fn.get("name", name),
+            "description": fn.get("description", ""),
+            "parameters": fn.get("parameters", {"type": "object", "properties": {}}),
+        }
+    return schema
+
+
+def _tau_augmented_registry(registry: dict[str, dict]) -> dict[str, dict]:
+    """Return ``registry`` flattened to canonical-inner shape PLUS the
+    ``respond`` pseudo-tool. Additive copy; leaves the caller's registry
+    untouched. The τ-bench loader emits OpenAI-wrapper schemas, but the adapters
+    and classification path key on canonical-inner; this is the single point
+    where we reconcile that (scoped to the τ-bench path)."""
+    augmented = {n: _to_canonical_inner(n, s) for n, s in registry.items()}
+    augmented.setdefault(_TAU_RESPOND_TOOL_NAME, _TAU_RESPOND_TOOL_SCHEMA)
+    return augmented
+
+
+_TAU_PROTOCOL = (
+    "\n\n# Interaction protocol\n"
+    "- You are an agent that interacts with a user and backend tools.\n"
+    "- To say anything to the user (ask for info, confirm, or give a final "
+    "answer), you MUST call the `respond` tool with a `content` string. Do not "
+    "reply in plain text — plain-text replies are not delivered to the user.\n"
+    "- To act on the backend (look up, cancel, modify, return, exchange, etc.), "
+    "call the corresponding tool.\n"
+    "- Make at most one tool call at a time.\n"
+    "- When the task is fully complete, call `respond` with a closing message."
+)
+
+
+def _tau_system_prompt(tool_executor: Callable[[str, dict], dict]) -> str:
+    """Build the τ-bench agent system prompt: the env's domain-policy wiki plus
+    the interaction protocol that points the agent at the `respond` pseudo-tool.
+    Falls back to just the protocol if the wiki can't be read."""
+    wiki = ""
+    env = getattr(tool_executor, "env", None)
+    candidate = getattr(env, "wiki", None)
+    if isinstance(candidate, str) and candidate.strip():
+        wiki = candidate.strip()
+    return (wiki + _TAU_PROTOCOL) if wiki else _TAU_PROTOCOL.strip()
+
+
 def _render_tools(adapter: ModelAdapter, registry: dict[str, dict]) -> list[dict]:
     """Pass canonical-inner tool schemas to the adapter; each adapter does its
     own provider-specific rendering internally (Anthropic→input_schema,
@@ -134,8 +213,26 @@ def run_task(
         list((task.expected_outcome or {}).get("subsequent_user_messages", []) or [])
         if task.benchmark == "bfcl" else []
     )
-    history: list[dict[str, Any]] = [{"role": "user", "content": task.initial_prompt}]
-    tools_rendered = _render_tools(adapter, task.registry)
+
+    # τ-bench: classify against the registry augmented with the `respond`
+    # pseudo-tool; seed a system prompt (domain policy wiki + interaction
+    # protocol) and the env's initial observation (the user simulator's opening
+    # message). BFCL path unchanged.
+    if task.benchmark == "tau_bench":
+        active_registry = _tau_augmented_registry(task.registry)
+        env_state = getattr(tool_executor, "state", None)
+        initial_obs = ""
+        if isinstance(env_state, dict):
+            initial_obs = str(env_state.get("initial_observation") or "")
+        history: list[dict[str, Any]] = [
+            {"role": "system", "content": _tau_system_prompt(tool_executor)},
+            {"role": "user", "content": initial_obs or task.initial_prompt},
+        ]
+    else:
+        active_registry = task.registry
+        history = [{"role": "user", "content": task.initial_prompt}]
+
+    tools_rendered = _render_tools(adapter, active_registry)
     intervention_fn = _INTERVENTIONS[condition]
 
     for turn_idx in range(turn_cap):
@@ -153,7 +250,7 @@ def run_task(
 
         # At most one re-prompt per turn (HARNESS_SPEC §2).
         if intervention_fn is not None and response.parse_ok and response.tool_calls:
-            decision = intervention_fn(list(response.tool_calls), task.registry)
+            decision = intervention_fn(list(response.tool_calls), active_registry)
             if decision.kind == ActionKind.RE_PROMPT and decision.feedback:
                 intervention_event = {
                     "kind": _INTERVENTION_KIND[condition],
@@ -164,8 +261,28 @@ def run_task(
                 _meter(cost_meter, adapter, response)
                 retry_used = True
 
+        # τ-bench faithfulness: a plain-text turn (no tool call) IS a message to
+        # the user. Synthesize a `respond` tool call from the assistant text so
+        # it flows through the env exactly like an explicit respond. This keeps
+        # the conversation advancing instead of stalling and matches τ-bench's
+        # own ToolCallingAgent semantics. Scoped to τ-bench.
+        synthesized_respond = False
+        if (task.benchmark == "tau_bench" and response.parse_ok
+                and not response.tool_calls and (response.raw_text or "").strip()
+                and not classify_refusal(response)):
+            response = ProviderResponse(
+                raw_text=response.raw_text,
+                tool_calls=[ToolCall(name=_TAU_RESPOND_TOOL_NAME,
+                                     arguments={"content": response.raw_text})],
+                parse_ok=True, finish_reason=response.finish_reason,
+                tokens_in=response.tokens_in, tokens_out=response.tokens_out,
+                latency_ms=response.latency_ms,
+                raw_provider_payload=response.raw_provider_payload,
+            )
+            synthesized_respond = True
+
         status, parsed_call, tool_response = _classify_and_execute(
-            response, task.registry, tool_executor
+            response, active_registry, tool_executor
         )
 
         # TEHR: refused→excluded; parse_fail→denom only; hallucinated→num+denom;
@@ -207,7 +324,67 @@ def run_task(
         # MLX uses role:"tool" or plain user.
         adapter_name = type(adapter).__name__
         is_anthropic = "Anthropic" in adapter_name
-        if is_anthropic and response.raw_provider_payload:
+        is_openai = adapter_name == "OpenAIAdapter"
+        if is_openai and response.parse_ok and response.tool_calls:
+            # OpenAI requires the assistant message to carry tool_calls (with
+            # ids), and each role:"tool" message to reference a tool_call_id.
+            # Pull the original ids from the raw provider payload (the OpenAI
+            # adapter stores response.model_dump() there). If unavailable,
+            # synthesize stable ids so the conversation still validates.
+            payload_calls: list[dict[str, Any]] = []
+            payload = response.raw_provider_payload or {}
+            choices = payload.get("choices") if isinstance(payload, dict) else None
+            if isinstance(choices, list) and choices:
+                msg = choices[0].get("message") if isinstance(choices[0], dict) else None
+                if isinstance(msg, dict) and isinstance(msg.get("tool_calls"), list):
+                    payload_calls = [c for c in msg["tool_calls"] if isinstance(c, dict)]
+
+            # Build one assistant tool_calls entry per call the model made,
+            # pairing parsed ToolCalls with payload ids positionally.
+            assistant_tool_calls: list[dict[str, Any]] = []
+            for idx, call in enumerate(response.tool_calls):
+                raw_call = payload_calls[idx] if idx < len(payload_calls) else {}
+                call_id = raw_call.get("id") or f"call_{turn_idx}_{idx}"
+                raw_fn = raw_call.get("function") if isinstance(raw_call.get("function"), dict) else {}
+                args_str = raw_fn.get("arguments")
+                if not isinstance(args_str, str):
+                    args_str = _json.dumps(call.arguments, default=str)
+                assistant_tool_calls.append({
+                    "id": call_id,
+                    "type": "function",
+                    "function": {"name": call.name, "arguments": args_str},
+                })
+
+            history.append({
+                "role": "assistant",
+                "content": response.raw_text or "",
+                "tool_calls": assistant_tool_calls,
+            })
+
+            # One tool message per tool_call id (even hallucinated / not-executed
+            # ones), mirroring the Anthropic branch's tool_result-for-every-id.
+            chosen_name = parsed_call.get("name") if parsed_call else None
+            for entry, call in zip(assistant_tool_calls, response.tool_calls):
+                if (status == "executed" and chosen_name and call.name == chosen_name
+                        and isinstance(tool_response, dict)):
+                    content_str = _json.dumps(tool_response, default=str)
+                elif call.name not in active_registry:
+                    content_str = _json.dumps(
+                        {"error": "tool_not_found", "name": call.name}, default=str)
+                else:
+                    content_str = _json.dumps(
+                        {"error": "not_executed_first_call_policy", "name": call.name},
+                        default=str)
+                history.append({
+                    "role": "tool",
+                    "tool_call_id": entry["id"],
+                    "content": content_str,
+                })
+        elif is_openai:
+            # No tool calls (plain text / refusal / parse_fail): a bare assistant
+            # message with content is valid for OpenAI.
+            history.append({"role": "assistant", "content": response.raw_text or ""})
+        elif is_anthropic and response.raw_provider_payload:
             assistant_blocks = response.raw_provider_payload.get("content") or []
             if isinstance(assistant_blocks, list) and assistant_blocks:
                 history.append({"role": "assistant", "content": assistant_blocks})
@@ -223,7 +400,7 @@ def run_task(
                         if (status == "executed" and chosen_name and tu_name == chosen_name
                                 and isinstance(tool_response, dict)):
                             content_str = _json.dumps(tool_response, default=str)
-                        elif tu_name not in task.registry:
+                        elif tu_name not in active_registry:
                             content_str = _json.dumps(
                                 {"error": "tool_not_found", "name": tu_name}, default=str)
                         else:
@@ -247,6 +424,19 @@ def run_task(
                     "content": _json.dumps(tool_response, default=str),
                 })
 
+        # τ-bench synthesized respond: the assistant text was sent to the user as
+        # a `respond` action, but (unlike an explicit tool_use) no tool_result was
+        # threaded above. Append the env's returned observation (the user
+        # simulator's reply) as the next user turn so the conversation advances
+        # and the history doesn't end on an assistant message. Skip when done.
+        if (synthesized_respond and not env_done
+                and isinstance(tool_response, dict)
+                and tool_response.get("output") is not None):
+            history.append({
+                "role": "user",
+                "content": str(tool_response.get("output") or ""),
+            })
+
         n_turns = turn_idx + 1
         if env_done:
             break
@@ -259,6 +449,15 @@ def run_task(
         if (status == "executed" and parsed_call is None
                 and task.benchmark == "bfcl"
                 and turn_idx >= len(subsequent_users)
+                and "Anthropic" in type(adapter).__name__):
+            terminal = "agent_stopped"
+            break
+        # τ-bench: the agent should advance via tool calls (real tools or the
+        # `respond` pseudo-tool). A plain-text turn with no tool call leaves the
+        # conversation ending on an assistant message; for Anthropic the next
+        # dispatch would raise. Treat it as the agent stalling and stop.
+        if (status in ("executed", "refused") and parsed_call is None
+                and task.benchmark == "tau_bench"
                 and "Anthropic" in type(adapter).__name__):
             terminal = "agent_stopped"
             break
