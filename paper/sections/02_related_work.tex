@@ -39,9 +39,14 @@ on then-current models. The closest prior measurement to ours is
 removes the correct tool from the registry and tracks the resulting
 fabrication via a per-query Correct Selection Rate. That isolates the
 registry-membership phenomenon cleanly, but stays at the per-query
-level on single-turn instructions. \citet{cao2025reliability} propose
-Reliability Alignment, which bundles non-existent-tool invocations
-together with relevance and timing errors into one aggregate score.
+level on single-turn instructions. \citet{cao2025reliability} name the
+phenomenon directly --- ``tool type hallucination,'' where the model
+fabricates a tool absent from the available set --- but their fix is a
+training-time \emph{reliability alignment} that expands the action space
+(defer / clarify / switch), and they report it inside a composite
+reliability score rather than as a standalone per-call rate. We share
+their target failure but differ on both axes: a per-call rate, and a
+training-free inference-time intervention.
 BFCL v4's hallucination metric \citep{bfclv4_2025} measures a
 different failure: invoking a tool when none is appropriate. We differ
 on denominator and setting. TEHR extends MetaTool's premise from
@@ -99,6 +104,21 @@ diagnostic for tool-augmented LLMs that is closer to our scope but
 operates per-task. \citet{stableTOOLbench2024} targets tool-server
 stability rather than name existence, and production tool-skill
 packaging \citep{anthropicagentskills2025} is orthogonal.
+
+\paragraph{Concurrent work on tool hallucination (2026).}
+Three 2026 papers bracket our setting. \citet{yin2026reasoningtrap}
+introduce SimpleToolHalluBench, whose ``no tool available'' and
+``only distractor tools'' regimes mirror our target-removed probe, and
+report that strengthening reasoning (RL/SFT/prompting) \emph{monotonically}
+amplifies tool hallucination. \citet{qi2026brief} find a \emph{non-monotonic}
+effect on a different axis --- chain-of-thought \emph{budget} at fixed scale
+on Qwen2.5-1.5B function calling. Our axis is orthogonal to both: model
+\emph{scale} at fixed (disabled) thinking, where the non-monotonicity
+appears across the Qwen3 size ladder rather than along a reasoning knob.
+\citet{healy2026internal} detect tool-selection hallucination from a model's
+internal representations in a single forward pass; we work purely
+behaviorally and, rather than detect, \emph{prevent} with a message-level
+re-prompt that needs no logit or activation access.
 
 \paragraph{Our differentiation.}
 Four contributions distinguish this work from the prior art above.

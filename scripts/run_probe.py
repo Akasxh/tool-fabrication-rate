@@ -146,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
                    help="Comma-separated model IDs (must be Anthropic for now).")
     p.add_argument("--distractor-types", default="near_name,synonym,matched_random,unrelated")
     p.add_argument("--n", type=int, default=25)
-    p.add_argument("--condition", default="C0", choices=["C0", "C0_5", "C0_7", "C1"])
+    p.add_argument("--condition", default="C0", choices=["C0", "C0_5", "C0_7", "C0_8", "C1"])
     p.add_argument("--run-id", default=None)
     p.add_argument("--output", default="results")
     p.add_argument("--bfcl-split", default="multi_turn_base")

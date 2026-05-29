@@ -13,7 +13,7 @@ from typing import Any, Callable, Optional
 
 from harness.adapters.base import ModelAdapter
 from harness.cost_meter import BudgetAbort, CostMeter
-from harness.intervention import framework_default, naive_retry, rvr
+from harness.intervention import decoy_list, framework_default, naive_retry, rvr
 from harness.registry import (
     render_for_anthropic,
     render_for_mlx,
@@ -35,10 +35,12 @@ _INTERVENTIONS: dict[str, Optional[Callable[..., Action]]] = {
     "C0": None,
     "C0_5": naive_retry.naive_retry,
     "C0_7": framework_default.framework_default,
+    "C0_8": decoy_list.decoy_list,
     "C1": rvr.rvr,
 }
 _INTERVENTION_KIND: dict[str, str] = {
-    "C0_5": "naive_retry", "C0_7": "framework_default", "C1": "rvr_rejected",
+    "C0_5": "naive_retry", "C0_7": "framework_default",
+    "C0_8": "decoy_list", "C1": "rvr_rejected",
 }
 
 
