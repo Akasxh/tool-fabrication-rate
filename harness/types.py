@@ -25,7 +25,7 @@ ToolCallStatus = Literal[
 # structured-error feedback) so we now carry four conditions, not three. The
 # `stats/__init__.py` alias map renders these as "C0", "C0.5", "C0.7", "C1" for
 # the paper.
-ConditionLabel = Literal["C0", "C0_5", "C0_7", "C0_8", "C1"]
+ConditionLabel = Literal["C0", "C0_5", "A2", "C0_7", "C0_8", "C1"]
 
 # Which benchmark a Task came from.
 BenchmarkName = Literal["bfcl", "tau_bench"]
