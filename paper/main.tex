@@ -70,7 +70,9 @@ populations: five Anthropic 4.x versions across an eleven-month release
 window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
 (4-bit MLX). The Anthropic side is quiet. Across $2{,}599$
 opaque-baseline calls we logged zero TFR events, Clopper--Pearson 95\%
-upper bound $\leq\!0.115\%$. Qwen3 isn't: its rate is non-monotone in
+upper bound $\leq\!0.115\%$. Commercial models across the OpenAI gpt-4.1
+and gpt-4o tiers also log $0\%$ TFR ($0/2{,}070$ pooled, $\leq\!0.14\%$).
+Qwen3 isn't: its rate is non-monotone in
 scale, climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and
 back to $0\%$ at $32$B. We propose Registry-Visible Reprompting (RVR), a
 training-free middleware that, on a registry miss, returns one re-prompt
@@ -78,13 +80,14 @@ wrapping a structured \texttt{tool\_not\_found} envelope. RVR removes all
 fourteen pooled Qwen3 fabrications (Fisher's exact one-sided,
 $p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\ $0/945$). The surprise is where
 the fix lives. An ablation that keeps the envelope but drops the registry
-listing ($\mathrm{C}_{0.7}$; $0/253$ on Qwen3-8B) already hits zero, and a
+listing ($\mathrm{C}_{0.7}$; $0/448$ on Qwen3-8B, Clopper--Pearson 95\%
+upper bound $\leq\!0.67\%$) already hits zero, and a
 decoy that fills the envelope with \emph{wrong} tool names
 ($\mathrm{C}_{0.8}$) does not re-introduce
 fabrications\footnote{The decoy arm logs zero TFR across all four
-Qwen3-8B probe arms ($0/410$: near\_name $0/97$, synonym $0/106$,
+Qwen3-8B probe arms ($0/410$, $\leq\!0.73\%$: near\_name $0/97$, synonym $0/106$,
 matched\_random $0/107$, unrelated $0/100$), matching $\mathrm{C}_{0.7}$
-($0/253$) and the real list $\mathrm{C}_1$ ($0/258$); registry content is
+($0/448$) and the real list $\mathrm{C}_1$ ($0/258$); registry content is
 decorative for recovery.}. The recovery is format, not content: a single structured
 rejection re-grounds the model regardless of what the registry says,
 echoing the format-over-content effect Min et al.\ found for in-context

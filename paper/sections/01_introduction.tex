@@ -57,19 +57,23 @@ because that is the unit at which such a risk would accrue.
 The two families don't look alike. Across $2{,}599$ Anthropic calls
 under $\mathrm{C}_0$, zero TFR events (Clopper--Pearson 95\% upper
 bound $\leq\!0.115\%$); the $\mathrm{C}_1$ subset adds $0/678$ at
-$\leq\!0.441\%$. The split designed to coax fabrication,
+$\leq\!0.441\%$. Commercial models across the OpenAI gpt-4.1 and
+gpt-4o tiers also log $0\%$ TFR ($0/404$, $0/408$, $0/409$, $0/419$,
+$0/430$ for gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-4o, gpt-4o-mini;
+per-model upper bounds $\leq\!0.69$--$0.74\%$, $0/2{,}070$ pooled at
+$\leq\!0.14\%$). The split designed to coax fabrication,
 \texttt{multi\_turn\_miss\_func}, didn't bite: the agent chained
 five smaller in-registry calls instead of inventing a one-shot.
 With every Anthropic cell at $0/N$, no temporal slope is fittable;
 the five versions function as a stability check, not a trend.
 
 Qwen3 looks nothing like that. Pooled per-call rates climb from
-$0\%$ at $0.6$B through $0.95\%$, $1.33\%$, $1.49\%$, peak at
+$0\%$ at $0.6$B through $0.95\%$, $1.33\%$, $1.46\%$, peak at
 $\mathbf{1.87\%}$ at $14$B, and drop back to $0\%$ at $32$B
-($N\!=\!224$, consistent with any true rate $\leq\!1.34\%$). The
+($N\!=\!224$, consistent with any true rate $\leq\!1.33\%$). The
 \emph{type} of distractor that wins also moves: $1.7$B peaks on
-near-name ($3.7\%$); $4$B/$8$B on matched-random ($5.4\%$, $3.0\%$);
-$14$B on synonym ($7.2\%$). The bump is not noise. A generative
+near-name ($3.7\%$); $4$B on matched-random ($5.4\%$); $8$B on
+matched-random ($2.3\%$); $14$B on synonym ($7.2\%$). The bump is not noise. A generative
 tool-name prior that strengthens with scale before a larger model's
 registry-grounding control catches up predicts exactly this shape ---
 a U-shaped capability window~\citep{wei2022ushaped,mckenzie2023inversescaling}.
@@ -87,8 +91,8 @@ the name, and on a miss re-prompt with a structured
 the four Qwen3 tiers with non-zero TFR ($1.7$B, $4$B, $8$B, $14$B),
 RVR clears all fourteen pooled fabrications: Fisher's exact one-sided
 on $14/973$ vs.\ $0/945$ gives $p=7.1\!\times\!10^{-5}$. A
-content-matched ablation ($\mathrm{C}_{0.7}$, $0/253$ on Qwen3-8B),
-keeping the envelope structure but dropping the registry list, also
+content-matched ablation ($\mathrm{C}_{0.7}$, $0/448$ on Qwen3-8B,
+$\leq\!0.67\%$), keeping the envelope structure but dropping the registry list, also
 hits zero --- and a decoy that fills the envelope with \emph{wrong}
 names ($\mathrm{C}_{0.8}$) still logs zero. The envelope is doing the
 work, not the listed names. On the Anthropic zero-event regime RVR holds at

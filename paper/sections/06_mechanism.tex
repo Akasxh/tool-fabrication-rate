@@ -8,11 +8,12 @@ answers this directly, and the answer does not require the distractor matrix we
 are underpowered to read.
 
 \paragraph{The ablation already points away from content.}
-On Qwen3-8B the opaque baseline fabricates $9/723$ calls ($1.24\%$). The naive
-retry $\mathrm{C}_{0.5}$ barely moves it ($1/258$). The structured error
+On Qwen3-8B the opaque baseline fabricates $9/615$ calls ($1.46\%$). The naive
+retry $\mathrm{C}_{0.5}$ barely moves it ($1/258$, $0.39\%$). The structured error
 $\mathrm{C}_{0.7}$ --- a \texttt{tool\_not\_found} envelope with \emph{no registry
-attached} --- already drives fabrications to zero ($0/253$), matching full RVR
-($\mathrm{C}_1$, $0/258$). Recovery is bought by the structured rejection, not by
+attached} --- already drives fabrications to zero ($0/448$, Clopper--Pearson
+95\% upper bound $\leq\!0.67\%$), matching full RVR
+($\mathrm{C}_1$, $0/258$, $\leq\!1.15\%$). Recovery is bought by the structured rejection, not by
 appending the list. If the model needed to \emph{read} the registry to recover,
 removing the registry should cost something; it costs nothing.
 
@@ -28,11 +29,12 @@ $\mathrm{C}_{0.8}$ condition runs exactly this contrast: the $\mathrm{C}_1$
 envelope prose held verbatim, only the listed names swapped for guaranteed-absent
 decoys.
 
-The decoy list recovers at $0/410$ across all four probe arms
+The decoy list recovers at $0/410$ (Clopper--Pearson 95\% upper bound
+$\leq\!0.73\%$) across all four probe arms
 (near\_name $0/97$, synonym $0/106$, matched\_random $0/107$, unrelated $0/100$),
 indistinguishable from the real list
 ($\mathrm{C}_1$, $0/258$ on 8B) and from the no-list envelope
-($\mathrm{C}_{0.7}$, $0/253$). A wrong list recovers as well as the right one.
+($\mathrm{C}_{0.7}$, $0/448$). A wrong list recovers as well as the right one.
 This is direct evidence that registry \emph{content} is decorative for the
 recovery effect: the model is not retrieving or being cued by valid names, it is
 responding to the message-level rejection itself. We read this as message-level
@@ -55,9 +57,9 @@ carry no signal to recover.
 
 \paragraph{The scale curve, descriptively.}
 For completeness we report where untreated fabrications concentrate. The Qwen3
-C0 rate is non-monotonic in size --- $0\%$ (0.6B), $0.95\%$ (1.7B), $1.33\%$ (4B),
-$1.24\%$ (8B), peaking at $1.87\%$ (14B, $5/268$) before collapsing to $0\%$
-(32B, $0/224$). Within the probe, the dominant distractor type drifts with scale
+C0 rate is non-monotonic in size --- $0\%$ (0.6B, $0/75$), $0.95\%$ (1.7B),
+$1.33\%$ (4B), $1.46\%$ (8B, $9/615$), peaking at $1.87\%$ (14B, $5/268$)
+before collapsing to $0\%$ (32B, $0/224$, $\leq\!1.33\%$). Within the probe, the dominant distractor type drifts with scale
 (near\_name at 1.7B, matched\_random at 4--8B, synonym at 14B). A Friedman exact
 permutation test on the size-by-arm cells returns $\chi^2_{(3)}\!=\!3.0$,
 $p\!=\!0.46$ ($n\!=\!4$ sizes, $\leq\!5$ events/cell): we are underpowered to

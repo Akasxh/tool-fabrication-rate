@@ -7,12 +7,21 @@ The pre-registered protocol is locked in git commit \texttt{c391017},
 dated before any data was collected. Three deviations from that
 protocol are worth naming. Probe $N$ was reduced from $100$ to $15$
 per cell to fund breadth across five Anthropic versions and six
-Qwen3 sizes. OpenAI was dropped from the vendor scope when no API
-key was available within the credit envelope. $\mathrm{C}_{0.7}$
+Qwen3 sizes. The OpenAI gpt-4.1 and gpt-4o tiers were added to the
+vendor scope after the pre-registration (five commercial models,
+$0/2{,}070$ pooled C0 calls, all $0\%$ TFR); the gpt-5 family is
+still in collection. $\mathrm{C}_{0.7}$
 was run at scale on Qwen3-8B only, not on Anthropic. Holm--Bonferroni
 correction across the three primary tests (Fisher's exact, Friedman,
 TOST): only Fisher's clears $\alpha\!=\!0.05$ at
 $p_{\mathrm{Holm}} = 2.14\!\times\!10^{-4}$.
+
+% NUMBERS_TODO: the following experiments are still running and are NOT yet
+% in scripts/aggregate_all.py; do not cite numbers until aggregated:
+%   (1) gpt-5 family frontier rows (currently only gpt-5-mini at n=19, preliminary, 0/19);
+%   (2) quantization-control cells: Qwen3-8B-8bit, Qwen3-8B-bf16, Qwen3-14B-8bit;
+%   (3) A2 reflection arm (currently only n=30, preliminary);
+%   (4) Qwen3-14B event-boost cell.
 
 The supplementary repository at
 \href{https://anonymous.4open.science/r/icml-tehr-scale-2026/}{anonymous.4open.science/r/icml-tehr-scale-2026}
