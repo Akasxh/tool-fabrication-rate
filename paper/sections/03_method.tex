@@ -2,7 +2,7 @@
 \label{sec:method}
 
 \subsection{Tool Fabrication Rate (TFR)}
-\label{sec:method:tehr}
+\label{sec:method:tfr}
 
 Let a tool registry $\mathcal{R}$ be a finite set of tool names with JSON schemas, exposed to the agent at episode start. The agent's message stream is parsed into a sequence of tool calls $c$, each carrying a name $c.\mathrm{name}$, and we define
 \[
@@ -48,11 +48,13 @@ We do not try to localize the effect to a specific cognitive story. An
 earlier draft pre-registered three mechanisms (induction-head copying,
 registry-as-cue, message-level rejection); the data cannot separate
 copying from cueing, so we drop that apparatus rather than over-read it.
-What the design \emph{can} decide is a single binary: does recovery
+What the design is \emph{aimed at} is a single binary: does recovery
 require the registry \emph{content}, or only the rejection \emph{format}?
-If a wrong list ($\mathrm{C}_{0.8}$) recovers as well as the right list
-($\mathrm{C}_1$), the content is decorative; if it fails where
-$\mathrm{C}_1$ succeeds, the model is reading the offered names. The
+If a wrong list ($\mathrm{C}_{0.8}$) re-introduces fabrications where the
+real list ($\mathrm{C}_1$) does not, the model is reading the offered
+names; if neither arm fabricates, the comparison bounds the content
+effect rather than settling it (Section~\ref{sec:mechanism}), and
+distinguishing the two requires fabrication events under the ablation. The
 distractor probe (Section~\ref{sec:method:probe}) is retained to
 characterize \emph{where} on the scale curve fabrications concentrate,
 not as a mechanism discriminator.

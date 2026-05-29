@@ -34,12 +34,12 @@ Haiku 4.5  & 0/109 & 0/120 & 0/107 \\
 BFCL designed the \texttt{miss\_func} split to elicit fabrication by
 removing a needed function. Both Anthropic models route around the
 missing tool by chaining smaller calls instead (one trace in
-Section~\ref{sec:results:trace-inspection}). Qwen3-8B does not behave
-the same way. % NUMBERS_TODO: Qwen3-8B miss_func cell (claimed 5/258=1.94%) absent from aggregator; rerun and reconcile against the base full-probe 9/615=1.46%.
-On the same split it logs $5/258 = 1.94\%$, slightly
-above the $1.46\%$ on the aligned \texttt{multi\_turn\_base} split.
-That is what BFCL's design predicts when the registry is deliberately
-incomplete.
+Section~\ref{sec:results:trace-inspection}). Qwen3-8B's only
+\texttt{miss\_func} regime cell in our aggregator is also zero-event
+($0/108$); its non-zero TFR comes from the target-removed distractor
+probe ($9/615$, Section~\ref{sec:results:scaling}), not from this split.
+We do not report a separate Qwen3-8B \texttt{miss\_func} rate, as no
+such cell is reproducible from the released traces.
 
 % =========================================================================
 \subsection{Anthropic stability check across $5$ model versions}
@@ -56,12 +56,13 @@ across the Opus, Sonnet, and Haiku families. On this probe every cell
 is $\boldsymbol{0/N}$ (Table~\ref{tab:anth-temporal};
 $95\%$ pooled upper bound $\leq\!0.16\%$). Combine the regime cells
 with the probe cells and the $\mathrm{C}_0$ Anthropic audit pools to
-\textbf{$\boldsymbol{0/2{,}599}$} (per-call aggregator, deduplicated
-across overlapping run-ids), or $\leq\!0.115\%$.
+\textbf{$\boldsymbol{0/2{,}578}$} (probe $1{,}917$ $+$ regime $661$;
+per-call aggregator, deduplicated across overlapping run-ids), or
+$\leq\!0.115\%$.
 
 \begin{table}[t]
 \caption{Anthropic 4.x distractor probe with target removed ($\mathrm{C}_0$).
-Pooled $\mathrm{C}_0$ over regime $+$ probe is $0/2{,}599$,
+Pooled $\mathrm{C}_0$ over regime $+$ probe is $0/2{,}578$,
 $\leq\!0.115\%$; the $\mathrm{C}_1$ subset adds $0/678$ at
 $\leq\!0.441\%$.}
 \label{tab:anth-temporal}
@@ -138,8 +139,8 @@ a Qwen3-specific artefact of one release. The lineage carries it.
 Commercial models track the Anthropic null rather than the Qwen3
 band. On the same probe, the OpenAI gpt-4.1 and gpt-4o tiers also log
 $0\%$ TFR: gpt-4.1 $0/404$, gpt-4.1-mini $0/408$, gpt-4.1-nano
-$0/409$, gpt-4o $0/419$, gpt-4o-mini $0/430$ (per-model Clopper--Pearson
-$95\%$ upper bounds $\leq\!0.69$--$0.74\%$), pooling to $0/2{,}070$ at
+$0/409$, gpt-4o $0/466$, gpt-4o-mini $0/430$ (per-model Clopper--Pearson
+$95\%$ upper bounds $\leq\!0.65$--$0.74\%$), pooling to $0/2{,}117$ at
 $\leq\!0.14\%$. The cross-vendor pattern is an open-vs-closed split:
 zero-event commercial frontiers against the Qwen-family
 $0.95$--$1.87\%$ band.
@@ -160,8 +161,16 @@ best primed to mimic.
 
 We applied the registry-visible re-prompt $\mathrm{C}_1$ on the four
 Qwen3 sizes with $\mathrm{TFR}\!>\!0$ in $\mathrm{C}_0$. Across
-$\sim\!944$ matched calls, RVR prevents all $\boldsymbol{14}$ of
-$\boldsymbol{14}$ hallucination events (Table~\ref{tab:rvr-validation}).
+$945$ matched calls, RVR prevents all $\boldsymbol{14}$ of
+$\boldsymbol{14}$ hallucination events in the matched per-tier
+$\mathrm{C}_0$/$\mathrm{C}_1$ subset (Table~\ref{tab:rvr-validation}).
+A ledger note: the full target-removed probe pool logs $19$ events
+across these four tiers ($2/210$, $3/226$, $9/615$, $5/268$;
+Table~\ref{tab:qwen3-scale}), while the matched RVR subset covers $14$.
+The difference is $5$ further Qwen3-8B events that fall in the larger
+full-probe pool ($9/615$) but outside the smaller paired-RVR pool
+($4/269$); those $5$ events are untested by RVR. We validate RVR on the
+$14$-event matched subset and do not claim the other $5$ were prevented.
 
 \begin{table}[t]
 \caption{RVR per-tier validation on Qwen3 sizes with non-zero $\mathrm{C}_0$

@@ -2,18 +2,21 @@
 \label{sec:mechanism}
 
 Does recovery use the \emph{content} of the echoed registry, or only the
-\emph{format} of a structured rejection? The condition ladder answers this
-directly, without the distractor matrix we are underpowered to read.
+\emph{format} of a structured rejection? The condition ladder speaks to
+this --- though, as we stress below, it bounds the content effect rather
+than resolving it, because every arm is zero-event.
 
-\paragraph{The ablation already points away from content.}
+\paragraph{The ablation is suggestive, not decisive.}
 On Qwen3-8B the structured error $\mathrm{C}_{0.7}$, a
 \texttt{tool\_not\_found} envelope with \emph{no registry attached},
-already drives fabrications to zero, matching full RVR
+also drives fabrications to zero, matching full RVR
 (Section~\ref{sec:results:rvr}). If the model needed to \emph{read} the
-registry to recover, removing it should cost something; it costs
-nothing.
+registry to recover, removing it might be expected to cost something;
+within the resolution of this experiment we see no such cost. But both
+arms are zero-event, so this bounds rather than excludes a content
+contribution.
 
-\paragraph{The decoy arm closes the question.}
+\paragraph{The decoy arm sharpens, but does not close, the question.}
 $\mathrm{C}_{0.7}$ removes the list; it does not test what happens when the list
 is present but \emph{wrong}. A registry-as-cue account predicts a decoy list
 (correctly formatted, count-matched, but populated with non-existent tools)
@@ -24,17 +27,25 @@ call. The $\mathrm{C}_{0.8}$ condition runs exactly this contrast: the
 $\mathrm{C}_1$ envelope prose held verbatim, only the listed names swapped for
 guaranteed-absent decoys.
 
-The decoy list recovers at $0/410$ (Clopper--Pearson 95\% upper bound
+The decoy list logs $0/410$ (Clopper--Pearson 95\% upper bound
 $\leq\!0.73\%$) across all four probe arms (near\_name $0/97$, synonym
-$0/106$, matched\_random $0/107$, unrelated $0/100$), indistinguishable
-from the real list ($\mathrm{C}_1$, $0/258$ on 8B) and from the no-list
-envelope ($\mathrm{C}_{0.7}$, $0/448$). A wrong list recovers as well as
-the right one: registry \emph{content} is decorative for recovery. The
-model is responding to the message-level rejection itself, not being
-cued by valid names; the truthfulness of the offered set is not
-load-bearing. This is positive evidence against the registry-as-cue
-account, which would need a valid name to point at and the decoy offers
-none.
+$0/106$, matched\_random $0/107$, unrelated $0/100$), matching the
+no-list envelope ($\mathrm{C}_{0.7}$, $0/448$) and the real list
+($\mathrm{C}_1$, $0/258$ on 8B). We are careful about what this can and
+cannot show. All three arms are zero-event, so we \emph{detect no
+content effect at this sample size} --- this is absence of evidence, not
+evidence of equivalence. The $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$
+difference is bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp; the
+$\mathrm{C}_1\!-\!\mathrm{C}_{0.8}$ contrast is similarly bounded. These
+bounds are consistent with the registry content buying up to $\sim$1~pp
+of recovery; they do not establish that it buys nothing. The data are
+therefore \emph{compatible with} a format-over-content account, under
+which the model responds to the message-level rejection rather than to
+the valid names offered --- but we do not treat zero-vs-zero as proof,
+and a registry-as-cue account is not ruled out within the $\pm$1.5~pp
+band. A powered test, with fabrication events present under the decoy
+ablation on a high-event cell, is the correct way to settle this and is
+in progress; we report no result for it here.
 
 \paragraph{What this does not claim.}
 Format-sufficiency is a claim about \emph{recovery}, not task success. A decoy
@@ -50,5 +61,7 @@ The dominant distractor type drifts with scale
 (Section~\ref{sec:results:scaling}), but a Friedman exact permutation test is
 underpowered ($\chi^2_{(3)}\!=\!3.0$, $p\!=\!0.46$; $n\!=\!4$ sizes), so we read
 the drift as phenomenology, not inference. The content-vs-format question rests
-not on this matrix but on the powered $\mathrm{C}_{0.7}$ and $\mathrm{C}_{0.8}$
-ablations.
+not on this matrix but on the $\mathrm{C}_{0.7}$ and $\mathrm{C}_{0.8}$
+ablations --- which, being zero-event, bound the content effect to
+$\pm$1.5~pp rather than resolving it. A powered version on a high-event
+cell is the right next step and is in progress.

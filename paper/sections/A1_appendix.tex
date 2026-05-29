@@ -11,7 +11,7 @@ $\mathrm{C}_0$, four-distractor probe with target removed. Error bars
 are Clopper--Pearson 95\% CIs; the dashed blue Anthropic 4.x upper bound
 pools all $5$ tested versions. The intra-family non-monotone shape and
 the gap between the open-source $\sim\!2{-}14\,$B band and the Anthropic
-bound is the paper's headline.}
+bound is reported descriptively, not as a fitted scaling law.}
 \label{fig:scaling}
 \end{figure}
 
@@ -102,7 +102,8 @@ five-distractor probe grid (target removed, per-call existence scored).
 across eleven months'' claim holds on \textsc{base} only; the three-split regime
 sweep is two production models (Haiku 4.5, Sonnet 4.6) plus one local model
 (Qwen3-8B, base). Anthropic hallucinated $=0$ in every cell; the per-call
-\textsc{tehr} signal is the Qwen3 size sweep on \textsc{base}.}
+TFR signal is the Qwen3 size sweep on \textsc{base}. Cells sum to the
+pooled Anthropic $\mathrm{C}_0$ total $2{,}578$.}
 \label{tab:coverage}
 \centering
 \small
@@ -118,7 +119,7 @@ Sonnet 4.0 \scriptsize(05/2025)   & \pmark\,253 & --          & --          \\
 Sonnet 4.5 \scriptsize(09/2025)   & \pmark\,285 & --          & --          \\
 Sonnet 4.6                        & \pmark\,677 & \rmark\,81  & \rmark\,128 \\
 Opus 4.7                          & \pmark\,293 & --          & --          \\
-Haiku 4.5                         & \pmark\,655 & \rmark\,107 & \rmark\,120 \\
+Haiku 4.5                         & \pmark\,634 & \rmark\,107 & \rmark\,120 \\
 \midrule
 \multicolumn{4}{l}{\emph{Qwen3 size sweep (4-bit)}} \\
 0.6B   & \pmark\,75   & -- & -- \\
@@ -140,7 +141,7 @@ protocol are worth naming. Probe $N$ was reduced from $100$ to $15$
 per cell to fund breadth across five Anthropic versions and six
 Qwen3 sizes. The OpenAI gpt-4.1 and gpt-4o tiers were added to the
 vendor scope after the pre-registration (five commercial models,
-$0/2{,}070$ pooled C0 calls, all $0\%$ TFR); the gpt-5 family is
+$0/2{,}117$ pooled C0 calls, all $0\%$ TFR); the gpt-5 family is
 still in collection. $\mathrm{C}_{0.7}$
 was run at scale on Qwen3-8B only, not on Anthropic. Holm--Bonferroni
 correction across the three primary tests (Fisher's exact, Friedman,

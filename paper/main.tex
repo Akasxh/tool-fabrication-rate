@@ -68,39 +68,35 @@ how often, and what fixes it? We define a per-call Tool Fabrication
 Rate (TFR) and run it on BFCL multi-turn against two
 populations: five Anthropic 4.x versions across an eleven-month release
 window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
-(4-bit MLX). The Anthropic side is quiet. Across $2{,}599$
+(4-bit MLX). The Anthropic side is quiet. Across $2{,}578$
 opaque-baseline calls we logged zero TFR events, Clopper--Pearson 95\%
 upper bound $\leq\!0.115\%$. Commercial models across the OpenAI gpt-4.1
-and gpt-4o tiers also log $0\%$ TFR ($0/2{,}070$ pooled, $\leq\!0.14\%$).
-Qwen3 isn't: its rate is non-monotone in
-scale, climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and
-back to $0\%$ at $32$B. We propose Registry-Visible Reprompting (RVR), a
+and gpt-4o tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.14\%$).
+The open-weight Qwen3 family isn't quiet: it logs non-zero TFR. We
+propose Registry-Visible Reprompting (RVR), a
 training-free middleware that, on a registry miss, returns one re-prompt
 wrapping a structured \texttt{tool\_not\_found} envelope. RVR removes all
-fourteen pooled Qwen3 fabrications (Fisher's exact one-sided,
-$p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\ $0/945$). The surprise is where
-the fix lives. An ablation that keeps the envelope but drops the registry
-listing ($\mathrm{C}_{0.7}$; $0/448$ on Qwen3-8B, Clopper--Pearson 95\%
-upper bound $\leq\!0.67\%$) already hits zero, and a
-decoy that fills the envelope with \emph{wrong} tool names
-($\mathrm{C}_{0.8}$) does not re-introduce
-fabrications\footnote{The decoy arm logs zero TFR across all four
-Qwen3-8B probe arms ($0/410$, $\leq\!0.73\%$: near\_name $0/97$, synonym $0/106$,
-matched\_random $0/107$, unrelated $0/100$), matching $\mathrm{C}_{0.7}$
-($0/448$) and the real list $\mathrm{C}_1$ ($0/258$); registry content is
-decorative for recovery.}. The recovery is format, not content: a single structured
-rejection re-grounds the model regardless of what the registry says,
-echoing the format-over-content effect Min et al.\ found for in-context
-demonstrations~\citep{min2022rethinking}. Read this way, the mid-scale
-bump stops being noise and becomes a predicted signature: a U-shaped
-capability window~\citep{wei2022ushaped,mckenzie2023inversescaling} in
-the generative tool-name prior, controlled for quantization by the
-$0$-and-$32$B endpoints that bracket it at the same 4-bit precision. On
-Anthropic's zero-event regime RVR also logs zero, but the strict-pass
-subset slips at $N\!=\!60$; we recommend tier-conditional deployment. Our
-read: reactive agent error-recovery is less about telling the model the
-right answer than about re-grounding its output format, and one
-structured reply does it on the models where the failure shows up.
+fourteen pooled Qwen3 fabrications in the matched per-tier subset
+(Fisher's exact one-sided, $p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\
+$0/945$). A secondary, deliberately hedged ablation asks where the fix
+lives. Dropping the registry listing from the envelope
+($\mathrm{C}_{0.7}$; $0/448$ on Qwen3-8B) and even filling it with
+\emph{wrong} tool names ($\mathrm{C}_{0.8}$; $0/410$) both stay at zero,
+matching the real list ($\mathrm{C}_1$; $0/258$). We do not read this as
+proof that content is irrelevant: all three arms are zero-event, so this
+is absence of evidence, not evidence of equivalence. At this sample size
+we detect no content effect; the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$
+difference is bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp ---
+consistent with content buying up to $\sim$1~pp, not proof it buys
+nothing. We flag a format-over-content recovery as a plausible reading,
+echoing Min et al.\ on in-context demonstrations~\citep{min2022rethinking},
+and leave it as an open ablation; a powered version on a high-event cell
+is in progress. Descriptively, Qwen3's rate is non-monotone in scale,
+climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and back to
+$0\%$ at $32$B; six points are not a curve, and we cannot yet
+disentangle scale from 4-bit quantization (a bf16 control is pending).
+On Anthropic's zero-event regime RVR also logs zero, but the strict-pass
+subset slips at $N\!=\!60$; we recommend tier-conditional deployment.
 \end{abstract}
 
 \input{sections/01_introduction}
