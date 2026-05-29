@@ -1,0 +1,75 @@
+[
+  {
+    "name": "clean_tool_call",
+    "raw": {
+      "stop_reason": "tool_use",
+      "content": [
+        {"type": "text", "text": "I'll look up the weather."},
+        {"type": "tool_use", "name": "get_weather", "input": {"city": "SF"}}
+      ],
+      "usage": {"input_tokens": 1203, "output_tokens": 74}
+    },
+    "expected": {
+      "raw_text": "I'll look up the weather.",
+      "tool_calls": [{"name": "get_weather", "arguments": {"city": "SF"}}],
+      "parse_ok": true,
+      "finish_reason": "tool_use",
+      "tokens_in": 1203,
+      "tokens_out": 74
+    }
+  },
+  {
+    "name": "hallucinated_tool_call",
+    "raw": {
+      "stop_reason": "tool_use",
+      "content": [
+        {"type": "tool_use", "name": "get_weather_v2", "input": {"city": "SF"}}
+      ],
+      "usage": {"input_tokens": 950, "output_tokens": 60}
+    },
+    "expected": {
+      "raw_text": "",
+      "tool_calls": [{"name": "get_weather_v2", "arguments": {"city": "SF"}}],
+      "parse_ok": true,
+      "finish_reason": "tool_use",
+      "tokens_in": 950,
+      "tokens_out": 60
+    }
+  },
+  {
+    "name": "refusal_text_only",
+    "raw": {
+      "stop_reason": "end_turn",
+      "content": [
+        {"type": "text", "text": "I can't help with that."}
+      ],
+      "usage": {"input_tokens": 800, "output_tokens": 12}
+    },
+    "expected": {
+      "raw_text": "I can't help with that.",
+      "tool_calls": [],
+      "parse_ok": true,
+      "finish_reason": "stop",
+      "tokens_in": 800,
+      "tokens_out": 12
+    }
+  },
+  {
+    "name": "parse_fail_malformed_input",
+    "raw": {
+      "stop_reason": "tool_use",
+      "content": [
+        {"type": "tool_use", "name": "get_weather", "input_raw_string": "{not json"}
+      ],
+      "usage": {"input_tokens": 1100, "output_tokens": 40}
+    },
+    "expected": {
+      "raw_text": "",
+      "tool_calls": [],
+      "parse_ok": false,
+      "finish_reason": "tool_use",
+      "tokens_in": 1100,
+      "tokens_out": 40
+    }
+  }
+]

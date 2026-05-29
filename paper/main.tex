@@ -1,0 +1,108 @@
+% Tool-Existence Hallucination Is Rarer Than Reported on BFCL Multi-Turn
+% SCALE @ ICML 2026 — anonymous double-blind submission
+
+\documentclass{article}
+
+% Recommended ICML 2026 packages
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xurl}  % allow long URLs to break across lines in references
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Blind submission: \usepackage{icml2026}
+% arXiv preprint: \usepackage[preprint]{icml2026}
+% Camera-ready:   \usepackage[accepted]{icml2026}
+\usepackage{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Listings setup for the RVR pseudocode in §3.
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible,
+    frame=single,
+    framerule=0.4pt,
+    aboveskip=0.5em,
+    belowskip=0.5em,
+}
+
+\icmltitlerunning{Tier-Dependent Tool-Existence Hallucination}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Tool-Existence Hallucination Is Tier-Dependent and \\
+           Intra-Family Non-Monotonic on BFCL Multi-Turn}
+
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Anonymous}{anon}
+\end{icmlauthorlist}
+\icmlaffiliation{anon}{~}
+
+\icmlkeywords{tool-using agents, hallucination, function calling,
+              BFCL, agent benchmarks, ICML 2026 SCALE}
+\vskip 0.3in
+]
+
+% Suppress the icml2026.sty boilerplate "Anonymous Institution, City,
+% Region, Country. Correspondence to: Anonymous Author <anon@...>".
+\makeatletter
+\renewcommand{\printAffiliationsAndNotice}[1]{\global\icml@noticeprintedtrue}
+\makeatother
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+Tool-name hallucination is a known failure mode. Who actually does it,
+and how often? We define a per-call Tool-Existence Hallucination Rate
+(TEHR) and run it on BFCL multi-turn against two populations: five
+Anthropic 4.x versions across an eleven-month release window, and the
+Qwen3-Instruct family at six sizes from $0.6$B to $32$B (4-bit MLX).
+The Anthropic side is quiet. Across $2{,}599$ opaque-baseline calls we
+logged zero TEHR events, Clopper--Pearson 95\% upper bound
+$\leq\!0.115\%$. Qwen3 isn't. Its rate is non-monotone in scale,
+climbing from $0\%$ at $0.6$B to $\mathbf{1.87\%}$ at $14$B and back
+to $0\%$ at $32$B; the dominant distractor type shifts too, near-name
+at $1.7$B, matched-random at $4$B/$8$B, synonym at $14$B. The bump in
+the middle is what surprised us. We propose Registry-Visible
+Reprompting (RVR), a training-free middleware that checks each
+proposed call against the runtime registry and, on a miss, returns one
+re-prompt wrapping a structured \texttt{tool\_not\_found} envelope.
+RVR removes all fourteen pooled Qwen3 fabrications (Fisher's exact
+one-sided, $p=7.1\!\times\!10^{-5}$ on $14/973$ vs.\ $0/945$). A
+content-matched ablation that drops the registry listing
+($\mathrm{C}_{0.7}$; $0/253$ on Qwen3-8B, matching $\mathrm{C}_1$) pins
+the effect to envelope shape, not to echoing tool names back at the
+model, so deployers can ship the cheaper signal without leaking
+registry contents. On Anthropic's zero-event regime RVR also logs
+zero, but the strict-pass subset slips at $N\!=\!60$; we recommend
+tier-conditional deployment. Our read: tool-name hallucination here
+looks like a mid-scale Qwen3 phenomenon, and one structured reply
+clears it on the models where it shows up.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_method}
+\input{sections/04_setup}
+\input{sections/05_results}
+\input{sections/06_mechanism}
+\input{sections/07_limitations}
+
+\bibliography{refs}
+\bibliographystyle{icml2026}
+
+\input{sections/08_llm_disclosure}
+\input{sections/A1_appendix}
+
+\end{document}

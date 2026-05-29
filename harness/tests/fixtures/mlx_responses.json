@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "owner": "A3 (Phase1-C)",
+    "model": "mlx-community/Qwen3-8B-4bit",
+    "purpose": "Raw mlx_lm.generate string outputs for MLXAdapter unit tests. Each entry's `raw` field is what mlx_lm.generate returns; tests mock generate to return that string and assert ProviderResponse correctness per HARNESS_SPEC §4 (MLX) and §5 acceptance items 1-4.",
+    "envelope": "<tool_call>{json}</tool_call> (DOTALL regex). enable_thinking=False so no leading <think> blocks."
+  },
+  "fixtures": {
+    "clean_tool_call": {
+      "description": "Spec §4 MLX #1 — model emits a well-formed envelope for a registry-resident tool. Adapter parses one ToolCall; runner classifies as `executed`.",
+      "raw": "<tool_call>\n{\"name\": \"get_weather\", \"arguments\": {\"city\": \"San Francisco\"}}\n</tool_call>",
+      "expected": {
+        "tool_calls": [
+          {"name": "get_weather", "arguments": {"city": "San Francisco"}}
+        ],
+        "parse_ok": true,
+        "finish_reason": "tool_use",
+        "raw_text": ""
+      }
+    },
+    "hallucinated_tool_call": {
+      "description": "Spec §4 MLX #2 — well-formed envelope but `name` not in registry. Adapter MUST surface it verbatim; runner's RVR classifies as hallucinated.",
+      "raw": "<tool_call>\n{\"name\": \"weather_lookup\", \"arguments\": {\"city\": \"San Francisco\"}}\n</tool_call>",
+      "expected": {
+        "tool_calls": [
+          {"name": "weather_lookup", "arguments": {"city": "San Francisco"}}
+        ],
+        "parse_ok": true,
+        "finish_reason": "tool_use",
+        "raw_text": ""
+      }
+    },
+    "refusal_no_tool": {
+      "description": "Spec §4 MLX #3 — plain refusal text, no envelope. parse_ok stays True (legitimate no-tool-call path); runner deny-list classifies as refused.",
+      "raw": "I'm sorry, I can't do that.",
+      "expected": {
+        "tool_calls": [],
+        "parse_ok": true,
+        "finish_reason": "stop",
+        "raw_text": "I'm sorry, I can't do that."
+      }
+    },
+    "parse_fail_malformed": {
+      "description": "Spec §4 MLX #4 — envelope matches the regex but the inner JSON is malformed (`{oops}` is not valid JSON). Adapter returns parse_ok=False with empty tool_calls; runner classifies as parse_fail.",
+      "raw": "<tool_call>{\"name\":\"x\", \"arguments\": {oops}</tool_call>",
+      "expected": {
+        "tool_calls": [],
+        "parse_ok": false,
+        "finish_reason": "stop",
+        "raw_text": ""
+      }
+    }
+  }
+}

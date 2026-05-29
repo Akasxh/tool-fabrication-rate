@@ -1,0 +1,29 @@
+\appendix
+
+\section{Pre-Registration and Reproducibility}
+\label{sec:appendix:prereg}
+
+The pre-registered protocol is locked in git commit \texttt{c391017},
+dated before any data was collected. Three deviations from that
+protocol are worth naming. Probe $N$ was reduced from $100$ to $15$
+per cell to fund breadth across five Anthropic versions and six
+Qwen3 sizes. OpenAI was dropped from the vendor scope when no API
+key was available within the credit envelope. $\mathrm{C}_{0.7}$
+was run at scale on Qwen3-8B only, not on Anthropic. Holm--Bonferroni
+correction across the three primary tests (Fisher's exact, Friedman,
+TOST): only Fisher's clears $\alpha\!=\!0.05$ at
+$p_{\mathrm{Holm}} = 2.14\!\times\!10^{-4}$.
+
+The supplementary repository at
+\href{https://anonymous.4open.science/r/icml-tehr-scale-2026/}{anonymous.4open.science/r/icml-tehr-scale-2026}
+contains the full harness ($144$ unit tests), the JSONL trace logs
+that produce every number in the paper, the aggregator and statistical
+scripts, the reproducibility manifest with dated model aliases, the
+full deviation log, the JSONL trace schema, the headline-number
+derivation rule, and a registry-size pilot. Running
+\texttt{python scripts/aggregate\_all.py} on the released traces
+reproduces every numerical claim. Distractor-injection RNG uses a
+SHA-256-derived stable hash, so reproduction does not depend on
+\texttt{PYTHONHASHSEED}; MLX 4-bit local inference is not
+bitwise-deterministic across runs but per-task tool-call decisions
+are stable to within $\pm 1$ token.

@@ -1,0 +1,10 @@
+.env.local
+results/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+.DS_Store
+**/.DS_Store
+.playwright-mcp/
+*.png
+paper/_pages/

@@ -1,0 +1,90 @@
+==============================================================================
+MLX + Qwen3-8B tool-calling feasibility probe (Gate 0.5)
+==============================================================================
+model_id        : mlx-community/Qwen3-8B-4bit
+mlx.core        : 0.31.2
+python          : 3.12.13
+default_device  : Device(gpu, 0)
+
+Loading model + tokenizer (first run downloads ~5-6 GB)...
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 9 files:  11%|█         | 1/9 [00:00<00:03,  2.57it/s]Fetching 9 files:  22%|██▏       | 2/9 [00:00<00:02,  2.72it/s]Fetching 9 files:  33%|███▎      | 3/9 [00:00<00:01,  3.25it/s]Fetching 9 files:  44%|████▍     | 4/9 [03:21<06:36, 79.22s/it]Fetching 9 files: 100%|██████████| 9/9 [03:21<00:00, 22.35s/it]
+Model loaded in 202.69s.
+Peak RSS after load: 5154 MiB
+
+------------------------------------------------------------------------------
+FIXTURE: weather_sf
+  user_prompt    : "What's the weather in San Francisco?"
+  expected_tool  : 'get_weather'
+  prompt_tokens  : 407
+  gen_tokens     : 20
+  gen_secs       : 2.00
+  tokens/sec     : 10.0
+  parse_ok       : True
+  parsed_calls  : [{"name": "get_weather", "arguments": {"city": "San Francisco"}}]
+  expectation_met: True
+  --- raw generation begin ---
+<tool_call>
+{"name": "get_weather", "arguments": {"city": "San Francisco"}}
+</tool_call>
+  --- raw generation end ---
+------------------------------------------------------------------------------
+FIXTURE: flight_jfk_lhr
+  user_prompt    : 'Book me a flight from JFK to LHR on May 5th.'
+  expected_tool  : 'book_flight'
+  prompt_tokens  : 414
+  gen_tokens     : 42
+  gen_secs       : 2.23
+  tokens/sec     : 18.9
+  parse_ok       : True
+  parsed_calls  : [{"name": "book_flight", "arguments": {"origin": "JFK", "destination": "LHR", "date": "2023-05-05"}}]
+  expectation_met: True
+  --- raw generation begin ---
+<tool_call>
+{"name": "book_flight", "arguments": {"origin": "JFK", "destination": "LHR", "date": "2023-05-05"}}
+</tool_call>
+  --- raw generation end ---
+------------------------------------------------------------------------------
+FIXTURE: capital_of_france
+  user_prompt    : "What's the capital of France?"
+  expected_tool  : None
+  prompt_tokens  : 406
+  gen_tokens     : 7
+  gen_secs       : 0.95
+  tokens/sec     : 7.4
+  parse_ok       : True
+  parsed_calls  : []
+  expectation_met: True
+  --- raw generation begin ---
+The capital of France is Paris.
+  --- raw generation end ---
+------------------------------------------------------------------------------
+SUMMARY
+  fixtures run               : 3
+  parse_ok                   : 3/3
+  expectation_met            : 3/3
+  total gen tokens           : 69
+  total gen secs             : 5.18
+  aggregate tokens/sec       : 13.3
+  model load secs            : 202.69
+  peak RSS (process, MiB)    : 5154
+
+Wrote machine-readable results: /Users/cero/Desktop/PROJECTS/icml/PHASE0/mlx_probe_results.json
+      210.98 real        13.23 user        19.99 sys
+          5404688384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              505774  page reclaims
+                 107  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                 996  messages sent
+              845104  messages received
+                   0  signals received
+                2429  voluntary context switches
+              680491  involuntary context switches
+         89536346825  instructions retired
+         56925547739  cycles elapsed
+          8446024232  peak memory footprint

@@ -1,0 +1,201 @@
+{
+  "clean_tool_call": {
+    "description": "Single well-formed tool_call; finish_reason=tool_calls. Adapter should map finish_reason -> 'tool_use', parse_ok=True, one ToolCall.",
+    "expected": {
+      "raw_text": "",
+      "finish_reason": "tool_use",
+      "parse_ok": true,
+      "n_tool_calls": 1,
+      "tool_name": "get_weather",
+      "tool_args": {"city": "SF"},
+      "tokens_in": 42,
+      "tokens_out": 11
+    },
+    "response": {
+      "id": "chatcmpl-test-clean",
+      "object": "chat.completion",
+      "created": 1745764000,
+      "model": "gpt-4.1-2025-04-14",
+      "system_fingerprint": "fp_test",
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "finish_reason": "tool_calls",
+          "logprobs": null,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [
+              {
+                "id": "call_abc123",
+                "type": "function",
+                "function": {
+                  "name": "get_weather",
+                  "arguments": "{\"city\": \"SF\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 42,
+        "completion_tokens": 11,
+        "total_tokens": 53,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null
+      }
+    }
+  },
+  "hallucinated_tool_call": {
+    "description": "Tool name not in registry. Adapter parses verbatim; runner classifies as hallucinated.",
+    "expected": {
+      "raw_text": "",
+      "finish_reason": "tool_use",
+      "parse_ok": true,
+      "n_tool_calls": 1,
+      "tool_name": "lookup_weather_api",
+      "tool_args": {"city": "SF"},
+      "tokens_in": 42,
+      "tokens_out": 13
+    },
+    "response": {
+      "id": "chatcmpl-test-hallu",
+      "object": "chat.completion",
+      "created": 1745764001,
+      "model": "gpt-4.1-2025-04-14",
+      "system_fingerprint": "fp_test",
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "finish_reason": "tool_calls",
+          "logprobs": null,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [
+              {
+                "id": "call_hallu1",
+                "type": "function",
+                "function": {
+                  "name": "lookup_weather_api",
+                  "arguments": "{\"city\": \"SF\"}"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 42,
+        "completion_tokens": 13,
+        "total_tokens": 55,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null
+      }
+    }
+  },
+  "refusal_safety": {
+    "description": "Safety refusal: message.refusal populated, no tool_calls. Adapter normalizes finish_reason to 'refusal'.",
+    "expected": {
+      "raw_text": "I cannot help with that request.",
+      "finish_reason": "refusal",
+      "parse_ok": true,
+      "n_tool_calls": 0,
+      "tokens_in": 30,
+      "tokens_out": 8
+    },
+    "response": {
+      "id": "chatcmpl-test-refusal",
+      "object": "chat.completion",
+      "created": 1745764002,
+      "model": "gpt-4.1-2025-04-14",
+      "system_fingerprint": "fp_test",
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "finish_reason": "stop",
+          "logprobs": null,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "refusal": "I cannot help with that request.",
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": null
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 30,
+        "completion_tokens": 8,
+        "total_tokens": 38,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null
+      }
+    }
+  },
+  "parse_fail_bad_json": {
+    "description": "Truncated JSON in tool_calls[0].function.arguments. Adapter must NOT raise; sets parse_ok=False, tool_calls=[].",
+    "expected": {
+      "raw_text": "",
+      "finish_reason": "tool_use",
+      "parse_ok": false,
+      "n_tool_calls": 0,
+      "tokens_in": 42,
+      "tokens_out": 9
+    },
+    "response": {
+      "id": "chatcmpl-test-parsefail",
+      "object": "chat.completion",
+      "created": 1745764003,
+      "model": "gpt-4.1-2025-04-14",
+      "system_fingerprint": "fp_test",
+      "service_tier": null,
+      "choices": [
+        {
+          "index": 0,
+          "finish_reason": "tool_calls",
+          "logprobs": null,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [
+              {
+                "id": "call_bad",
+                "type": "function",
+                "function": {
+                  "name": "get_weather",
+                  "arguments": "{\"city\": "
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 42,
+        "completion_tokens": 9,
+        "total_tokens": 51,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null
+      }
+    }
+  }
+}

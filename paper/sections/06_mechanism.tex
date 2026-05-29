@@ -1,0 +1,4 @@
+\section{Mechanism}
+\label{sec:mechanism}
+
+Anthropic produces zero events across the pooled $0/2{,}204$ trials, so any distractor-type contrast has to come from the Qwen3 side alone. There the peak shifts as scale grows. At $1.7$B the dominant type is near\_name ($3.7\%$); $4$B and $8$B move to matched\_random ($5.4\%$ and $3.0\%$); $14$B peaks on synonym ($7.2\%$); $32$B is flat at zero. The drift is suggestive but the matrix is small. A Friedman exact permutation test on the $\{1.7,4,8,14\}$B size-by-arm cells returns $\chi^2_{(3)}\!=\!3.0$ at $p\!=\!0.46$, with $n\!=\!4$ sizes and $\leq\!5$ events per cell. We are underpowered to call it. For now we read the pattern descriptively and decline to assign it to M-Retrieve, M-Metacog, or M-Constrain.

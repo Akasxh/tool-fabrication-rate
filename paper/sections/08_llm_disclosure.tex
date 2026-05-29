@@ -1,0 +1,21 @@
+\section*{LLM/Agent Usage Disclosure}
+\label{sec:llm-disclosure}
+
+\paragraph{Experimental subjects.} The paper evaluates eleven LLMs as
+subjects of measurement: five Anthropic 4.x versions (Opus~4.7,
+Sonnet 4/4.5/4.6, Haiku~4.5) via Anthropic's tool-use API, and six
+Qwen3-Instruct sizes (0.6B--32B) as 4-bit MLX builds on a $32$~GB
+Apple Silicon machine. All are treated as black-box targets;
+version snapshots, dated aliases, and decoding configurations are
+pinned in the supplementary manifest.
+
+\paragraph{Drafting, code, and statistics.} The paper text and the
+harness (adapters, intervention conditions, statistical scripts,
+trace logger, cost meter) were drafted with LLM-based assistance
+under author supervision. All claims, numerical results,
+methodological decisions, and statistical tests (Fisher's exact,
+Newcombe-hybrid TOST, Holm--Bonferroni, BCa cluster-bootstrap,
+Friedman+Nemenyi) are reproducible from the released harness and
+its $144$ unit tests; no $p$-value appears without a code path that
+regenerates it. Contributions, experimental design, scope claims,
+and limitations were authored under direct human supervision.

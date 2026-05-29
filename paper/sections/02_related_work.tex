@@ -1,0 +1,123 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Tool-using agents and benchmarks.}
+Tool-using LLM agents are evaluated on a small, fairly stable set of
+suites. The Berkeley Function-Calling Leaderboard~\citep{bfcl2024,bfclv4_2025}
+started as single-turn API selection and has grown into a stateful
+multi-turn suite. $\tau$-bench~\citep{taubench2024} pushes in a different
+direction, scoring dialog-driven retail and airline agents that must
+reconcile a user goal against a tool catalog. Both report
+\emph{end-to-end task success}, which fuses tool selection with reasoning,
+parsing, and policy errors into one number. Trace-level harnesses
+\citep{appworld2024,reactagent2023} expose more, yet still report
+pass-rate as the headline. We argue this is the wrong granularity for
+the failure we care about, and contribute a per-call diagnostic, the
+Tool-Existence Hallucination Rate (TEHR), that isolates a portable
+slice of these failures across vendors and benchmarks.
+
+\paragraph{Empirical analysis of agent failures.}
+Practitioners have informally reported that frontier models call tools
+that were never declared. \citet{czapla2026} reproduces the behavior
+across Claude, Gemini, and Grok, noting that ``Claude 4.5 hallucinated
+access to a tool I hadn't given it yet \ldots I've reproduced similar
+behavior with Gemini and Grok.'' On the academic side,
+\citet{bugstudy2026} mine 998 bug reports from CrewAI and LangChain
+and find ``API misuse,'' ``API incompatibility,'' and ``Documentation
+Desync'' dominating the root-cause distribution, with the Self-Action
+lifecycle stage hit hardest. Neither line puts a number on the failure
+under controlled conditions. We do, formalizing the unauthorized-tool
+subclass as TEHR and reporting it across five models.
+
+\paragraph{Prior tool-hallucination metrics.}
+Tool-call name errors have been measured under several aggregations,
+and the choice of denominator matters. \citet{li2023apibank} introduce
+``API Hallucination'' in API-Bank as a ground-truth-vs-prediction
+name-mismatch error category, with per-task error rates up to $61.4\%$
+on then-current models. The closest prior measurement to ours is
+\citet{huang2024metatool}, whose MetaTool sub-task~3 deliberately
+removes the correct tool from the registry and tracks the resulting
+fabrication via a per-query Correct Selection Rate. That isolates the
+registry-membership phenomenon cleanly, but stays at the per-query
+level on single-turn instructions. \citet{cao2025reliability} propose
+Reliability Alignment, which bundles non-existent-tool invocations
+together with relevance and timing errors into one aggregate score.
+BFCL v4's hallucination metric \citep{bfclv4_2025} measures a
+different failure: invoking a tool when none is appropriate. We differ
+on denominator and setting. TEHR extends MetaTool's premise from
+\emph{per-query} to \emph{per-call} on multi-turn agentic traces, and
+from controlled removal to the natural distribution of
+registry-membership violations. Per-call is what lets the intervention
+in Section~\ref{sec:method:rvr} be evaluated against a clean ablation:
+$C_1$ versus a content-controlled $C_{0.7}$ structured-error baseline,
+on the strict subset of hallucination-tagged tool calls. Aggregate
+metrics cannot expose that contrast.
+
+\paragraph{Constrained decoding and self-correction.}
+A separate line constrains agents at decode time. Grammar-constrained
+and JSON-mode decoding \citep{outlines2023,jsonmode2024} prevent
+malformed calls. Provider-side function-calling APIs reject unknown
+names but surface the error as an opaque exception
+\citep{openaitools2024,anthropictools2024}. Self-correction methods
+such as Reflexion \citep{reflexion2023} and self-debug
+\citep{selfdebug2023} push the diagnosis back onto the agent's own
+trace. The closest neighbor in method shape is CRITIC
+\citep{gou2024critic}, an external-feedback verify-then-correct loop
+that needs no training and treats the model as a black box. RVR is a
+registry-membership-specialized instance of that pattern. What
+distinguishes it is the content-controlled $C_{0.5}/C_{0.7}/C_1$
+ablation, which separates whether the gain comes from retrying, from
+a structured-error code, or from the registry list itself. Production
+frameworks have started to adopt structured tool-not-found feedback;
+the LangChain community \citep{langchain_toolnotfound2025} explicitly
+proposes returning a structured \texttt{ToolMessage} on a failed call,
+but stops short of echoing the available registry. That gap is exactly
+what our $C_{0.7}/C_1$ contrast measures.
+
+\paragraph{Closely related interventions.}
+Three concurrent works deserve direct comparison. \citet{licl2026}
+introduce Localized In-Context Learning (L-ICL) for symbolic planners,
+locating the first constraint violation and injecting a minimal
+corrective example, lifting valid-plan rate from $59\%$ to $89\%$ on
+$8{\times}8$ gridworld. RVR is similarly minimal but operates on
+tool-using agents and pulls its signal from the runtime registry rather
+than curated examples. \citet{fissiongrpo2026} train Qwen3-8B with
+Fission-GRPO, an RL recipe that resamples failed trajectories with
+diagnostic feedback, gaining $+5.7$pp error recovery on BFCL-v4
+multi-turn. That is a training-time fix on the same benchmark family
+we target at inference time, and the two are orthogonal.
+\citet{englander2026} describe a related failure: agents discover
+useful signals but fail to act on them (``agents use the environment
+to fetch expected information, but not to revise their strategy'').
+RVR addresses the dual problem of acting on \emph{unobserved} tools,
+evaluated as a paired content-controlled contrast rather than
+observationally.
+
+\paragraph{Adjacent work.}
+\citet{toolbehonest2024} introduces a multi-level hallucination
+diagnostic for tool-augmented LLMs that is closer to our scope but
+operates per-task. \citet{stableTOOLbench2024} targets tool-server
+stability rather than name existence, and production tool-skill
+packaging \citep{anthropicagentskills2025} is orthogonal.
+
+\paragraph{Our differentiation.}
+Four contributions distinguish this work from the prior art above.
+A per-call TEHR diagnostic disaggregates registry-membership errors
+from the relevance, argument, and timing errors that aggregate metrics
+\citep{li2023apibank,cao2025reliability} bundle together. We audit
+five Anthropic 4.x model versions over an $11$-month window and run a
+$6$-point Qwen3 size sweep ($0.6$B--$32$B), surfacing an
+\emph{intra-family non-monotonicity} that single-tier comparisons in
+the prior literature could not have caught. RVR itself is a
+training-free, registry-only, single-turn re-prompt, validated
+end-to-end with a $14 \to 0$ event prevention pattern on every Qwen3
+tier with $\mathrm{TEHR}>0$ (no SFT or RL as in
+\citealp{fissiongrpo2026}; no curated examples as in \citealp{licl2026}).
+The content-controlled
+$\mathrm{C}_{0.5}/\mathrm{C}_{0.7}/\mathrm{C}_1$ ablation isolates the
+registry list itself, rather than crediting any retry. The result is
+a tier-separated measurement of the cost-quality trade-off in agentic
+deployments, not a single-model benchmark gain. The TEHR scaling
+shape itself ($0.6$B$\to\!14$B rise, $32$B collapse) is a finding
+aggregate metrics could not have produced, with the peak distractor
+type shifting across sizes.
