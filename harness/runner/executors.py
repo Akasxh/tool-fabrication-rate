@@ -82,13 +82,46 @@ def make_bfcl_executor(task: Task) -> Callable[[str, dict], dict]:
     return executor
 
 
+def _resolve_tau_env_class(fqn: str) -> Any:
+    """Resolve the τ-bench env class for ``fqn`` (e.g.
+    ``tau_bench.envs.retail.MockRetailDomainEnv``).
+
+    The loader stubs the ``...retail`` package ``__init__`` (which would import
+    litellm at import time) with an empty namespace module, so the class is NOT
+    an attribute of the package object. We therefore try the package attribute
+    first, then fall back to the ``...retail.env`` submodule that actually
+    defines the class. Stubs are (re)installed defensively in case the executor
+    is constructed before the loader ran in this process."""
+    from harness.bench_loaders.tau_bench import (
+        DEFAULT_DATA_DIR,
+        _install_namespace_stubs,
+    )
+
+    _install_namespace_stubs(Path(DEFAULT_DATA_DIR))
+    module_name, _, class_name = fqn.rpartition(".")
+    mod = importlib.import_module(module_name)
+    cls = getattr(mod, class_name, None)
+    if cls is not None:
+        return cls
+    # Fallback: the real definition lives in the `.env` submodule.
+    submod = importlib.import_module(f"{module_name}.env")
+    return getattr(submod, class_name)
+
+
 def make_tau_bench_executor(
     task: Task, anthropic_client: Optional[Any] = None,
 ) -> Callable[[str, dict], dict]:
     """Build a τ-bench env-step executor for ``task``.
 
     Patches τ-bench's GPT-4o user simulator with the Haiku replacement BEFORE
-    the env class is imported (HARNESS_SPEC §8.9).
+    the env class is imported (HARNESS_SPEC §8.9). Calls ``env.reset(task_index)``
+    so the env loads the task DB + user instruction; the resulting initial
+    observation (the user's first message) is exposed on
+    ``executor.state["initial_observation"]`` for the runner to seed history.
+
+    The agent talks to the user simulator via the ``respond`` pseudo-tool
+    (τ-bench ``RESPOND_ACTION_NAME``); a ``respond`` call is stepped through the
+    env exactly like a real tool, routing ``content`` to the user sim.
     """
     from harness.bench_loaders._tau_user_simulator_haiku import (
         patch_tau_bench_user_loader,
@@ -97,12 +130,26 @@ def make_tau_bench_executor(
     expected = task.expected_outcome or {}
     fqn: str = expected.get("env_class", "tau_bench.envs.retail.MockRetailDomainEnv")
     init_kwargs: dict = dict(expected.get("env_init_kwargs", {}) or {})
+    task_index: Optional[int] = expected.get("task_index")
 
     patch_tau_bench_user_loader(anthropic_client=anthropic_client)
-    module_name, _, class_name = fqn.rpartition(".")
-    EnvCls = getattr(importlib.import_module(module_name), class_name)
+    EnvCls = _resolve_tau_env_class(fqn)
     env = EnvCls(**init_kwargs)
-    state: dict[str, Any] = {"done": False, "reward": 0.0, "last_info": None}
+
+    state: dict[str, Any] = {
+        "done": False, "reward": 0.0, "last_info": None,
+        "initial_observation": "", "reset_ok": False, "reset_error": None,
+    }
+    # Reset loads the task DB and returns the user's opening message. Never let a
+    # reset failure crash the runner — record it so the cell surfaces a system
+    # failure instead.
+    try:
+        reset_resp = env.reset(task_index=task_index)
+        state["initial_observation"] = getattr(reset_resp, "observation", "") or ""
+        state["last_info"] = getattr(reset_resp, "info", None)
+        state["reset_ok"] = True
+    except Exception as exc:  # noqa: BLE001
+        state["reset_error"] = f"{type(exc).__name__}: {exc}"
 
     def executor(name: str, args: dict) -> dict:
         if state["done"]:

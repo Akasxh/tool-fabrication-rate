@@ -126,14 +126,27 @@ class AnthropicAdapter(ModelAdapter):
         """Single ``messages.create`` round-trip; see class docstring."""
         anthropic_tools = _canonical_to_anthropic_tools(tools)
         start_ts = monotonic_ns()
+        # Anthropic takes `system` as a top-level kwarg, not a message role.
+        # Extract any leading system-role message(s) into it. Additive: callers
+        # that never send a system message (BFCL path) are unaffected — the
+        # `messages` list and request shape are byte-identical to before.
+        system_text: str = ""
+        api_messages = list(messages)
+        while api_messages and api_messages[0].get("role") == "system":
+            sys_msg = api_messages.pop(0)
+            content = sys_msg.get("content", "")
+            if isinstance(content, str):
+                system_text += (("\n\n" if system_text else "") + content)
         # Opus 4.7 deprecates `temperature` — only Sonnet 4.6 / Haiku 4.5 / older
         # 3.5 family accept it. Build kwargs conditionally.
         kwargs: dict[str, Any] = {
             "model": self.model_id,
             "max_tokens": max_tokens,
             "tools": anthropic_tools,
-            "messages": messages,
+            "messages": api_messages,
         }
+        if system_text:
+            kwargs["system"] = system_text
         if not self.model_id.startswith("claude-opus-4"):
             kwargs["temperature"] = LOCKED_TEMPERATURE
         try:

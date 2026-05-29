@@ -42,6 +42,33 @@ from harness.types import ProviderResponse, ToolCall
 # at G0.5 (PHASE0/mlx_feasibility.md) on the live model.
 _TOOL_CALL_RE = re.compile(r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.DOTALL)
 
+# --- Cross-family tool-call envelopes (ADDITIVE; do NOT touch Qwen path) --- #
+# Mistral v0.3 emits ``[TOOL_CALLS][{"name":..,"arguments":..}, ...]`` (a JSON
+# *array*) followed by EOS. Confirmed from the model's bundled "tool_use" chat
+# template (``'[TOOL_CALLS]' + message['content']``). We capture from the marker
+# to end-of-string and JSON-decode the bracketed list ourselves (greedy: the
+# array is the model's final output).
+_MISTRAL_TOOL_CALLS_RE = re.compile(r"\[TOOL_CALLS\]\s*(\[.*\])", re.DOTALL)
+
+# Llama-3.1 JSON tool-calling: the model emits a bare JSON object
+# ``{"name":..,"parameters":..}`` (verified from saved C0 traces), optionally
+# prefixed with the ``<|python_tag|>`` special token. ``parameters`` is Llama's
+# spelling of ``arguments`` (handled by the shared key-aliasing below).
+_PYTHON_TAG = "<|python_tag|>"
+
+# Reasoning distills (DeepSeek-R1-Distill, Qwen3 with thinking) wrap chain-of-
+# thought in ``<think>...</think>``. We strip it before parsing so a trailing
+# tool-call envelope is still recoverable. For the Qwen3 path enable_thinking is
+# already False, so this is a no-op there (no <think> present) — verified
+# against the existing §4 fixtures.
+_THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
+
+# Qwen3 model ids are the only ones whose chat template accepts the
+# ``enable_thinking`` kwarg as a first-class reasoning toggle. Other families
+# (Llama/Mistral/Phi/gemma/DeepSeek-distill) either ignore it or would choke, so
+# we gate the kwarg on the family.
+_QWEN3_MARKER = "qwen3"
+
 # Date hint locked to today's date for the run; Qwen3 hallucinates the year on
 # relative-date prompts (G0.5 quirk #3).
 _DATE_HINT: str = "Today's date is 2026-04-27."
@@ -115,28 +142,126 @@ class MLXAdapter(ModelAdapter):
         return out
 
     @staticmethod
-    def _parse_tool_calls(raw: str) -> tuple[list[ToolCall], bool]:
-        """Parse zero-or-more ``<tool_call>{json}</tool_call>`` envelopes.
+    def _coerce_call(obj: Any) -> ToolCall:
+        """Normalize one decoded call dict into a :class:`ToolCall`.
 
-        Returns:
-            ``(tool_calls, parse_ok)``. ``parse_ok`` is False iff at least one
-            envelope was present but its JSON failed to decode or lacked
-            ``name``; in that case ``tool_calls`` is the empty list (we
-            DON'T emit partial results — runner classifies the whole response
-            as ``parse_fail``).
+        Accepts both ``arguments`` (Qwen3/Mistral) and ``parameters``
+        (Llama-3.1) as the argument key — they are aliases. Raises
+        ``KeyError``/``TypeError`` (caught by the caller) if ``name`` is
+        absent or ``obj`` isn't a mapping, so a malformed call degrades to
+        ``parse_ok=False`` exactly like the legacy Qwen path.
         """
-        tool_calls: list[ToolCall] = []
-        for match in _TOOL_CALL_RE.finditer(raw):
+        name = obj["name"]  # KeyError → parse_fail, matching legacy behavior
+        args = obj.get("arguments")
+        if args is None:
+            args = obj.get("parameters", {})
+        if not isinstance(args, dict):
+            args = {}
+        return ToolCall(name=str(name), arguments=args)
+
+    @classmethod
+    def _parse_tool_calls(cls, raw: str) -> tuple[list[ToolCall], bool]:
+        """Parse zero-or-more tool-call envelopes across model families.
+
+        Family precedence (first matching family wins; the Qwen3 path is
+        unchanged and still checked first so existing behavior is byte-for-byte
+        preserved):
+
+            1. Qwen3   — ``<tool_call>{json}</tool_call>`` (one or more).
+            2. Mistral — ``[TOOL_CALLS][{...}, ...]`` (a JSON array).
+            3. Llama   — ``<|python_tag|>{json}`` or a bare top-level
+                         ``{"name":..,"parameters":..}`` object.
+
+        ``<think>...</think>`` reasoning blocks are stripped before any of the
+        bare/array forms are considered (Qwen3 runs with enable_thinking=False
+        so this is a no-op there).
+
+        Returns ``(tool_calls, parse_ok)``. ``parse_ok`` is False iff a
+        recognized envelope/marker was present but its JSON failed to decode or
+        lacked ``name``; in that case ``tool_calls`` is empty (no partial
+        results — the runner classifies the whole response as ``parse_fail``).
+        """
+        # --- Tier 1: Qwen3 envelope (UNCHANGED). ---
+        qwen_matches = list(_TOOL_CALL_RE.finditer(raw))
+        if qwen_matches:
+            tool_calls: list[ToolCall] = []
+            for match in qwen_matches:
+                try:
+                    obj = json.loads(match.group(1))
+                    tool_calls.append(cls._coerce_call(obj))
+                except (json.JSONDecodeError, KeyError, TypeError):
+                    return [], False
+            return tool_calls, True
+
+        # Strip reasoning so the bare/array detectors below see the final answer.
+        stripped = _THINK_RE.sub("", raw).strip()
+
+        # --- Tier 2: Mistral [TOOL_CALLS][...] array. ---
+        m = _MISTRAL_TOOL_CALLS_RE.search(stripped)
+        if m:
             try:
-                obj = json.loads(match.group(1))
-                name = obj["name"]
+                arr = json.loads(m.group(1))
+                if not isinstance(arr, list):
+                    return [], False
+                return [cls._coerce_call(o) for o in arr], True
             except (json.JSONDecodeError, KeyError, TypeError):
                 return [], False
-            arguments = obj.get("arguments", {}) if isinstance(obj, dict) else {}
-            if not isinstance(arguments, dict):
-                arguments = {}
-            tool_calls.append(ToolCall(name=str(name), arguments=arguments))
-        return tool_calls, True
+
+        # --- Tier 3: Llama bare JSON, optionally <|python_tag|>-prefixed. ---
+        candidate = stripped
+        if _PYTHON_TAG in candidate:
+            candidate = candidate.split(_PYTHON_TAG, 1)[1].strip()
+            had_marker = True
+        else:
+            had_marker = False
+        if candidate.startswith("{") or candidate.startswith("["):
+            try:
+                obj = json.loads(candidate)
+            except json.JSONDecodeError:
+                # An explicit python_tag promised a call but the JSON is broken.
+                return ([], False) if had_marker else ([], True)
+            objs = obj if isinstance(obj, list) else [obj]
+            # Only treat as tool calls if every element looks like one (has a
+            # ``name`` key); otherwise it's incidental JSON content, not a call.
+            if all(isinstance(o, dict) and "name" in o for o in objs) and objs:
+                try:
+                    return [cls._coerce_call(o) for o in objs], True
+                except (KeyError, TypeError):
+                    return [], False
+            return ([], False) if had_marker else ([], True)
+
+        # No recognized envelope/marker → legitimate no-tool-call response.
+        return [], True
+
+    @staticmethod
+    def _strip_envelopes(raw: str) -> str:
+        """Remove all recognized tool-call envelopes from the text channel.
+
+        Mirrors :meth:`_parse_tool_calls`'s family coverage so downstream
+        redaction / refusal classification never sees raw JSON args. The Qwen3
+        ``<tool_call>`` substitution is applied exactly as before; the
+        cross-family markers are additive.
+        """
+        out = _TOOL_CALL_RE.sub("", raw)
+        out = _THINK_RE.sub("", out)
+        # Mistral array: drop from the marker to end-of-string.
+        out = _MISTRAL_TOOL_CALLS_RE.sub("", out)
+        # Llama python_tag + trailing bare JSON object/array.
+        if _PYTHON_TAG in out:
+            out = out.split(_PYTHON_TAG, 1)[0]
+        out = out.strip()
+        # Bare Llama JSON call with no marker: if the *entire* remaining text is
+        # a JSON object/array carrying a ``name`` key, it's the call itself —
+        # blank the text channel (parity with the envelope families).
+        if out.startswith("{") or out.startswith("["):
+            try:
+                obj = json.loads(out)
+            except json.JSONDecodeError:
+                return out
+            objs = obj if isinstance(obj, list) else [obj]
+            if objs and all(isinstance(o, dict) and "name" in o for o in objs):
+                return ""
+        return out
 
     def _generate(self, prompt: str, max_tokens: int) -> str:
         """Wrap ``mlx_lm.generate`` so test code only needs to patch one symbol.
@@ -182,13 +307,19 @@ class MLXAdapter(ModelAdapter):
         # Date-hint injection per §D.1 / §8.5.
         prepared_messages = self._inject_date_hint(messages)
 
-        # Render via Qwen3 chat template; CRITICAL: enable_thinking=False.
+        # Render via the model's chat template. CRITICAL: enable_thinking=False
+        # is a Qwen3-only knob (its reasoning toggle defaults ON and injects
+        # <think> blocks that break the parser). Other families' templates don't
+        # accept it, so we pass it only for Qwen3 (model_id-gated, ADDITIVE).
+        template_kwargs: dict[str, Any] = {
+            "tools": list(tools),
+            "add_generation_prompt": True,
+            "tokenize": False,
+        }
+        if _QWEN3_MARKER in self.model_id.lower():
+            template_kwargs["enable_thinking"] = False
         prompt = self._tokenizer.apply_chat_template(
-            prepared_messages,
-            tools=list(tools),
-            add_generation_prompt=True,
-            tokenize=False,
-            enable_thinking=False,
+            prepared_messages, **template_kwargs
         )
 
         start_ns = monotonic_ns()
@@ -199,8 +330,10 @@ class MLXAdapter(ModelAdapter):
         tool_calls, parse_ok = self._parse_tool_calls(raw)
 
         # Strip envelopes from the text channel so downstream redaction /
-        # refusal classification sees only natural-language content.
-        raw_text = _TOOL_CALL_RE.sub("", raw).strip()
+        # refusal classification sees only natural-language content. Covers all
+        # supported families (Qwen3 <tool_call>, Mistral [TOOL_CALLS], Llama
+        # python_tag / bare JSON, plus <think> reasoning).
+        raw_text = self._strip_envelopes(raw)
 
         # Token accounting — encode prompt + raw via the same tokenizer that
         # produced them. ``encode`` returns a list[int] for both

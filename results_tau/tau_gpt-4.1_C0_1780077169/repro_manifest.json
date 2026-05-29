@@ -1,0 +1,62 @@
+{
+  "run_id": "tau_gpt-4.1_C0_1780077169",
+  "started_at": "2026-05-29T17:52:49.944047+00:00",
+  "git_commit": "d64683c0f7e25a137483e85777fc15be14dcb7be",
+  "python_version": "3.12.13",
+  "os": "macOS-26.4.1-arm64-arm-64bit",
+  "sdks": {
+    "anthropic": "0.97.0",
+    "openai": "2.32.0",
+    "mlx_lm": "0.31.3",
+    "scipy": "1.13.1",
+    "numpy": "1.26.4",
+    "statsmodels": "0.14.4",
+    "scikit-posthocs": "0.10.0",
+    "pydantic": "2.13.4"
+  },
+  "datasets": {
+    "bfcl_v4": {
+      "commit": "6ea5797",
+      "license": "Apache-2.0"
+    },
+    "tau_bench_retail": {
+      "commit": "59a200c",
+      "license": "MIT"
+    }
+  },
+  "models": {
+    "claude-sonnet-4-6": {
+      "resolved_via_models_api": null
+    },
+    "claude-haiku-4-5-20251001": {
+      "alias": "claude-haiku-4-5"
+    },
+    "gpt-4.1-2025-04-14": {
+      "alias": "gpt-4.1"
+    },
+    "gpt-4.1-mini-2025-04-14": {
+      "alias": "gpt-4.1-mini"
+    },
+    "mlx-community/Qwen3-8B-4bit": {
+      "hf_revision_sha": "545dc4251c05440727734bcd94334791f6ab0192",
+      "local_mirror": "harness/data/mlx_models/Qwen3-8B-4bit/"
+    }
+  },
+  "decoding": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "max_tokens": 1024
+  },
+  "seeds": {
+    "loader_seed": 0,
+    "bootstrap_seed": 0,
+    "permutation_seed": 0
+  },
+  "n_per_cell": {
+    "probe": 25
+  },
+  "conditions": [
+    "C0"
+  ],
+  "addendum_version": "R1"
+}

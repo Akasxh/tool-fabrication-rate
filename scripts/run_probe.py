@@ -92,6 +92,16 @@ def make_distractor_schema(name: str, description_len: int, arity: int) -> dict:
     }
 
 
+def _inner_schema(schema: dict) -> dict:
+    """Return the canonical-inner view of a tool schema. BFCL emits
+    canonical-inner ({name, description, parameters}); τ-bench emits the OpenAI
+    wrapper ({type:"function", function:{...}}). desc/arity must be read from
+    the inner fields in both cases so matched_random distractors match shape."""
+    if schema.get("type") == "function" and isinstance(schema.get("function"), dict):
+        return schema["function"]
+    return schema
+
+
 def inject(task, distractor_type: str, rng: random.Random,
            remove_target: bool = False):
     """Return a new Task with one distractor tool added to the registry.
@@ -100,15 +110,20 @@ def inject(task, distractor_type: str, rng: random.Random,
     registry and the distractor is added in its place — this reproduces the
     Czapla-style scenario where the agent expects a tool to exist but the
     registry only offers a near-similar one.
+
+    Benchmark-agnostic: handles both BFCL canonical-inner registries and
+    τ-bench OpenAI-wrapper registries. The injected distractor is always
+    canonical-inner; the runner's tau path flattens the whole registry to
+    canonical-inner before classification, so mixing shapes is safe.
     """
     if not task.registry:
         return task
 
     real_names = list(task.registry.keys())
     target = rng.choice(real_names)
-    target_schema = task.registry[target]
-    desc_len = len(target_schema.get("description", "") or "")
-    arity = len(target_schema.get("parameters", {}).get("properties", {}) or {})
+    inner = _inner_schema(task.registry[target])
+    desc_len = len(inner.get("description", "") or "")
+    arity = len(inner.get("parameters", {}).get("properties", {}) or {})
 
     if distractor_type == "near_name":
         bad = _near_name(target)
@@ -149,7 +164,14 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--condition", default="C0", choices=["C0", "C0_5", "A2", "C0_7", "C0_8", "C1"])
     p.add_argument("--run-id", default=None)
     p.add_argument("--output", default="results")
+    p.add_argument("--benchmark", default="bfcl", choices=["bfcl", "tau_bench"],
+                   help="Which benchmark's Tasks to probe. tau_bench loads the "
+                        "Sierra retail tasks (a genuinely different, non-zero-base "
+                        "benchmark) and uses the τ-bench env-step executor + "
+                        "Haiku user simulator.")
     p.add_argument("--bfcl-split", default="multi_turn_base")
+    p.add_argument("--tau-split", default="test",
+                   help="τ-bench split: test (115), dev (20), train (500).")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--remove-target", action="store_true",
                    help="Also remove the real target tool the distractor mimics. "
@@ -157,8 +179,7 @@ def main(argv: list[str] | None = None) -> int:
                         "tool that exists in the runtime but not in the provided registry.")
     args = p.parse_args(argv)
 
-    from harness.bench_loaders.bfcl import load_bfcl
-    from harness.runner.executors import make_bfcl_executor
+    from harness.runner.executors import make_bfcl_executor, make_tau_bench_executor
     from harness.runner.loop import run_task
     from harness.cost_meter import CostMeter
     from harness.trace_logger import TraceLogger
@@ -190,8 +211,19 @@ def main(argv: list[str] | None = None) -> int:
         out_path=run_dir / "repro_manifest.json",
     )
 
-    base_tasks = list(load_bfcl(n=args.n, seed=args.seed, split=args.bfcl_split))
-    print(f"Loaded {len(base_tasks)} base tasks from {args.bfcl_split}.", file=sys.stderr)
+    if args.benchmark == "tau_bench":
+        from harness.bench_loaders.tau_bench import load_tau_bench_retail
+        base_tasks = list(load_tau_bench_retail(n=args.n, seed=args.seed,
+                                                split=args.tau_split))
+        split_label = f"tau_{args.tau_split}"
+        make_executor = make_tau_bench_executor
+    else:
+        from harness.bench_loaders.bfcl import load_bfcl
+        base_tasks = list(load_bfcl(n=args.n, seed=args.seed, split=args.bfcl_split))
+        split_label = args.bfcl_split
+        make_executor = make_bfcl_executor
+    print(f"Loaded {len(base_tasks)} base tasks from {split_label} "
+          f"(benchmark={args.benchmark}).", file=sys.stderr)
     print(f"Distractor types: {distractor_types}", file=sys.stderr)
     print(f"Models: {models}", file=sys.stderr)
     print(f"Condition: {args.condition}", file=sys.stderr)
@@ -200,8 +232,9 @@ def main(argv: list[str] | None = None) -> int:
     for model in models:
         adapter = _make_adapter(model)
         meter = CostMeter(budget_usd=400.0)
+        model_slug = model.replace("/", "_")
         for dtype in distractor_types:
-            cell_key = f"anthropic_{model}_{args.bfcl_split}_{args.condition}_{dtype}"
+            cell_key = f"{model_slug}_{split_label}_{args.condition}_{dtype}"
             trace_path = run_dir / f"{cell_key}.jsonl"
             cell_summary = {"runs": 0, "tehr_num": 0, "tehr_denom": 0, "passes": 0}
             print(f"\n[{cell_key}] dispatching n={args.n} (distractor={dtype})…",
@@ -213,7 +246,7 @@ def main(argv: list[str] | None = None) -> int:
                     probe_task = inject(base_task, dtype, rng,
                                          remove_target=args.remove_target)
                     try:
-                        executor = make_bfcl_executor(probe_task)
+                        executor = make_executor(probe_task)
                     except Exception as exc:
                         print(f"  executor failed: {exc}", file=sys.stderr)
                         continue

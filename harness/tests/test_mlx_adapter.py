@@ -186,6 +186,56 @@ def test_lazy_load_does_not_run_at_construction() -> None:
     assert a._model is None and a._tokenizer is None
 
 
+# Cross-family parse-only checks (ADDITIVE; A3 cross-family fix) ----------- #
+@pytest.mark.parametrize(
+    "raw, want_name, want_args",
+    [
+        # Llama-3.1 bare JSON with `parameters` alias (verified from C0 traces).
+        ('{"name": "mkdir", "parameters": {"dir_name": "Projects"}}',
+         "mkdir", {"dir_name": "Projects"}),
+        # Llama-3.1 with <|python_tag|> prefix.
+        ('<|python_tag|>{"name": "mv", "parameters": {"src": "a", "dst": "b"}}',
+         "mv", {"src": "a", "dst": "b"}),
+        # Mistral v0.3 [TOOL_CALLS] JSON array with `arguments`.
+        ('[TOOL_CALLS][{"name": "mkdir", "arguments": {"dir_name": "Projects"}}]',
+         "mkdir", {"dir_name": "Projects"}),
+        # Reasoning-distill <think> block stripped, trailing Qwen envelope kept.
+        ('<think>reasoning</think>\n<tool_call>{"name": "ls", "arguments": {}}</tool_call>',
+         "ls", {}),
+    ],
+)
+def test_cross_family_parse(raw: str, want_name: str, want_args: dict) -> None:
+    calls, ok = MLXAdapter._parse_tool_calls(raw)
+    assert ok is True
+    assert len(calls) == 1
+    assert calls[0].name == want_name
+    assert calls[0].arguments == want_args
+    assert MLXAdapter._strip_envelopes(raw) == ""
+
+
+def test_cross_family_incidental_json_not_a_call() -> None:
+    # Bare JSON without a `name` key is content, not a tool call.
+    calls, ok = MLXAdapter._parse_tool_calls('{"result": 42}')
+    assert ok is True and calls == []
+    assert MLXAdapter._strip_envelopes('{"result": 42}') == '{"result": 42}'
+
+
+def test_qwen_path_unchanged_for_malformed_envelope() -> None:
+    # Regression guard: malformed Qwen envelope still parse_fail, raw_text "".
+    raw = '<tool_call>{"name":"x", "arguments": {oops}</tool_call>'
+    calls, ok = MLXAdapter._parse_tool_calls(raw)
+    assert ok is False and calls == []
+    assert MLXAdapter._strip_envelopes(raw) == ""
+
+
+def test_enable_thinking_not_passed_for_non_qwen3() -> None:
+    a, tok, gen = _adapter("plain text response")
+    a.model_id = "mlx-community/Llama-3.1-8B-Instruct-4bit"
+    _go(a, gen)
+    _, kw = tok.apply_chat_template.call_args
+    assert "enable_thinking" not in kw
+
+
 def test_ensure_loaded_calls_mlx_lm_load_once() -> None:
     tok = MagicMock(apply_chat_template=MagicMock(return_value="P"),
                     encode=MagicMock(return_value=[0, 1, 2]))
