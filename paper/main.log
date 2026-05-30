@@ -632,41 +632,20 @@ Underfull \vbox (badness 6477) has occurred while \output is active []
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
-Underfull \hbox (badness 1253) in paragraph at lines 216--226
-\TU/pcr/m/n/10 ing the registry list on top buys no further re-
- []
-
-
-Underfull \hbox (badness 1092) in paragraph at lines 216--226
-\TU/pcr/m/n/10 duction (Newcombe-hybrid 95% CI on $\OT1/cmr/m/n/10 C[]  \OMS/cm
-sy/m/n/10 ^^@  \OT1/cmr/m/n/10 C[]$\TU/pcr/m/n/10 :
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [6]
-Underfull \hbox (badness 1342) in paragraph at lines 291--291
+Underfull \hbox (badness 1342) in paragraph at lines 296--296
 [][][]\TU/ptm/m/it/9 Additional open-family runs (Mistral-7B, Qwen2.5
  []
 
 
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 302--316
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 307--321
  [][] 
  []
 
-) (sections/06_mechanism
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [7]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-)
-(sections/07_limitations) (main.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [8]
-[9]) (sections/08_llm_disclosure) (sections/A1_appendix
+) (sections/06_mechanism [7]) (sections/07_limitations) [8] (main.bbl [9])
+(sections/08_llm_disclosure) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
@@ -698,38 +677,31 @@ Overfull \hbox (312.51326pt too wide) in paragraph at lines 56--93
  []
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 138--150
+Underfull \hbox (badness 1092) in paragraph at lines 138--153
 []\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [10])
-Underfull \hbox (badness 10000) in paragraph at lines 151--112
+[10])
+Underfull \hbox (badness 10000) in paragraph at lines 154--112
 []\TU/pcr/m/n/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 151--112
+Underfull \hbox (badness 10000) in paragraph at lines 154--112
 [][]\TU/pcr/m/n/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
  []
 
 
-Underfull \hbox (badness 1694) in paragraph at lines 151--112
+Underfull \hbox (badness 1694) in paragraph at lines 154--112
 \TU/pcr/m/n/10 the aggregator and statistical scripts, the repro-
  []
 
 
-Underfull \hbox (badness 1596) in paragraph at lines 151--112
+Underfull \hbox (badness 1596) in paragraph at lines 154--112
 \TU/pcr/m/n/10 Distractor-injection RNG uses a SHA-256-derived
  []
 
-
-Underfull \vbox (badness 2478) has occurred while \output is active []
-
- [11]
-[12
+[11] [12
 
 ] (main.aux)
 
@@ -738,4 +710,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (12 pages, 549360 bytes).
+Output written on main.xdv (12 pages, 557020 bytes).

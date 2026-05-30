@@ -56,7 +56,7 @@ tested on $N\!=\!15$ \texttt{multi\_turn\_base} tasks where $\mathrm{C}_0$
 already passes. We ran five Anthropic 4.x versions over an $11$-month window
 across the Opus, Sonnet, and Haiku families. On this probe every cell
 is $\boldsymbol{0/N}$ (Table~\ref{tab:anth-temporal};
-$95\%$ two-sided pooled upper bound $\leq\!0.16\%$). Combine the regime cells
+$95\%$ two-sided pooled upper bound $\leq\!0.19\%$). Combine the regime cells
 with the probe cells and the $\mathrm{C}_0$ Anthropic audit pools to
 \textbf{$\boldsymbol{0/2{,}592}$} (probe $1{,}931$ $+$ regime $661$;
 per-call aggregator, deduplicated across overlapping run-ids), or
@@ -208,8 +208,10 @@ $N$ (Section~\ref{sec:limitations:rvr-null}).
 \centering
 \includegraphics[width=0.62\linewidth]{figures/fig2_ablation_ladder}
 \caption{Qwen3-8B 4-condition ablation. The structured-error
-envelope ($\mathrm{C}_{0.7}$) drives the prevention; adding the
-registry list ($\mathrm{C}_1$) adds no further reduction.}
+envelope ($\mathrm{C}_{0.7}$) already takes TFR to zero; adding the
+registry list ($\mathrm{C}_1$) yields no further \emph{detectable}
+reduction (both arms zero-event; see \S\ref{sec:mechanism} for why this
+bounds rather than proves a format-over-content account).}
 \label{fig:ablation}
 \end{figure}
 
@@ -217,8 +219,8 @@ The four-condition ladder on Qwen3-8B walks down a clean gradient
 (Figure~\ref{fig:ablation}). Opaque baseline $1.46\%$ ($9/615$), naive
 retry $0.39\%$ ($1/258$), structured envelope $\mathrm{C}_{0.7}$ $0/448$
 ($\leq\!0.82\%$), full RVR $\mathrm{C}_1$ $0/258$. The structured
-envelope drives the prevention; stacking the registry list on top buys
-no further reduction (Newcombe-hybrid 95\% CI on
+envelope alone already takes TFR to zero; stacking the registry list on
+top buys no further \emph{detectable} reduction (Newcombe-hybrid 95\% CI on
 $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$: $[-1.5, +1.4]$~pp), as we analyze in
 Section~\ref{sec:mechanism}. The practical upshot: a deployer who wants
 prevention without echoing internal tool names can ship
@@ -234,7 +236,7 @@ one-sided $p$ values are $\{0.26, 0.12, 0.042, 0.040\}$ for
 $1.7$B/$4$B/$8$B/$14$B respectively. Each tier is individually
 underpowered, but the sign is consistent. The pooled contrast
 survives Holm--Bonferroni at
-$p_{\mathrm{Holm}}\!=\!2.1\!\times\!10^{-4}$.
+$p_{\mathrm{Holm}}\!=\!1.0\!\times\!10^{-4}$.
 
 \paragraph{Trace inspection.}
 \label{sec:results:trace-inspection}
@@ -262,7 +264,10 @@ two-sided.
 \paragraph{Precision ladder.} We re-ran Qwen3-8B at three precisions.
 Fabrication does not vanish at full precision: bf16 logs $2/316=0.63\%$
 $[0.08, 2.27]$, alongside 8-bit $2/435=0.46\%$ $[0.06, 1.65]$ and 4-bit
-$9/623=1.44\%$ $[0.66, 2.72]$. Point estimates trend downward as
+$9/623=1.44\%$ $[0.66, 2.72]$.\footnote{This 4-bit cell ($9/623$) is the
+precision-control acquisition; the scaling-sweep 8B cell ($9/615$,
+Table~\ref{tab:qwen3-scale}) is a separate run with the same nine
+fabrication events over marginally fewer parsed calls.} Point estimates trend downward as
 precision rises, but all three intervals overlap, so we do not claim a
 precision effect. The load-bearing fact is the floor: \textbf{tool
 fabrication persists at full precision and is therefore not a
