@@ -307,11 +307,14 @@ registry-visible prompt and the rejection safety net --- thus both fire
 on a lineage outside Qwen, even where the prompt alone leaves a residue.
 This is a weaker per-call null than the matched Qwen3 sweep ($0/945$), as
 expected for a single $N\!\approx\!500$ cross-family probe rather than a
-per-tier-matched design. Mistral-7B and a Qwen2.5 RVR sweep are still
-completing; we report only the families above and will add more
-open lineages in a later revision.\footnote{Additional open-family runs
-(Mistral-7B, Qwen2.5 RVR) were in progress at submission; we report
-no numbers for them here.}
+per-tier-matched design. Mistral-7B-Instruct-v0.3 was also probed but
+emitted no parseable tool calls under our harness (zero parsed calls
+across all arms), so it yields no TFR denominator and is excluded; a
+Qwen2.5 RVR sweep is still completing. We report only the families
+above and will add more open lineages in a later
+revision.\footnote{Mistral-7B-v0.3 produced no parseable tool calls
+under our text-parse path, hence no denominator and no rate; the
+Qwen2.5 RVR sweep was in progress at submission.}
 
 \begin{table}[t]
 \caption{Cross-family and precision controls on the $\mathrm{C}_0$

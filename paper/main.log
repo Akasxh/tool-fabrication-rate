@@ -650,21 +650,12 @@ Underfull \vbox (badness 4416) has occurred while \output is active []
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
  [7]
-Underfull \hbox (badness 1342) in paragraph at lines 314--314
-[][][]\TU/ptm/m/it/9 Additional open-family runs (Mistral-7B, Qwen2.5
- []
-
-
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 325--339
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 328--342
  [][] 
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-)
-(sections/06_mechanism [8]) (sections/07_limitations (sections/_inbody_deployer
-
+) (sections/06_mechanism [8]) (sections/07_limitations
+(sections/_inbody_deployer
 Underfull \hbox (badness 4429) in paragraph at lines 25--25
 []\TU/ptm/m/it/9 Audited TFR (evi-
  []
@@ -835,4 +826,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 614992 bytes).
+Output written on main.xdv (14 pages, 617036 bytes).
