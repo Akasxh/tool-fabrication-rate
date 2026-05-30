@@ -273,9 +273,18 @@ lineage independent of Qwen, fabricates at $5/400=1.25\%$ $[0.41, 2.89]$
 on the same probe --- squarely inside the Qwen-family band. With
 Qwen2.5-7B-Instruct's $28/459=6.10\%$ (Section~\ref{sec:results:scaling}),
 the open-weight gap now appears in two distinct lineages, not one.
-RVR generalizes across the boundary too: the $\mathrm{C}_1$
-registry-visible re-prompt on Llama-3.1-8B clears its fabrications,
-$0/96=0\%$ $[0.00, 3.77]$. Mistral-7B and a Qwen2.5 RVR sweep are still
+RVR generalizes across the boundary too, though not to a clean zero:
+the $\mathrm{C}_1$ registry-visible re-prompt cuts Llama-3.1-8B's
+fabrication from $1.25\%$ to $2/487=0.41\%$ $[0.05, 1.48]$, a roughly
+threefold reduction, and both residual emissions (\texttt{mkdir} on a
+matched-random task, \texttt{cancel\_order} on an unrelated one) were
+intercepted by RVR's \texttt{tool\_not\_found} rejection layer rather
+than reaching the environment. RVR's two stages --- the
+registry-visible prompt and the rejection safety net --- thus both fire
+on a lineage outside Qwen, even where the prompt alone leaves a residue.
+This is a weaker per-call null than the matched Qwen3 sweep ($0/945$), as
+expected for a single $N\!\approx\!500$ cross-family probe rather than a
+per-tier-matched design. Mistral-7B and a Qwen2.5 RVR sweep are still
 completing; we report only the families above and will add more
 open lineages in a later revision.\footnote{Additional open-family runs
 (Mistral-7B, Qwen2.5 RVR) were in progress at submission; we report
@@ -301,7 +310,7 @@ Qwen3-8B (4-bit)   & 9/623  & 1.44\% [0.66, 2.72] \\
 Llama-3.1-8B (4-bit)   & 5/400  & 1.25\% [0.41, 2.89] \\
 Qwen2.5-7B             & 28/459 & 6.10\% [4.09, 8.70] \\
 \midrule
-Llama-3.1-8B, $\mathrm{C}_1$ (RVR) & 0/96 & 0\% [0.00, 3.77] \\
+Llama-3.1-8B, $\mathrm{C}_1$ (RVR) & 2/487 & 0.41\% [0.05, 1.48] \\
 \bottomrule
 \end{tabular}
 \end{table}

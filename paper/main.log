@@ -587,11 +587,7 @@ Underfull \hbox (badness 1478) in paragraph at lines 87--104
 \TU/pcr/m/n/10 (L-ICL) for symbolic planners, locating the first
  []
 
-
-Underfull \vbox (badness 4647) has occurred while \output is active []
-
- [3])
-(sections/03_method (lstlang1.sty
+[3]) (sections/03_method (lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 
@@ -629,13 +625,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--1
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Underfull \vbox (badness 6477) has occurred while \output is active []
-
  [5]
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
+[6]
 Underfull \hbox (badness 1253) in paragraph at lines 216--226
 \TU/pcr/m/n/10 ing the registry list on top buys no further re-
  []
@@ -647,15 +641,27 @@ sy/m/n/10 ^^@  \OT1/cmr/m/n/10 C[]$\TU/pcr/m/n/10 :
  []
 
 
+Underfull \hbox (badness 1342) in paragraph at lines 291--291
+[][][]\TU/ptm/m/it/9 Additional open-family runs (Mistral-7B, Qwen2.5
+ []
+
+
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 302--316
+ [][] 
+ []
+
+) (sections/06_mechanism
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6])
-(sections/06_mechanism
-Underfull \vbox (badness 1067) has occurred while \output is active []
+ [7]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7])
-(sections/07_limitations) (main.bbl [8]) (sections/08_llm_disclosure)
-(sections/A1_appendix
+)
+(sections/07_limitations) (main.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+[9]) (sections/08_llm_disclosure) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
@@ -675,7 +681,6 @@ Underfull \hbox (badness 4060) in paragraph at lines 12--1
 \TU/pcr/m/n/10 cluster-bootstrap, Friedman+Nemenyi) are repro-
  []
 
-[9]
 File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
 <use figures/fig1_scaling_curve.pdf>
 File: figures/fig3_rvr_architecture.png Graphic file (type bmp)
@@ -692,31 +697,34 @@ Underfull \hbox (badness 1092) in paragraph at lines 138--150
 []\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
-)
-Underfull \hbox (badness 10000) in paragraph at lines 151--110
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10])
+Underfull \hbox (badness 10000) in paragraph at lines 151--112
 []\TU/pcr/m/n/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 151--110
+Underfull \hbox (badness 10000) in paragraph at lines 151--112
 [][]\TU/pcr/m/n/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
  []
 
 
-Underfull \hbox (badness 1694) in paragraph at lines 151--110
+Underfull \hbox (badness 1694) in paragraph at lines 151--112
 \TU/pcr/m/n/10 the aggregator and statistical scripts, the repro-
  []
 
 
-Underfull \hbox (badness 1596) in paragraph at lines 151--110
+Underfull \hbox (badness 1596) in paragraph at lines 151--112
 \TU/pcr/m/n/10 Distractor-injection RNG uses a SHA-256-derived
  []
 
 
-Underfull \vbox (badness 1048) has occurred while \output is active []
+Underfull \vbox (badness 2478) has occurred while \output is active []
 
- [10]
-[11
+ [11]
+[12
 
 ] (main.aux)
 
@@ -725,4 +733,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (11 pages, 518240 bytes).
+Output written on main.xdv (12 pages, 549744 bytes).
