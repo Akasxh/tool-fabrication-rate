@@ -7,8 +7,10 @@ ROOT="/Users/cero/Desktop/PROJECTS/icml"
 cd "$ROOT" 2>/dev/null || exit 0
 QDIR="$ROOT/results/_queue"; mkdir -p "$QDIR"; LOG="$QDIR/watchdog.log"
 ts(){ date '+%Y-%m-%d %H:%M:%S'; }
-# single-instance guard for the watchdog itself
-exec 9>"$QDIR/.watchdog.lock"; flock -n 9 || exit 0
+# NOTE: no flock here. The daemon (watchdog_daemon.sh) already holds a single-
+# instance lock and calls this script sequentially, so a second lock is
+# redundant — and worse, its fd leaks into the nohup'd queue children below,
+# which then pin the lock forever and silently no-op every future tick.
 # 1) Mac awake
 pgrep -f "caffeinate -i -d -m -s" >/dev/null 2>&1 || { nohup caffeinate -i -d -m -s -t 100000 >/dev/null 2>&1 & echo "$(ts) RELAUNCH caffeinate" >>"$LOG"; }
 # 2) run_final2 (quant ladder + cross-family) — relaunch if dead & not complete
