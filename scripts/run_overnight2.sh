@@ -22,14 +22,15 @@ cell(){ local model="$1" cond="$2" n="$3" reqgb="$4"; local short
   [[ $? -eq 0 ]] && touch "$mk"; log "DONE $short $cond | $(grep -E 'tehr=[0-9]+/' "$QDIR/logs/${rid}.log"|tail -4|tr '\n' ' ')"
   PYTHONPATH="$ROOT" "$PY" scripts/aggregate_all.py >/dev/null 2>&1; }
 
-# P1: powered content-vs-format ablation on the highest-yield open family
-cell mlx-community/Qwen2.5-7B-Instruct-4bit C0_8 60 8    # decoy/WRONG list (key content test)
-cell mlx-community/Qwen2.5-7B-Instruct-4bit C0_7 60 8    # structured envelope, no list
-cell mlx-community/Qwen2.5-7B-Instruct-4bit C0_5 40 8    # naive retry (ladder rung)
-# P2: Gemma 4th family (system-role fix)
-cell mlx-community/gemma-2-9b-it-4bit C0 25 9
-cell mlx-community/gemma-2-9b-it-4bit C1 25 9
-# P3: Phi + DeepSeek (fix may unlock)
+# P1 (highest value): powered content-vs-format ablation on the highest-yield open family.
+# n=20 already out-powers the existing Qwen3-8B ablation (6.10% base vs 1.46%).
+cell mlx-community/Qwen2.5-7B-Instruct-4bit C0_8 20 8    # decoy/WRONG list (key content test)
+cell mlx-community/Qwen2.5-7B-Instruct-4bit C0_7 20 8    # structured envelope, no list
+# P2: Gemma 4th family (system-role fix) — front-loaded for breadth
+cell mlx-community/gemma-2-9b-it-4bit C0 20 9
+cell mlx-community/gemma-2-9b-it-4bit C1 20 9
+# P3: ladder rung + remaining families (time-permitting)
+cell mlx-community/Qwen2.5-7B-Instruct-4bit C0_5 20 8    # naive retry (ladder)
 cell mlx-community/Phi-3.5-mini-instruct-4bit C0 20 6
 cell mlx-community/Phi-3.5-mini-instruct-4bit C1 20 6
 cell mlx-community/DeepSeek-R1-Distill-Qwen-7B-4bit C0 20 8
