@@ -650,7 +650,7 @@ Underfull \vbox (badness 4416) has occurred while \output is active []
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
  [7]
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 328--342
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 329--344
  [][] 
  []
 
@@ -790,7 +790,7 @@ Underfull \hbox (badness 1092) in paragraph at lines 126--141
 []\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
-)
+[11])
 Underfull \hbox (badness 10000) in paragraph at lines 142--112
 []\TU/pcr/m/n/10 The supplementary repository at
  []
@@ -810,10 +810,6 @@ Underfull \hbox (badness 1596) in paragraph at lines 142--112
 \TU/pcr/m/n/10 Distractor-injection RNG uses a SHA-256-derived
  []
 
-
-Underfull \vbox (badness 3428) has occurred while \output is active []
-
- [11]
 [12
 
 ] [13] [14
@@ -826,4 +822,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 617036 bytes).
+Output written on main.xdv (14 pages, 617752 bytes).

@@ -296,31 +296,32 @@ lineage independent of Qwen, fabricates at $5/400=1.25\%$ $[0.41, 2.89]$
 on the same probe --- squarely inside the Qwen-family band. With
 Qwen2.5-7B-Instruct's $28/459=6.10\%$ (Section~\ref{sec:results:scaling}),
 the open-weight gap now appears in two distinct lineages, not one.
-RVR generalizes across the boundary too, though not to a clean zero:
-the $\mathrm{C}_1$ registry-visible re-prompt cuts Llama-3.1-8B's
-fabrication from $1.25\%$ to $2/487=0.41\%$ $[0.05, 1.48]$, a roughly
-threefold reduction, and both residual emissions (\texttt{mkdir} on a
-matched-random task, \texttt{cancel\_order} on an unrelated one) were
-intercepted by RVR's \texttt{tool\_not\_found} rejection layer rather
-than reaching the environment. RVR's two stages --- the
-registry-visible prompt and the rejection safety net --- thus both fire
-on a lineage outside Qwen, even where the prompt alone leaves a residue.
-This is a weaker per-call null than the matched Qwen3 sweep ($0/945$), as
-expected for a single $N\!\approx\!500$ cross-family probe rather than a
-per-tier-matched design. Mistral-7B-Instruct-v0.3 was also probed but
-emitted no parseable tool calls under our harness (zero parsed calls
-across all arms), so it yields no TFR denominator and is excluded; a
-Qwen2.5 RVR sweep is still completing. We report only the families
-above and will add more open lineages in a later
-revision.\footnote{Mistral-7B-v0.3 produced no parseable tool calls
-under our text-parse path, hence no denominator and no rate; the
-Qwen2.5 RVR sweep was in progress at submission.}
+RVR generalizes across the boundary too, though not to a clean zero.
+The $\mathrm{C}_1$ registry-visible re-prompt cuts Llama-3.1-8B from
+$1.25\%$ to $2/487=0.41\%$ $[0.05, 1.48]$ (a threefold reduction) and
+Qwen2.5-7B from $6.10\%$ to $1/320=0.31\%$ $[0.01, 1.73]$ (roughly
+twentyfold). In each case the handful of residual emissions
+(\texttt{mkdir} and \texttt{cancel\_order} on Llama, \texttt{mkdir} on
+Qwen2.5) were intercepted by RVR's \texttt{tool\_not\_found} rejection
+layer rather than reaching the environment. So across two lineages
+outside Qwen, RVR's two stages both fire: the registry-visible prompt
+removes most fabrications and the rejection safety net catches the
+rest --- defense-in-depth, not a single-shot guarantee. These are
+weaker per-call nulls than the matched Qwen3 sweep ($0/945$), as expected
+for single $N\!\approx\!300$--$500$ cross-family probes rather than a
+per-tier-matched design, but the pattern is consistent across both
+families. Mistral-7B-Instruct-v0.3 was also probed but emitted no
+parseable tool calls under our harness (zero parsed calls across all
+arms), so it yields no TFR denominator and is excluded. We will add more
+open lineages in a later revision.\footnote{Mistral-7B-v0.3 produced no
+parseable tool calls under our text-parse path, hence no denominator and
+no rate.}
 
 \begin{table}[t]
 \caption{Cross-family and precision controls on the $\mathrm{C}_0$
 target-removed probe. Cells are events / parsed calls with TFR and
-Clopper--Pearson $95\%$ two-sided intervals. Bottom row is the
-$\mathrm{C}_1$ RVR arm on Llama.}
+Clopper--Pearson $95\%$ two-sided intervals. Bottom rows are the
+$\mathrm{C}_1$ RVR arms on Llama and Qwen2.5.}
 \label{tab:controls}
 \centering
 \small
@@ -337,6 +338,7 @@ Llama-3.1-8B (4-bit)   & 5/400  & 1.25\% [0.41, 2.89] \\
 Qwen2.5-7B             & 28/459 & 6.10\% [4.09, 8.70] \\
 \midrule
 Llama-3.1-8B, $\mathrm{C}_1$ (RVR) & 2/487 & 0.41\% [0.05, 1.48] \\
+Qwen2.5-7B, $\mathrm{C}_1$ (RVR)   & 1/320 & 0.31\% [0.01, 1.73] \\
 \bottomrule
 \end{tabular}
 \end{table}
