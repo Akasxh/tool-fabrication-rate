@@ -88,10 +88,11 @@ is absence of evidence, not evidence of equivalence. At this sample size
 we detect no content effect; the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$
 difference is bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp ---
 consistent with content buying up to $\sim$1~pp, not proof it buys
-nothing. We flag a format-over-content recovery as a plausible reading,
-echoing Min et al.\ on in-context demonstrations~\citep{min2022rethinking},
-and leave it as an open ablation; a powered version on a high-event cell
-is in progress. Descriptively, Qwen3's rate is non-monotone in scale,
+nothing. On a high-event cell (Qwen2.5, $\mathrm{C}_0=6.10\%$) the
+ablation is powered: a \emph{wrong} registry list recovers as well as the
+real one ($\mathrm{C}_{0.8}$ vs.\ $\mathrm{C}_1$, Fisher $p=1.0$; both
+$\sim\!24\times$ below baseline), so recovery is format-driven, echoing
+Min et al.~\citep{min2022rethinking}. Descriptively, Qwen3's rate is non-monotone in scale,
 climbing from $0\%$ at $0.6$B to $\mathbf{1.64\%}$ at $14$B and back to
 $0\%$ at $32$B; six points are not a curve. A precision ladder
 (4-bit/8-bit/bf16) shows the fabrication persists at full precision, so

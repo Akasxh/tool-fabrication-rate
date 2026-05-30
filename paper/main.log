@@ -558,7 +558,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Underfull \hbox (badness 1024) in paragraph at lines 61--102
+Underfull \hbox (badness 1024) in paragraph at lines 61--103
 \TU/ptm/m/it/10 middleware that, on a registry miss, re-
  []
 
@@ -782,7 +782,11 @@ Underfull \hbox (badness 3240) in paragraph at lines 65--70
 \TU/ptm/m/it/9 but does not prove safety.
  []
 
-)) [9] (main.bbl [10]) (sections/08_llm_disclosure [11]) (sections/A1_appendix
+)) [9] (main.bbl
+Underfull \vbox (badness 1448) has occurred while \output is active []
+
+ [10])
+(sections/08_llm_disclosure [11]) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/ptm/m/it/10 with LLM-based assistance under author supervi-
  []
@@ -817,22 +821,22 @@ Underfull \hbox (badness 1092) in paragraph at lines 126--141
  []
 
 )
-Underfull \hbox (badness 10000) in paragraph at lines 142--117
+Underfull \hbox (badness 10000) in paragraph at lines 142--118
 []\TU/ptm/m/it/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 142--117
+Underfull \hbox (badness 10000) in paragraph at lines 142--118
 [][]\TU/ptm/m/it/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
  []
 
 
-Underfull \hbox (badness 1694) in paragraph at lines 142--117
+Underfull \hbox (badness 1694) in paragraph at lines 142--118
 \TU/ptm/m/it/10 the aggregator and statistical scripts, the repro-
  []
 
 
-Underfull \hbox (badness 1596) in paragraph at lines 142--117
+Underfull \hbox (badness 1596) in paragraph at lines 142--118
 \TU/ptm/m/it/10 Distractor-injection RNG uses a SHA-256-derived
  []
 
@@ -846,4 +850,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 646704 bytes).
+Output written on main.xdv (14 pages, 649564 bytes).

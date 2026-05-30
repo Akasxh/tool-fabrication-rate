@@ -43,9 +43,18 @@ therefore \emph{compatible with} a format-over-content account, under
 which the model responds to the message-level rejection rather than to
 the valid names offered --- but we do not treat zero-vs-zero as proof,
 and a registry-as-cue account is not ruled out within the $\pm$1.5~pp
-band. A powered test, with fabrication events present under the decoy
-ablation on a high-event cell, is the correct way to settle this and is
-in progress; we report no result for it here.
+band. We settle it on a high-event cell. On Qwen2.5-7B
+($\mathrm{C}_0=6.10\%$, $28/459$ --- $28$ real fabrications to suppress),
+the decoy/\emph{wrong}-list arm $\mathrm{C}_{0.8}$ logs $1/405=0.25\%$
+and the real-list arm $\mathrm{C}_1$ logs $1/320=0.31\%$: both cut
+fabrication $\sim\!24\times$ (Fisher vs.\ $\mathrm{C}_0$,
+$p=2\!\times\!10^{-7}$), and the wrong list is statistically
+indistinguishable from the real one (Fisher $\mathrm{C}_{0.8}$ vs.\
+$\mathrm{C}_1$, $p=1.0$). With events available to recover, a content
+effect of the size the $\pm$1.5~pp Qwen3-8B bound left open does not
+appear. This is a \emph{powered} null on content: recovery is
+format-driven, and a registry of \emph{wrong} names recovers as well as
+the right one.
 
 \paragraph{What this does not claim.}
 Format-sufficiency is a claim about \emph{recovery}, not task success. A decoy
@@ -61,7 +70,6 @@ The dominant distractor type drifts with scale
 (Section~\ref{sec:results:scaling}), but a Friedman exact permutation test is
 underpowered ($\chi^2_{(3)}\!=\!3.0$, $p\!=\!0.46$; $n\!=\!4$ sizes), so we read
 the drift as phenomenology, not inference. The content-vs-format question rests
-not on this matrix but on the $\mathrm{C}_{0.7}$ and $\mathrm{C}_{0.8}$
-ablations --- which, being zero-event, bound the content effect to
-$\pm$1.5~pp rather than resolving it. A powered version on a high-event
-cell is the right next step and is in progress.
+not on this matrix but on the $\mathrm{C}_{0.7}$/$\mathrm{C}_{0.8}$
+ablations, now powered on Qwen2.5 above: a wrong registry recovers as
+well as the right one.
