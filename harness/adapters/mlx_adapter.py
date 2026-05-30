@@ -142,6 +142,31 @@ class MLXAdapter(ModelAdapter):
         return out
 
     @staticmethod
+    def _merge_system_into_user(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Fold leading system message(s) into the first user turn.
+
+        Some chat templates (Gemma-2, some Phi variants) reject a ``system``
+        role outright (``TemplateError: System role not supported``). For those
+        models we splice any leading system content onto the front of the first
+        user message so the same instructions/registry still reach the model.
+        Families whose templates accept a system role never hit this path, so
+        existing results are unaffected.
+        """
+        out: list[dict[str, Any]] = [dict(m) for m in messages]
+        sys_parts: list[str] = []
+        while out and out[0].get("role") == "system":
+            sys_parts.append(str(out.pop(0).get("content", "")))
+        if not sys_parts:
+            return out
+        sys_text = "\n\n".join(p for p in sys_parts if p)
+        for m in out:
+            if m.get("role") == "user":
+                m["content"] = f"{sys_text}\n\n{m.get('content', '')}"
+                return out
+        out.insert(0, {"role": "user", "content": sys_text})
+        return out
+
+    @staticmethod
     def _coerce_call(obj: Any) -> ToolCall:
         """Normalize one decoded call dict into a :class:`ToolCall`.
 
@@ -318,9 +343,22 @@ class MLXAdapter(ModelAdapter):
         }
         if _QWEN3_MARKER in self.model_id.lower():
             template_kwargs["enable_thinking"] = False
-        prompt = self._tokenizer.apply_chat_template(
-            prepared_messages, **template_kwargs
-        )
+        try:
+            prompt = self._tokenizer.apply_chat_template(
+                prepared_messages, **template_kwargs
+            )
+        except Exception as exc:  # noqa: BLE001 - template engines raise varied types
+            # Gemma-2 / some Phi templates reject a "system" role. Fold the
+            # system content into the first user turn and retry once. Only the
+            # exception path changes behaviour, so system-role-capable families
+            # (Qwen3, Llama, Qwen2.5, Mistral) are untouched.
+            if "system" in str(exc).lower():
+                prepared_messages = self._merge_system_into_user(prepared_messages)
+                prompt = self._tokenizer.apply_chat_template(
+                    prepared_messages, **template_kwargs
+                )
+            else:
+                raise
 
         start_ns = monotonic_ns()
         raw = self._generate(prompt, max_tokens)
