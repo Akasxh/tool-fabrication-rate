@@ -625,11 +625,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--1
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
+
+Underfull \vbox (badness 6477) has occurred while \output is active []
+
  [5]
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
-[6]
 Underfull \hbox (badness 1253) in paragraph at lines 216--226
 \TU/pcr/m/n/10 ing the registry list on top buys no further re-
  []
@@ -641,6 +643,9 @@ sy/m/n/10 ^^@  \OT1/cmr/m/n/10 C[]$\TU/pcr/m/n/10 :
  []
 
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6]
 Underfull \hbox (badness 1342) in paragraph at lines 291--291
 [][][]\TU/ptm/m/it/9 Additional open-family runs (Mistral-7B, Qwen2.5
  []
@@ -733,4 +738,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (12 pages, 549744 bytes).
+Output written on main.xdv (12 pages, 549360 bytes).
