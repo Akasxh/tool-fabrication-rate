@@ -629,23 +629,143 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 6477) has occurred while \output is active []
 
  [5]
-File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
-<use figures/fig2_ablation_ladder.pdf>
+(sections/_inbody_scaling
+File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
+<use figures/fig1_scaling_curve.pdf>
+)
+Underfull \vbox (badness 7256) has occurred while \output is active []
 
+
+(sections/_inbody_frontier
+Overfull \hbox (20.3679pt too wide) in paragraph at lines 23--38
+ [][] 
+ []
+
+)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [6]
-Underfull \hbox (badness 1342) in paragraph at lines 296--296
+Underfull \vbox (badness 4416) has occurred while \output is active []
+
+File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
+<use figures/fig2_ablation_ladder.pdf>
+ [7]
+Underfull \hbox (badness 1342) in paragraph at lines 314--314
 [][][]\TU/ptm/m/it/9 Additional open-family runs (Mistral-7B, Qwen2.5
  []
 
 
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 307--321
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 325--339
  [][] 
  []
 
-) (sections/06_mechanism [7]) (sections/07_limitations) [8] (main.bbl [9])
-(sections/08_llm_disclosure) (sections/A1_appendix
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+)
+(sections/06_mechanism [8]) (sections/07_limitations (sections/_inbody_deployer
+
+Underfull \hbox (badness 4429) in paragraph at lines 25--25
+[]\TU/ptm/m/it/9 Audited TFR (evi-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--31
+\TU/ptm/m/it/9 Anthropic $\OT1/cmr/m/n/9 0\OML/cmm/m/it/9 =\OT1/cmr/m/n/9 2[]59
+2$
+ []
+
+
+Underfull \hbox (badness 1939) in paragraph at lines 34--40
+\TU/ptm/m/it/9 tiers are zero-event on the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
+[]\TU/ptm/m/it/9 Audited open-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--42
+\OT1/cmr/m/n/9 1\OML/cmm/m/it/9 :\OT1/cmr/m/n/9 7$\TU/ptm/m/it/9 –$\OT1/cmr/m/n
+/9 14$\TU/ptm/m/it/9 B, Llama-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--45
+\TU/ptm/m/it/9 Qwen3 pooled
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--45
+\TU/ptm/m/it/9 Qwen2.5-7B
+ []
+
+
+LaTeX Font Warning: Font shape `TU/ptm/b/it' undefined
+(Font)              using `TU/ptm/b/n' instead on input line 47.
+
+
+Underfull \hbox (badness 1205) in paragraph at lines 47--48
+\TU/ptm/m/it/9 executor allow-listing. Pre-
+ []
+
+
+Underfull \hbox (badness 1490) in paragraph at lines 49--57
+\TU/ptm/m/it/9 tion layer, not the prompt
+ []
+
+
+Underfull \hbox (badness 1960) in paragraph at lines 49--57
+\TU/ptm/m/it/9 optional. Not a quantiza-
+ []
+
+
+Underfull \hbox (badness 3039) in paragraph at lines 58--58
+[]\TU/ptm/m/it/9 Unaudited open-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 58--58
+\TU/ptm/m/it/9 out a per-call
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--61
+[]\TU/ptm/m/it/9 Unknown; assume
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 59--61
+\TU/ptm/m/it/9 Gap appears in
+ []
+
+
+Underfull \hbox (badness 3029) in paragraph at lines 59--61
+\TU/ptm/m/it/9 as fabrication-prone
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--70
+[]\TU/ptm/m/it/9 We observe non-monotonic
+ []
+
+
+Underfull \hbox (badness 1331) in paragraph at lines 65--70
+\TU/ptm/m/it/9 default, so capability is no
+ []
+
+
+Underfull \hbox (badness 2828) in paragraph at lines 65--70
+\TU/ptm/m/it/9 wide intervals at small $\OML/cmm/m/it/9 N$\TU/ptm/m/it/9 ,
+ []
+
+
+Underfull \hbox (badness 3240) in paragraph at lines 65--70
+\TU/ptm/m/it/9 but does not prove safety.
+ []
+
+)) (main.bbl [9] [10]) (sections/08_llm_disclosure) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
@@ -665,43 +785,48 @@ Underfull \hbox (badness 4060) in paragraph at lines 12--1
 \TU/pcr/m/n/10 cluster-bootstrap, Friedman+Nemenyi) are repro-
  []
 
-File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
-<use figures/fig1_scaling_curve.pdf>
 File: figures/fig3_rvr_architecture.png Graphic file (type bmp)
 <figures/fig3_rvr_architecture.png>
 File: figures/fig4_distractor_probe.png Graphic file (type bmp)
 <figures/fig4_distractor_probe.png>
 
-Overfull \hbox (312.51326pt too wide) in paragraph at lines 56--93
+Overfull \hbox (312.51326pt too wide) in paragraph at lines 44--81
  [][] 
  []
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 138--153
+Underfull \hbox (badness 1092) in paragraph at lines 126--141
 []\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
-[10])
-Underfull \hbox (badness 10000) in paragraph at lines 154--112
+)
+Underfull \hbox (badness 10000) in paragraph at lines 142--112
 []\TU/pcr/m/n/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 154--112
+Underfull \hbox (badness 10000) in paragraph at lines 142--112
 [][]\TU/pcr/m/n/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
  []
 
 
-Underfull \hbox (badness 1694) in paragraph at lines 154--112
+Underfull \hbox (badness 1694) in paragraph at lines 142--112
 \TU/pcr/m/n/10 the aggregator and statistical scripts, the repro-
  []
 
 
-Underfull \hbox (badness 1596) in paragraph at lines 154--112
+Underfull \hbox (badness 1596) in paragraph at lines 142--112
 \TU/pcr/m/n/10 Distractor-injection RNG uses a SHA-256-derived
  []
 
-[11] [12
+
+Underfull \vbox (badness 3428) has occurred while \output is active []
+
+ [11]
+[12
+
+] [13] [14
+
 
 ] (main.aux)
 
@@ -710,4 +835,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (12 pages, 557020 bytes).
+Output written on main.xdv (14 pages, 614992 bytes).

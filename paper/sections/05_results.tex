@@ -101,7 +101,7 @@ rather than per call.
 % =========================================================================
 
 The $14$B$\to\!32$B drop, $1.64\%$ to $0\%$, is our central
-intra-family result (Table~\ref{tab:qwen3-scale}; plotted in Appendix
+intra-family result (Table~\ref{tab:qwen3-scale}; plotted in
 Figure~\ref{fig:scaling}). Pooled per-call TFR
 rises from $0\%$ ($0/75$, $\leq\!4.80\%$) at $0.6$B, peaks at $14$B
 ($6/366=1.64\%$), and collapses back to $0\%$ ($0/224$,
@@ -110,6 +110,8 @@ overlap the $14$B point estimate, so ``collapse'' here should be read
 as ``not-detected at this $N$,'' not as emergent capability. The per-arm
 peak also shifts with scale (bold cells, Table~\ref{tab:qwen3-scale}):
 near\_name at $1.7$B, matched\_random at $4$--$8$B, synonym at $14$B.
+
+\input{sections/_inbody_scaling}
 
 \begin{table}[t]
 \caption{Qwen3 scaling curve under $\mathrm{C}_0$ (target removed).
@@ -138,14 +140,30 @@ arm. This is not an apples-to-apples generation comparison (different
 post-training, different tokenizer), but it says the failure mode is not
 a Qwen3-specific artefact of one release. The lineage carries it.
 
-Commercial models track the Anthropic null rather than the Qwen3
-band. On the same probe, the OpenAI gpt-4.1 and gpt-4o tiers also log
-$0\%$ TFR: gpt-4.1 $0/404$, gpt-4.1-mini $0/408$, gpt-4.1-nano
-$0/409$, gpt-4o $0/466$, gpt-4o-mini $0/430$ (per-model Clopper--Pearson
-$95\%$ two-sided upper bounds $\leq\!0.79$--$0.91\%$), pooling to $0/2{,}117$ at
-$\leq\!0.18\%$. The cross-vendor pattern is an open-vs-closed split:
-zero-event commercial frontiers against the Qwen-family
-$0.95$--$1.64\%$ band.
+\paragraph{The zero-event frontier is broad; the non-zero band is
+open-weight.} Commercial models track the Anthropic null rather than
+the Qwen3 band (Table~\ref{tab:frontier}). On the same probe the five
+OpenAI gpt-4.1 and gpt-4o tiers also log $0\%$ TFR, pooling to
+$0/2{,}117$ at $\leq\!0.18\%$, alongside the five Anthropic~4.x versions
+at $0/2{,}592$ ($\leq\!0.14\%$; Section~\ref{sec:results:probe}). Every
+open-weight model with a non-zero rate is in an open lineage: the Qwen3
+band ($0.95$--$1.64\%$), Qwen2.5-7B ($6.10\%$), and Llama-3.1-8B
+($1.25\%$). The split is clean enough to \emph{state} but not to
+\emph{attribute}: the commercial models are reached through each
+vendor's structured function-calling API, whereas the open-weight models
+are self-hosted $4$-bit MLX builds whose calls we recover by
+text-parsing the generated stream. A structured API that refuses or
+drops a malformed call removes fabrication surface a text-parse path
+still sees, so we cannot separate the model from its serving path; we
+report the contrast as a serving-and-model bundle, not a pure model
+property, and draw no scaling law or cross-vendor capability ranking
+from it (Section~\ref{sec:limitations}). As a confirmatory extension,
+the gpt-5 generation (gpt-5, gpt-5-mini, gpt-5-nano, gpt-5.5) adds
+$0/1{,}311$ ($\leq\!0.28\%$), all $0\%$ TFR; we keep it out of the
+locked $0/2{,}117$ OpenAI headline pool and report it only as a
+robustness check (Appendix~\ref{sec:appendix:prereg}).
+
+\input{sections/_inbody_frontier}
 
 We treat the shape itself as the result. Most readers would guess
 that $14$B fabricates less than $1.7$B. It does not. The traces

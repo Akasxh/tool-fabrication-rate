@@ -1,0 +1,73 @@
+% Deployer decision table: per-tier operator recommendation, grounded in paper evidence.
+% Honest framing: RVR/C0.7 reduces measured fabrication; it is one layer of a
+% defense-in-depth stack (prompt arm + executor-side rejection), not a guarantee.
+% Every claim cites a results/limitations section. No overclaim: we recommend the
+% intervention ONLY on tiers with audited TFR>0, always paired with executor
+% allow-listing (Section~\ref{sec:limitations}).
+\begin{table*}[t]
+\caption{Deployer decision table. Recommendation by model tier for an operator
+running tool-calling agents on BFCL-style registries. ``Audited TFR'' is the
+per-call tool-fabrication rate measured under $\mathrm{C}_0$ (no intervention);
+intervals are Clopper--Pearson $95\%$ two-sided. The intervention column lists
+\emph{RVR} ($\mathrm{C}_1$, registry-visible re-prompt) and its prompt-only
+variant $\mathrm{C}_{0.7}$ (structured-error envelope, no internal tool names
+echoed). RVR \emph{reduces} measured fabrication and adds an executor-side
+rejection layer; it is one layer of defense-in-depth, not a guarantee
+(Section~\ref{sec:limitations}). We recommend the intervention only on tiers
+with audited $\mathrm{TFR}\!>\!0$, always paired with executor allow-listing.}
+\label{tab:deployer}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{2.5cm}p{3.0cm}p{4.3cm}p{4.3cm}}
+\toprule
+Tier & Audited TFR (evidence) & Middleware recommendation & Rationale / caveat \\
+\midrule
+
+\textbf{Commercial frontier} \newline (Anthropic, OpenAI) &
+$\approx\!0$, audited. \newline Anthropic $0/2{,}592$ ($\leq\!0.14\%$); OpenAI
+$0/2{,}117$ ($\leq\!0.18\%$) \newline (\S\ref{sec:results:probe},
+\S\ref{sec:results:scaling}) &
+\textbf{No fabrication middleware required.} Keep executor allow-listing as
+standard hygiene. &
+Five Anthropic versions over $11$ months and five OpenAI tiers are zero-event on
+the target-removed probe. On Anthropic, RVR is a call-path no-op yet strict-pass
+can drop at $N\!=\!60$ (\S\ref{sec:results:rvr}): adding it buys no measured
+safety here and may cost utility. Null is not ``proven safe'' --- it is bounded
+by the audit, and is indistinguishable from BFCL-v4 contamination
+(\S\ref{sec:limitations}). Re-audit on model updates. \\
+
+\textbf{Audited open-weight} \newline ($\mathrm{TFR}\!>\!0$: Qwen3 $1.7$--$14$B,
+Llama-3.1-8B, Qwen2.5-7B) &
+$0.4$--$6.1\%$, measured. \newline Qwen3 pooled $20/1{,}417$; Llama-3.1-8B
+$5/400\!=\!1.25\%$; Qwen2.5-7B $28/459\!=\!6.10\%$ \newline
+(\S\ref{sec:results:scaling}, \S\ref{sec:results:controls}) &
+\textbf{Deploy $\mathrm{C}_{0.7}$ or RVR ($\mathrm{C}_1$) \emph{plus} executor
+allow-listing.} Prefer $\mathrm{C}_{0.7}$ if internal tool names must stay
+private. &
+On the matched Qwen3 sweep RVR drives $20\!\to\!0$ (Fisher one-sided
+$p\!=\!3.5\!\times\!10^{-5}$; \S\ref{sec:results:rvr}); $\mathrm{C}_{0.7}$ alone
+already reaches zero on Qwen3-8B at no detectable cost
+(Fig.~\ref{fig:ablation}). Cross-family it \emph{reduces} not eliminates: Llama
+$1.25\%\!\to\!0.41\%$, with both residuals caught by the rejection layer, not
+the prompt (\S\ref{sec:results:controls}). Hence the executor allow-list is
+load-bearing, not optional. Not a quantization artefact: persists at bf16
+(\S\ref{sec:results:controls}). \\
+
+\textbf{Unaudited open-weight} \newline (any model without a per-call TFR audit) &
+Unknown; \textbf{assume $\mathrm{TFR}\!>\!0$}. \newline Gap appears in two
+distinct open lineages (Qwen, Llama), so treat open weights as fabrication-prone
+by default (\S\ref{sec:results:controls}) &
+\textbf{Audit first} (run the $\mathrm{C}_0$ target-removed probe), then deploy
+$\mathrm{C}_{0.7}$/RVR \emph{plus} executor allow-listing regardless of the
+audit. &
+We observe non-monotonic TFR across $0.6$--$32$B (\S\ref{sec:results:scaling}):
+a larger model is \emph{not} safer by default, so capability is no substitute
+for an audit. With wide intervals at small $N$, a zero in the audit bounds but
+does not prove safety. The executor allow-list is the guarantee; RVR/$\mathrm{C}_{0.7}$
+reduces the load reaching it. \\
+
+\bottomrule
+\end{tabular}
+\end{table*}

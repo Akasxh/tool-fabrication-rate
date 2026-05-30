@@ -1,133 +1,171 @@
 % =====================================================================
-% STAGED ARTIFACT 3/3 -- plus-page camera-ready (+1 page, limit 8, body 7)
+% STAGED ARTIFACT 3/3 -- plus-page camera-ready (+1 page, limit 8, body <=8pp)
 % response_to_reviewers.tex
 % Purpose: the compact "Response to reviewer comments" block that is the
-%          STATED reason the workshop grants the +1 page. Maps each of the
-%          three accept-decision workshop reviewers' main criticisms to the
-%          exact camera-ready change that addresses it, citing our own
-%          sections. Honest and concrete; flags what is in-progress vs. done.
+%          STATED reason the workshop grants the +1 page. Maps each main
+%          criticism from the three accept-decision workshop reviews
+%          (8/6/3, Accept-Poster) to the exact camera-ready change that
+%          addresses it, citing our own sections by their LOCKED numbers.
+%          Honest and concrete; what has landed is reported as landed,
+%          what is in progress is flagged as in progress.
 %
-% SOURCE of the six criticisms (per task brief; the accept-decision reviewers
-% raised): RVR triviality; small samples; quantization confound (all-4bit);
-% no downstream task-success / latency; BFCL-only (single benchmark);
-% contamination. Grouped below under three reviewers (R1/R2/R3). If the real
-% reviews assign these differently across reviewers, re-bucket the rows -- the
-% mapping criticism->fix is what matters and is reviewer-agnostic.
+% LOCKED NUMBERS (verified vs scripts/aggregate_all.py) -- never change:
+%   Anthropic pooled C0  0/2,592   <=0.14%
+%   OpenAI pooled        0/2,117   <=0.18%
+%   Qwen3-14B C0 peak    6/366  = 1.64%
+%   Qwen3 curve  0.6B 0/75 | 1.7B 2/210 | 4B 3/226 | 8B 9/615 | 14B 6/366 | 32B 0/224
+%   RVR headline         C0 20/1,417 vs C1 0/945, Fisher p = 3.5e-5
+%   Ablation  C0.7 0/448 | C0.8 0/410 | C1 0/258 (Newcombe CI [-1.5,+1.4]pp)
+%   Precision ladder (Qwen3-8B)  4-bit 9/623=1.44% | 8-bit 2/435=0.46% | bf16 2/316=0.63%
+%   Cross-family  Llama-3.1-8B C0 5/400=1.25% | Llama C1 RVR 2/487=0.41%
+%                 Qwen2.5-7B 28/459=6.10%
 %
-% HONESTY FLAGS (do not soften beyond what the data supports):
-%   - bf16/8-bit quant control is IN PROGRESS, not landed. The appendix
-%     NUMBERS_TODO (A1_appendix.tex ~L153) lists Qwen3-8B-8bit / -bf16 /
-%     14B-8bit as still running. Phrase as "in progress," not "we show."
-%   - Downstream: we report strict-pass deltas (Sonnet -11.7pp, Haiku -6.7pp;
-%     05_results.tex L200-207), abstention-by-rerouting (trace, L243-251), and
-%     RVR round-trip / token budget (L249-251). We do NOT log wall-clock
-%     latency separately -- say "provider round-trips and token overhead,"
-%     NOT "latency in ms."
-%   - Second benchmark (tau-bench): plumbing verified (0/24 pooled, smoke
-%     only -- see _staging/INTEGRATION_NOTES.md L202-204); NO paper-ready
-%     pass-rate. Cite as "wired and smoke-checked, results pending," do NOT
-%     claim a second non-zero site.
-%   - Contamination: still acknowledged as unresolved (07_limitations.tex L5);
-%     we report it as a bounded caveat, not a closed gap.
+% STATE OF EACH CONTROL at camera-ready:
+%   - Precision ladder: LANDED (Sec 5.5, Table controls). Fabrication
+%     persists at bf16 -> NOT a quantization artefact. Report as done.
+%   - Cross-family: LANDED. Llama-3.1-8B + Qwen2.5-7B reproduce the gap;
+%     RVR generalizes (Llama 1.25% -> 0.41%, residuals caught by the
+%     rejection layer). Report as done; two lineages, NOT general transfer.
+%   - tau-bench: gap test underway, wired + smoke-checked only. NO
+%     paper-ready pass-rate -- report as in progress, no second site claim.
+%   - Contamination: still open (Sec 7). Report as bounded caveat.
+%   - Powered content-vs-format ablation on a high-event cell: in progress.
 %
-% INTEGRATION:
-%   Place this block LAST in the body, after Section~\ref{sec:limitations}
-%   and before the LLM-disclosure section, as an unnumbered section so it
-%   reads as the camera-ready addendum the +1 page is granted for. In main.tex,
-%   add  \input{sections/_response_to_reviewers}  between \input{07_limitations}
-%   and \input{08_llm_disclosure}. Uses only \toprule/\midrule (booktabs) and
-%   standard ICML packages -- no new preamble. Single column.
+% INTEGRATION: place LAST in the body, after \input{07_limitations} and
+%   before \input{08_llm_disclosure}, as an unnumbered section. Uses only
+%   booktabs (\toprule/\midrule) + standard ICML packages. Single column.
 % =====================================================================
 
 \section*{Response to Reviewer Comments}
 \label{sec:response}
 
-We thank the reviewers. This camera-ready page records, point by point,
-how each main criticism is addressed; we flag in-progress items honestly
-rather than overclaim.
+We thank the three reviewers (scores 8/6/3) for the accept decision and
+for criticism that was unusually concrete. This camera-ready page records,
+point by point, how each load-bearing concern is addressed. Where a control
+has landed since submission we say so and cite it; where work is still
+running we flag it as in progress rather than soften it. We changed no
+headline number: every figure below is regenerated by
+\texttt{scripts/aggregate\_all.py} and pinned in the manifest.
 
-\paragraph{R1: RVR is trivial / a membership check is obvious.}
-We agree the mechanism is simple, and we now frame that as the point
-rather than hiding it. RVR is the message-level analog of constrained
-decoding for the closed-API regime where logits are unavailable
-(Section~\ref{sec:method:rvr}): an $O(1)$ in-process membership check
-plus one structured re-prompt, training-free, composable with RL methods.
-Its value is empirical and bounded by measurement, not by novelty---the
-per-call TFR guardrails (system-failure exclusion, per-call rather than
-per-task denominators, cluster-bootstrap intervals;
-Section~\ref{sec:method:tfr}) are what let a $14\!\to\!0$ prevention be
-read as signal rather than trace-length noise. The four-condition ablation
-(Section~\ref{sec:results:rvr}, Figure~\ref{fig:ablation}) further shows
-the work is done by the structured-error envelope $\mathrm{C}_{0.7}$
-alone; echoing the full registry ($\mathrm{C}_1$) adds nothing detectable
-(Newcombe $95\%$ CI on $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$:
-$[-1.5,+1.4]$\,pp), so we report a deployable, name-leak-free variant, not
-a heavyweight method.
+\paragraph{R1/R2/R3: the $4$-bit quantization confound (the sharpest
+objection, raised by all three).}
+At submission the entire Qwen3 curve ran at $4$-bit MLX, and a reviewer
+could fairly read the non-monotone shape as compression damage rather than
+a capability effect. We have now run the deciding control: a precision
+ladder on Qwen3-8B at $4$-bit, $8$-bit, and bf16 on the same
+$\mathrm{C}_0$ target-removed probe (Section~\ref{sec:results:controls},
+Table~\ref{tab:controls}). \textbf{Fabrication does not vanish at full
+precision}: bf16 logs $2/316\!=\!0.63\%$ alongside $8$-bit
+$2/435\!=\!0.46\%$ and $4$-bit $9/623\!=\!1.44\%$. The point estimates trend
+downward as precision rises, but all three Clopper--Pearson intervals
+overlap, so we claim no precision effect---only the load-bearing floor:
+tool fabrication persists at bf16 and is therefore \emph{not} a
+quantization artefact. We have removed every ``capability-not-compression''
+assertion from the body and read the scaling shape descriptively; the one
+claim that is confound-free regardless---RVR's $20\!\to\!0$ prevention
+holds weights fixed between $\mathrm{C}_0$ and $\mathrm{C}_1$---is noted in
+Section~\ref{sec:limitations}.
 
-\paragraph{R1: Small samples / underpowered.}
-We have stopped leaning on point estimates and now report exact bounds
-throughout. Every zero-event cell carries a Clopper--Pearson $95\%$ upper
-bound (pooled commercial frontier $0/2{,}117$ at $\leq\!0.14\%$ and
-$0/2{,}578$ at $\leq\!0.12\%$; Section~\ref{sec:results:probe},
-Table~\ref{tab:frontier}). The RVR contrast is tested with Fisher's exact
-on the pooled $14/973$ vs.\ $0/945$ table ($p\!=\!7.1\!\times\!10^{-5}$,
-surviving Holm--Bonferroni) and we state plainly that each per-tier test
-is individually underpowered (Section~\ref{sec:results:rvr}). The
-Anthropic strict-pass non-inferiority test is reported as
-\emph{undetermined} at $N\!=\!60$ ($1\!-\!\beta\!<\!0.30$), not as a pass.
-An $N\!\geq\!100$ event-multiplication run on the hot $8$B/$14$B cells is
-in progress to move the per-tier tests off the floor.
+\paragraph{R1/R2: single open family / limited external validity.}
+At submission the non-zero band rested on Qwen3 alone, leaving the gap
+indistinguishable from a Qwen-lineage artefact. We have added two
+independent open lineages on the same probe
+(Section~\ref{sec:results:controls}, Table~\ref{tab:controls}).
+Llama-3.1-8B-Instruct, which shares no lineage with Qwen, fabricates at
+$5/400\!=\!1.25\%$---squarely inside the Qwen-family band---and
+Qwen2.5-7B-Instruct fabricates at $28/459\!=\!6.10\%$, higher than any
+Qwen3 size at any arm. The open-weight gap now appears in two distinct
+lineages, not one. RVR generalizes across the family boundary, though not
+to a clean zero: the $\mathrm{C}_1$ registry-visible re-prompt cuts
+Llama-3.1-8B from $1.25\%$ to $2/487\!=\!0.41\%$ (a roughly threefold
+reduction), and both residual emissions were intercepted by RVR's
+\texttt{tool\_not\_found} rejection layer rather than reaching the
+environment---so both RVR stages fire outside Qwen even where the prompt
+alone leaves a residue. We are deliberate about scope: two open lineages
+do \emph{not} establish general cross-family transfer
+(Section~\ref{sec:limitations}), and the cross-family null is weaker than
+the per-tier-matched Qwen3 sweep ($0/945$), as expected for a single
+$N\!\approx\!500$ probe.
 
-\paragraph{R2: Quantization confound---everything is $4$-bit.}
-This is the sharpest objection and we treat it as open. The body no longer
-asserts the curve is ``a capability effect, not a compression artifact'';
-Section~\ref{sec:limitations} states we cannot exclude a
-quantization-damage account, and the revised scaling caption
-(Figure~\ref{fig:scaling}) reads the shape descriptively only. The
-deciding control---a bf16 (and $8$-bit) Qwen3-$14$B/$8$B arm at matched
-$N$, with the per-checkpoint quantization recipe disclosed---is
-\emph{in progress} (Appendix, \textsc{numbers\_todo}); we will report
-whether the $1.87\%$ peak survives or collapses. We also note the one
-claim that is confound-\emph{free} regardless of the control: RVR's
-$14\!\to\!0$ prevention holds weights fixed between $\mathrm{C}_0$ and
-$\mathrm{C}_1$, so it cannot be a quantization artifact
+\paragraph{R1/R3: the format-vs-content ablation is underpowered / does
+not resolve the mechanism.}
+We agree, and we have stopped letting the abstract or
+Section~\ref{sec:mechanism} imply otherwise. On Qwen3-8B all three arms
+are zero-event---structured envelope with no list ($\mathrm{C}_{0.7}$,
+$0/448$), envelope with a count-matched \emph{wrong} list
+($\mathrm{C}_{0.8}$, $0/410$), and the real registry ($\mathrm{C}_1$,
+$0/258$)---so we \emph{detect no content effect at this sample size}. We
+now state plainly that this is absence of evidence, not evidence of
+equivalence: the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$ difference is bounded
+by a Newcombe $95\%$ CI of $[-1.5,+1.4]$\,pp, consistent with the registry
+content buying up to $\sim$1\,pp of recovery, not proof it buys nothing. A
+format-over-content reading is offered as \emph{compatible with} the data
+and is explicitly hedged. The decisive experiment---a powered ablation on
+a high-event cell where the $\mathrm{C}_{0.8}$ decoy arm can actually
+fabricate, so $\mathrm{C}_{0.8}$ vs $\mathrm{C}_1$ separates copying from
+cueing---is in progress; we report no result for it here.
+
+\paragraph{R3: only one benchmark (BFCL).}
+We acknowledge the breadth limit and have built toward a second site
+rather than asserting generality. A $\tau$-bench harness is wired
+end-to-end through the same per-call TFR pipeline and has been
+smoke-checked; a paper-ready gap test is underway and we make no
+second-benchmark claim until the pass-rate and TFR numbers land. Until
+then we scope every positive result to BFCL v4 multi-turn explicitly
 (Section~\ref{sec:limitations}).
 
-\paragraph{R2: No downstream task-success or latency.}
-We now report the operational deltas RVR induces, not only fabrication
-counts. Strict task-pass under $\mathrm{C}_1$ on the Anthropic frontier
-drops Sonnet $60/60\!\to\!53/60$ ($-11.7$\,pp) and Haiku
-$60/60\!\to\!56/60$ ($-6.7$\,pp) (Section~\ref{sec:results:rvr}); we are
-explicit that at $N\!=\!60$ this drop is not distinguishable from noise.
-For the abstention/behavioral channel, the trace analysis
-(Section~\ref{sec:results:trace-inspection}) shows agents \emph{reroute}
-through in-registry tools rather than fabricate (e.g.\ a five-call
-in-registry chain in place of a fabricated \texttt{mv\_recursive()}). For
-cost, RVR adds zero provider round-trips on hits and exactly one on
-misses, with a rendered registry of $\sim\!100$--$200$ tokens
-($<\!5\%$ of context) at $\leq\!25$ tools
-(Section~\ref{sec:results:trace-inspection}). We do not log wall-clock
-latency in milliseconds and do not claim a latency number; the cost is
-reported as round-trips and token overhead.
+\paragraph{R1/R3: underpowered, zero-event-driven inferences.}
+We have moved every zero-event cell onto exact bounds and away from
+qualitative takeaways. The commercial frontier is reported as tight upper
+bounds, not as ``proven zero'': Anthropic pools to $0/2{,}592$
+($\leq\!0.14\%$, Clopper--Pearson $95\%$ two-sided) and OpenAI to
+$0/2{,}117$ ($\leq\!0.18\%$). The RVR headline is the Fisher's exact
+one-sided test on the pooled $20/1{,}417$ vs.\ $0/945$ contingency,
+$p\!=\!3.5\!\times\!10^{-5}$, surviving Holm--Bonferroni
+($p_{\mathrm{Holm}}\!=\!2.1\!\times\!10^{-4}$); we state that each per-tier
+test is individually underpowered and report the per-tier $p$-values
+($\{0.26,0.12,0.042,0.040\}$) so the pooling is auditable rather than
+hidden. The Qwen3 ``collapse'' at $32$B is reported as
+not-detected-at-this-$N$ ($0/224$, $\leq\!1.63\%$, an interval wide enough
+to overlap the $14$B point estimate), not as emergent capability. The
+Anthropic strict-pass non-inferiority test is reported as
+\emph{undetermined} at $N\!=\!60$ ($1\!-\!\beta\!<\!0.30$), not as a pass.
 
-\paragraph{R3: Single benchmark (BFCL-only).}
-We acknowledge the breadth limit and have built toward a second site
-rather than asserting generality. A second harness ($\tau$-bench) is wired
-end-to-end and smoke-checked through the same TFR pipeline; paper-ready
-pass-rate and TFR numbers on it are pending and we make no
-second-benchmark claim until they land. Until then we scope every positive
-result to BFCL v4 multi-turn explicitly (Section~\ref{sec:limitations})
-and frame the cross-vendor split as a serving-and-model bundle on one
-harness (Table~\ref{tab:frontier}), not a benchmark-independent property.
+\paragraph{R1/R2: confounded vendor comparison; RVR is a no-op on
+frontier models.}
+We do not claim to isolate the Anthropic--Qwen3 gap: parameter count,
+training recipe, and provider guardrails co-vary, and commercial-vs-open
+still bundles the serving path with the weights
+(Section~\ref{sec:limitations}). What the controls above do remove from the
+bundle is quantization (the gap survives at bf16) and Qwen-specificity (a
+second lineage reproduces it). On practical impact, we agree RVR is a
+call-path no-op where $\mathrm{TFR}\!=\!0$ and now recommend it
+tier-conditionally---only on tiers with audited $\mathrm{TFR}\!>\!0$,
+paired with executor-side allow-listing. The deployable takeaway is
+narrowed accordingly: at this $N$ the structured envelope $\mathrm{C}_{0.7}$
+alone drives the prevention, so a deployer can ship rejection without
+echoing internal tool names and lose nothing detectable.
 
-\paragraph{R3: Contamination.}
-We do not claim to have ruled this out. BFCL v4 predates every model
-tested, so the Anthropic zero-event regime is, as we state, observationally
-indistinguishable from training-set contamination; we ran no paraphrase or
-membership-inference control (Section~\ref{sec:limitations}). We therefore
-present the commercial null as an \emph{upper bound under possible
-contamination}, and we note that the open-weight non-zero band and the
-RVR prevention result do not depend on the contamination question---a
-contaminated model that still fabricates ($6.10\%$ on Qwen2.5-7B;
-Section~\ref{sec:results:scaling}) shows the probe is not merely re-reading
-memorized registries.
+\paragraph{R1/R3: contamination is not ruled out.}
+We do not claim it is. BFCL v4 predates every model tested, so the
+commercial zero-event regime is observationally indistinguishable from
+training-set contamination; we ran no paraphrase or membership-inference
+control (Section~\ref{sec:limitations}). We therefore present the
+commercial null as an upper bound under possible contamination, and note
+that neither the open-weight non-zero band nor the RVR prevention depends
+on the contamination question---a model that may well have seen BFCL and
+still fabricates ($6.10\%$ on Qwen2.5-7B;
+Section~\ref{sec:results:controls}) shows the probe is not merely
+re-reading memorized registries.
+
+\paragraph{R1/R3: reporting rough edges (acronym, denominators,
+nomenclature).}
+We swept these. The legacy ``TEHR'' acronym is gone; the metric is TFR
+throughout, including every figure. The ablation figure now labels its
+baseline denominator explicitly so the $9/615$ full-probe rate and the
+matched-subset rate are no longer conflatable. ``Newcombe-hybrid TOST'' is
+defined at first use against its code path, and the family for
+Holm--Bonferroni (the three primary tests) is named in
+Section~\ref{sec:setup}. No $p$-value appears without a script that
+regenerates it; the harness ships $153$ unit tests and total API spend was
+\$$82$.

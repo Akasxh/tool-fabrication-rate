@@ -1,0 +1,38 @@
+% In-body frontier table (plus-page camera-ready). Locked numbers only.
+%   Anthropic 4.x pooled C0  0/2,592  <=0.14%
+%   OpenAI gpt-4.x/4o (5)    0/2,117  <=0.18%
+%   gpt-5 generation (4)     0/1,311  <=0.28%  (CONFIRMATORY, out of headline pool)
+%   Qwen3 peak (14B) 6/366=1.64%; Qwen2.5-7B 28/459=6.10%; Llama-3.1-8B 5/400=1.25%
+\begin{table}[t]
+\caption{Tool-fabrication rate (TFR) on the target-removed distractor
+probe ($\mathrm{C}_0$): the commercial frontier vs.\ the open-weight band.
+Cells are events\,/\,parsed calls; UB is the two-sided Clopper--Pearson
+$95\%$ upper bound. This is an \emph{open-vs-closed} split, not a verified
+model property: every commercial tier is reached through its vendor's
+structured function-calling API (which can refuse or drop a malformed
+call), whereas every open-weight model is a self-hosted $4$-bit MLX build
+whose calls we recover by text-parsing the generated stream. The two reach
+paths cannot be separated, so we report the contrast as a serving-and-model
+bundle and draw no scaling law or cross-vendor capability ranking from it.
+The gpt-5 generation is a confirmatory extension, kept out of the locked
+$0/2{,}117$ OpenAI headline pool.}
+\label{tab:frontier}
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{llr}
+\toprule
+Tier & Events\,/\,$N$ & TFR (UB) \\
+\midrule
+\multicolumn{3}{l}{\emph{Commercial (closed, API-served)}} \\
+Anthropic 4.x (5 ver., pooled) & $0/2{,}592$ & $0\%$ ($\leq\!0.14\%$) \\
+OpenAI gpt-4.1/4o (5 tiers)    & $0/2{,}117$ & $0\%$ ($\leq\!0.18\%$) \\
+OpenAI gpt-5 gen.\ (4)         & $0/1{,}311$ & $0\%$ ($\leq\!0.28\%$) \\
+\midrule
+\multicolumn{3}{l}{\emph{Open-weight (4-bit MLX, text-parsed)}} \\
+Qwen3 (peak, $14$B)            & $6/366$  & $1.64\%$ \\
+Qwen2.5-7B                     & $28/459$ & $6.10\%$ \\
+Llama-3.1-8B                   & $5/400$  & $1.25\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
