@@ -88,8 +88,10 @@ echoing Min et al.\ on in-context demonstrations~\citep{min2022rethinking},
 and leave it as an open ablation; a powered version on a high-event cell
 is in progress. Descriptively, Qwen3's rate is non-monotone in scale,
 climbing from $0\%$ at $0.6$B to $\mathbf{1.64\%}$ at $14$B and back to
-$0\%$ at $32$B; six points are not a curve, and we cannot yet
-disentangle scale from 4-bit quantization (a bf16 control is pending).
+$0\%$ at $32$B; six points are not a curve. A precision ladder
+(4-bit/8-bit/bf16) shows the fabrication persists at full precision, so
+it is not a quantization artefact, and a second open family
+(Llama-3.1-8B) reproduces the gap.
 On Anthropic's zero-event regime RVR also logs zero, but the strict-pass
 subset slips at $N\!=\!60$; we recommend tier-conditional deployment.
 \end{abstract}

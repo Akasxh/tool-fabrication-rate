@@ -247,3 +247,61 @@ tools rather than the removed target's or the distractor's name. RVR
 adds zero provider round-trips on hits, one on misses; the rendered
 registry is $\sim$100--200 tokens at $\leq$25 tools (under 5\% of
 context).
+
+% =========================================================================
+\subsection{Cross-family and precision controls}
+\label{sec:results:controls}
+% =========================================================================
+
+Two objections target the open-weight result: that the Qwen3 band is a
+4-bit MLX quantization artefact, and that it reflects a single open
+family. We address both on the same $\mathrm{C}_0$ target-removed probe
+(Table~\ref{tab:controls}). All intervals are Clopper--Pearson $95\%$
+two-sided.
+
+\paragraph{Precision ladder.} We re-ran Qwen3-8B at three precisions.
+Fabrication does not vanish at full precision: bf16 logs $2/316=0.63\%$
+$[0.08, 2.27]$, alongside 8-bit $2/435=0.46\%$ $[0.06, 1.65]$ and 4-bit
+$9/623=1.44\%$ $[0.66, 2.72]$. Point estimates trend downward as
+precision rises, but all three intervals overlap, so we do not claim a
+precision effect. The load-bearing fact is the floor: \textbf{tool
+fabrication persists at full precision and is therefore not a
+quantization artefact}.
+
+\paragraph{Second open family.} Llama-3.1-8B-Instruct (4-bit), a
+lineage independent of Qwen, fabricates at $5/400=1.25\%$ $[0.41, 2.89]$
+on the same probe --- squarely inside the Qwen-family band. With
+Qwen2.5-7B-Instruct's $28/459=6.10\%$ (Section~\ref{sec:results:scaling}),
+the open-weight gap now appears in two distinct lineages, not one.
+RVR generalizes across the boundary too: the $\mathrm{C}_1$
+registry-visible re-prompt on Llama-3.1-8B clears its fabrications,
+$0/96=0\%$ $[0.00, 3.77]$. Mistral-7B and a Qwen2.5 RVR sweep are still
+completing; we report only the families above and will add more
+open lineages in a later revision.\footnote{Additional open-family runs
+(Mistral-7B, Qwen2.5 RVR) were in progress at submission; we report
+no numbers for them here.}
+
+\begin{table}[t]
+\caption{Cross-family and precision controls on the $\mathrm{C}_0$
+target-removed probe. Cells are events / parsed calls with TFR and
+Clopper--Pearson $95\%$ two-sided intervals. Bottom row is the
+$\mathrm{C}_1$ RVR arm on Llama.}
+\label{tab:controls}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llc}
+\toprule
+Model (precision) & Events/$N$ & TFR [95\% CI] \\
+\midrule
+Qwen3-8B (bf16)    & 2/316  & 0.63\% [0.08, 2.27] \\
+Qwen3-8B (8-bit)   & 2/435  & 0.46\% [0.06, 1.65] \\
+Qwen3-8B (4-bit)   & 9/623  & 1.44\% [0.66, 2.72] \\
+\midrule
+Llama-3.1-8B (4-bit)   & 5/400  & 1.25\% [0.41, 2.89] \\
+Qwen2.5-7B             & 28/459 & 6.10\% [4.09, 8.70] \\
+\midrule
+Llama-3.1-8B, $\mathrm{C}_1$ (RVR) & 0/96 & 0\% [0.00, 3.77] \\
+\bottomrule
+\end{tabular}
+\end{table}
