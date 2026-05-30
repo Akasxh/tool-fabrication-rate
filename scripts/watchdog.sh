@@ -19,4 +19,8 @@ fi
 if ! pgrep -f "run_tau_lean.sh" >/dev/null 2>&1 && ! grep -q "LEAN TAU GAP COMPLETE" "$QDIR/tau_lean.log" 2>/dev/null; then
   nohup bash "$ROOT/scripts/run_tau_lean.sh" >/dev/null 2>&1 & echo "$(ts) RELAUNCH run_tau_lean" >>"$LOG"
 fi
-echo "$(ts) tick: caffeinate=$(pgrep -f "caffeinate -i -d -m -s" 2>/dev/null | wc -l | tr -d " ") final2=$(pgrep -f run_final2.sh 2>/dev/null | wc -l | tr -d " ") taulean=$(pgrep -f run_tau_lean.sh 2>/dev/null | wc -l | tr -d " ") freeGB=$(vm_stat|awk '/Pages free/{f=$3+0}/Pages inactive/{i=$3+0}/Pages speculative/{s=$3+0}END{printf "%d",(f+i+s)*16384/1073741824}')" >>"$LOG"
+# 4) run_stretch (3 more open families, breadth) — relaunch if dead & not complete
+if [ -f "$ROOT/scripts/run_stretch.sh" ] && ! pgrep -f "run_stretch.sh" >/dev/null 2>&1 && ! grep -q "STRETCH QUEUE COMPLETE" "$QDIR/stretch.log" 2>/dev/null; then
+  nohup bash "$ROOT/scripts/run_stretch.sh" >/dev/null 2>&1 & echo "$(ts) RELAUNCH run_stretch" >>"$LOG"
+fi
+echo "$(ts) tick: caffeinate=$(pgrep -f "caffeinate -i -d -m -s" 2>/dev/null | wc -l | tr -d " ") final2=$(pgrep -f run_final2.sh 2>/dev/null | wc -l | tr -d " ") taulean=$(pgrep -f run_tau_lean.sh 2>/dev/null | wc -l | tr -d " ") stretch=$(pgrep -f run_stretch.sh 2>/dev/null | wc -l | tr -d " ") freeGB=$(vm_stat|awk '/Pages free/{f=$3+0}/Pages inactive/{i=$3+0}/Pages speculative/{s=$3+0}END{printf "%d",(f+i+s)*16384/1073741824}')" >>"$LOG"
