@@ -756,7 +756,11 @@ Underfull \hbox (badness 3240) in paragraph at lines 65--70
 \TU/ptm/m/it/9 but does not prove safety.
  []
 
-)) (main.bbl [9] [10]) (sections/08_llm_disclosure) (sections/A1_appendix
+)) (main.bbl
+Underfull \vbox (badness 1448) has occurred while \output is active []
+
+ [9]
+[10]) (sections/08_llm_disclosure) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
@@ -822,4 +826,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 617752 bytes).
+Output written on main.xdv (14 pages, 627408 bytes).
