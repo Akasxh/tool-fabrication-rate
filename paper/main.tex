@@ -67,7 +67,12 @@ window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
 opaque-baseline calls we logged zero TFR events, Clopper--Pearson 95\%
 two-sided upper bound $\leq\!0.14\%$. Commercial models across the OpenAI gpt-4.1
 and gpt-4o tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.18\%$).
-The open-weight Qwen3 family isn't quiet: it logs non-zero TFR. We
+The open-weight Qwen3 family isn't quiet: it logs non-zero TFR, reaching
+$10.4\%$ on the worst per-arm cell. And the invented calls are not
+harmless: $70\%$ name state-changing actions carrying concrete arguments
+(fabricated \texttt{place\_order} and \texttt{cancel\_booking} calls), so
+under a permissive executor the failure is an unintended \emph{action},
+not a failed lookup. We
 propose Registry-Visible Reprompting (RVR), a
 training-free middleware that, on a registry miss, returns one re-prompt
 wrapping a structured \texttt{tool\_not\_found} envelope. RVR removes all

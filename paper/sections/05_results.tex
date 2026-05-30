@@ -175,6 +175,41 @@ at each scale the dominant failure is whichever distractor that scale is
 best primed to mimic.
 
 % =========================================================================
+\subsection{What gets fabricated: execution-ready state-changing actions}
+\label{sec:results:severity}
+% =========================================================================
+
+A per-call rate understates the exposure if the invented calls are
+harmless stubs. They are not. We classified each of the $53$ open-weight
+fabrication events from the $\mathrm{C}_0$ target-removed pools
+(Qwen3~$20$, Qwen2.5~$28$, Llama~$5$) by the effect of the named tool.
+\textbf{Thirty-seven ($70\%$) name state-changing actions} rather than
+read-only queries, and \textbf{all $37$ carry a concrete, execution-ready
+argument object}---no empty or malformed calls. Eleven name
+\emph{irreversible business transactions}: \texttt{place\_order} ($4$),
+\texttt{cancel\_order} ($3$), \texttt{cancel\_booking} ($3$), and
+\texttt{create\_ticket} ($1$). Their payloads are fully specified---e.g.\
+a fabricated \texttt{place\_order} with
+\texttt{quantity=150, price=25.5, order\_type="buy"} and a fabricated
+\texttt{cancel\_booking} carrying a \texttt{booking\_id} and
+\texttt{card\_id}---a $150$-share purchase and a booking cancellation,
+each ready to execute.
+
+In our harness these calls are caught because the tool is absent from the
+registry. The exposure surfaces under a \emph{permissive} executor:
+frameworks that fuzzy-match a requested tool to the nearest registered one,
+or auto-register tools on first use, would route a fabricated
+\texttt{place\_order} to whatever real order tool exists. We demonstrate no
+such exploit; we report that the fabrications are well-formed,
+argument-complete, and disproportionately state-changing, so the failure
+mode is an \emph{unintended action}, not a failed lookup---and that
+worst-case per-arm rates reach $14/135 = 10.4\%$ $[5.8, 16.8]$ (Qwen2.5,
+synonym distractor), well above the $6.10\%$ pooled figure. Commercial
+models never reach this surface: zero fabricated calls of any kind across
+more than $6{,}000$ probes (Sections~\ref{sec:results:probe},
+\ref{sec:results:scaling}).
+
+% =========================================================================
 \subsection{RVR per-tier validation: $20 \to 0$ events across the Qwen3 sweep}
 \label{sec:results:rvr}
 % =========================================================================
