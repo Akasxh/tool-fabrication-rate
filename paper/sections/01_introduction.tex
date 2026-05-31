@@ -4,7 +4,7 @@
 An agent calls \texttt{search\_flights}. The registry contains
 \texttt{find\_flights}. The call fails. Practitioners hit this mismatch
 in production with Claude, Gemini, and Grok~\citep{czapla2026}, and what
-stings is that the model knew the task, picked something plausible, and
+stings is that the model knew the task and picked something plausible. It
 just got the name wrong. Who actually does this, how often, and what
 fixes it? We answer with a per-call diagnostic, a cross-vendor audit,
 and a training-free fix that clears every fabrication we logged.
@@ -56,9 +56,9 @@ Qwen3 does not. Pooled per-call rates climb from
 $0\%$ at $0.6$B, peak at $\mathbf{1.64\%}$ at $14$B, and drop back to
 $0\%$ at $32$B. We report this shape descriptively. A generative
 tool-name prior that strengthens with scale before a larger model's
-registry-grounding control catches up would produce something like it ---
-a U-shaped capability
-window~\citep{wei2022ushaped,mckenzie2023inversescaling} --- but six
+registry-grounding control catches up would produce something like it, a
+U-shaped capability
+window~\citep{wei2022ushaped,mckenzie2023inversescaling}. But six
 points isn't a curve, and we say so. The $0\%$ endpoints at $0.6$B and
 $32$B bracket the $1.64\%$ peak at the same 4-bit MLX precision, which
 is weakly suggestive that the arc is not a pure compression artifact;
@@ -77,7 +77,7 @@ at \emph{where} the fix lives: dropping the registry list
 ($\mathrm{C}_{0.7}$) and even filling the envelope with \emph{wrong}
 names ($\mathrm{C}_{0.8}$) both stay at zero. We do not over-read this.
 All three arms are zero-event, so we detect no content effect at this
-sample size --- the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$ difference is
+sample size: the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$ difference is
 bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp, consistent with
 content buying up to $\sim$1~pp. A format-over-content reading
 (\S\ref{sec:mechanism}) is plausible and echoes

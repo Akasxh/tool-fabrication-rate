@@ -25,7 +25,7 @@ def rvr(agent_msg, registry):
     return Action.EXECUTE(proposed)
 \end{lstlisting}
 
-Echoing $\mathcal{R}$ back into the conversation places valid names in the model's recent context, which is what the next decoding step attends to. The intervention uses one re-prompt, a production-realistic budget; it is training-free and assumes no gradient access; it composes with RL-based methods such as Fission-GRPO~\citep{fissiongrpo2026}; and it is the message-level analog of constrained decoding for closed-API regimes without logit access.
+Echoing $\mathcal{R}$ back into the conversation places valid names in the model's recent context, which is what the next decoding step attends to. The intervention uses one re-prompt, a production-realistic budget. It is training-free and assumes no gradient access, so it composes with RL-based methods such as Fission-GRPO~\citep{fissiongrpo2026}. For closed-API regimes without logit access, it is the message-level analog of constrained decoding.
 
 \subsection{Conditions and the content-vs-format question}
 \label{sec:method:conditions}

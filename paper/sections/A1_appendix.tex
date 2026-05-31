@@ -3,7 +3,6 @@
 \section{Supplementary Figures and Tables}
 \label{sec:appendix:tables}
 
-\input{sections/_inbody_scaling}
 \input{sections/_inbody_deployer}
 \input{sections/_inbody_frontier}
 
@@ -162,15 +161,15 @@ are stable to within $\pm 1$ token.
 This work is diagnostic and defensive: it measures a failure mode and
 ships a training-free mitigation. Every fabrication reported here was
 elicited in a typed, offline harness with no real executor and no side
-effects --- we demonstrate no exploit and trigger no real-world action.
+effects. We demonstrate no exploit and trigger no real-world action.
 The underlying failure class (agents emitting calls to non-existent
 tools) is already documented in prior tool-hallucination
 work~\citep{li2023apibank,huang2024metatool}, and the open-weight models
 we name are publicly released, so we judge the net effect of releasing a
 per-call measurement plus a cheap fix to be defensive rather than
-uplifting. The one concrete risk we surface --- a \emph{permissive}
+uplifting. The one concrete risk we surface (a \emph{permissive}
 executor that fuzzy-matches or auto-registers a fabricated
-state-changing call --- is mitigated by the executor-side allow-listing
+state-changing call) is mitigated by the executor-side allow-listing
 we recommend alongside RVR; RVR reduces the fabrication load reaching
 that allow-list rather than replacing it. Code and the per-event
 severity labels are released at

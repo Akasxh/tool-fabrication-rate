@@ -14,7 +14,9 @@ Every cell in the regime grid is $\boldsymbol{0/N}$ (C0 calls only).
 Among the six C0 cells displayed in Table~\ref{tab:regime}, the widest
 Clopper--Pearson $95\%$ two-sided per-cell upper bound is $\leq\!4.45\%$
 (the $0/81$ long-context Sonnet cell); pooled over the $661$ C0 regime
-calls, $\leq\!0.56\%$.
+calls, $\leq\!0.56\%$ (the \texttt{miss\_func} split, designed to elicit
+fabrication, also stays $0/N$; both Anthropic models chain smaller
+in-registry calls instead, trace in Section~\ref{sec:results:trace-inspection}).
 
 \begin{table}[t]
 \caption{Regime-test TFR by model and BFCL split under $\mathrm{C}_0$.
@@ -32,16 +34,6 @@ Haiku 4.5  & 0/109 & 0/120 & 0/107 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-BFCL designed the \texttt{miss\_func} split to elicit fabrication by
-removing a needed function. Both Anthropic models route around the
-missing tool by chaining smaller calls instead (one trace in
-Section~\ref{sec:results:trace-inspection}). Qwen3-8B's only
-\texttt{miss\_func} regime cell in our aggregator is also zero-event
-($0/108$); its non-zero TFR comes from the target-removed distractor
-probe ($9/615$, Section~\ref{sec:results:scaling}), not from this split.
-We do not report a separate Qwen3-8B \texttt{miss\_func} rate, as no
-such cell is reproducible from the released traces.
 
 % =========================================================================
 \subsection{Anthropic stability check across $5$ model versions}
@@ -102,7 +94,7 @@ rather than per call.
 
 The $14$B$\to\!32$B drop, $1.64\%$ to $0\%$, is our central
 intra-family result (Table~\ref{tab:qwen3-scale}; plotted in
-Appendix Figure~\ref{fig:scaling}). Pooled per-call TFR
+Figure~\ref{fig:scaling}). Pooled per-call TFR
 rises from $0\%$ ($0/75$, $\leq\!4.80\%$) at $0.6$B, peaks at $14$B
 ($6/366=1.64\%$), and collapses back to $0\%$ ($0/224$,
 $\leq\!1.63\%$) at $32$B. That $32$B upper bound is wide enough to
@@ -110,6 +102,8 @@ overlap the $14$B point estimate, so ``collapse'' here should be read
 as ``not-detected at this $N$,'' not as emergent capability. The per-arm
 peak also shifts with scale (bold cells, Table~\ref{tab:qwen3-scale}):
 near\_name at $1.7$B, matched\_random at $4$--$8$B, synonym at $14$B.
+
+\input{sections/_inbody_scaling}
 
 \begin{table}[t]
 \caption{Qwen3 scaling curve under $\mathrm{C}_0$ (target removed).
@@ -146,16 +140,11 @@ $0/2{,}117$ at $\leq\!0.18\%$, alongside the five Anthropic~4.x versions
 at $0/2{,}592$ ($\leq\!0.14\%$; Section~\ref{sec:results:probe}). Every
 open-weight model with a non-zero rate is in an open lineage: the Qwen3
 band ($0.95$--$1.64\%$), Qwen2.5-7B ($6.10\%$), and Llama-3.1-8B
-($1.25\%$). The split is clean enough to \emph{state} but not to
-\emph{attribute}: the commercial models are reached through each
-vendor's structured function-calling API, whereas the open-weight models
-are self-hosted $4$-bit MLX builds whose calls we recover by
-text-parsing the generated stream. A structured API that refuses or
-drops a malformed call removes fabrication surface a text-parse path
-still sees, so we cannot separate the model from its serving path; we
-report the contrast as a serving-and-model bundle, not a pure model
-property, and draw no scaling law or cross-vendor capability ranking
-from it (Section~\ref{sec:limitations}). As a confirmatory extension,
+($1.25\%$). This is an open-vs-closed split, not a verified model
+property: the serving paths differ (structured API vs.\ text-parsed
+$4$-bit MLX), so we report a serving-and-model bundle and draw no
+scaling law or cross-vendor ranking
+(Table~\ref{tab:frontier}; Section~\ref{sec:limitations}). As a confirmatory extension,
 the gpt-5 generation (gpt-5, gpt-5-mini, gpt-5-nano, gpt-5.5) adds
 $0/1{,}311$ ($\leq\!0.28\%$), all $0\%$ TFR; we keep it out of the
 locked $0/2{,}117$ OpenAI headline pool and report it only as a
@@ -178,20 +167,20 @@ best primed to mimic.
 A per-call rate understates the exposure if the invented calls are
 harmless stubs. They are not. We classified each of the $53$ open-weight
 fabrication events from the $\mathrm{C}_0$ target-removed pools
-(Qwen3~$20$, Qwen2.5~$28$, Llama~$5$) by the effect of the named tool ---
+(Qwen3~$20$, Qwen2.5~$28$, Llama~$5$) by the effect of the named tool:
 \emph{state-changing} if it mutates filesystem, account, or transaction
-state, else \emph{read-only}; the per-event labels are released with the
+state, else \emph{read-only}. The per-event labels are released with the
 code.
 \textbf{Thirty-seven ($70\%$) name state-changing actions} rather than
 read-only queries, and \textbf{all $37$ carry a concrete, execution-ready
-argument object}---no empty or malformed calls. Eleven name
+argument object}: no empty or malformed calls. Eleven name
 \emph{irreversible business transactions}: \texttt{place\_order} ($4$),
 \texttt{cancel\_order} ($3$), \texttt{cancel\_booking} ($3$), and
-\texttt{create\_ticket} ($1$). Their payloads are fully specified---e.g.\
+\texttt{create\_ticket} ($1$). Their payloads are fully specified, e.g.\
 a fabricated \texttt{place\_order} with
 \texttt{quantity=150, price=25.5, order\_type="buy"} (a $150$-share
 purchase), and a fabricated \texttt{cancel\_booking} carrying a (synthetic
-BFCL-fixture) \texttt{booking\_id} and \texttt{card\_id}---each ready to
+BFCL-fixture) \texttt{booking\_id} and \texttt{card\_id}, each ready to
 execute.
 
 In our harness these calls are caught because the tool is absent from the
@@ -199,10 +188,10 @@ registry. The exposure surfaces under a \emph{permissive} executor that
 fuzzy-matches a requested tool to the nearest registered one or
 auto-registers tools on first use, routing a fabricated
 \texttt{place\_order} to whatever real order tool exists. We demonstrate no
-such exploit; we report that the fabrications are well-formed,
-argument-complete, and disproportionately state-changing, so the failure
-mode is an \emph{unintended action}, not a failed lookup---and that
-worst-case per-arm rates reach $14/135 = 10.4\%$ $[5.8, 16.8]$ (Qwen2.5,
+such exploit. We report that the fabrications are well-formed and
+argument-complete, and that they skew state-changing, so the failure
+mode is an \emph{unintended action}, not a failed lookup. Worst-case
+per-arm rates reach $14/135 = 10.4\%$ $[5.8, 16.8]$ (Qwen2.5,
 synonym distractor), well above the $6.10\%$ pooled figure. Commercial
 models never reach this surface: zero fabricated calls of any kind across
 more than $6{,}000$ probes (Sections~\ref{sec:results:probe},
@@ -326,7 +315,7 @@ quantization artefact}.
 
 \paragraph{Second open family.} Llama-3.1-8B-Instruct (4-bit), a
 lineage independent of Qwen, fabricates at $5/400=1.25\%$ $[0.41, 2.89]$
-on the same probe --- inside the Qwen-family band. With
+on the same probe, inside the Qwen-family band. With
 Qwen2.5-7B-Instruct's $28/459=6.10\%$ (Section~\ref{sec:results:scaling}),
 the open-weight gap appears in two distinct lineages, not one.
 RVR generalizes across the boundary too, though not to a clean zero.
@@ -336,9 +325,9 @@ Qwen2.5-7B from $6.10\%$ to $1/320=0.31\%$ $[0.01, 1.73]$ (roughly
 twentyfold). In each case the residual emissions
 (\texttt{mkdir} and \texttt{cancel\_order} on Llama, \texttt{mkdir} on
 Qwen2.5) were intercepted by RVR's \texttt{tool\_not\_found} rejection
-layer rather than reaching the environment: both RVR stages fire --- the
+layer rather than reaching the environment. Both RVR stages fire (the
 registry-visible prompt removes most fabrications, the rejection net
-catches the rest --- defense-in-depth, not a single-shot guarantee. These
+catches the rest): defense-in-depth, not a single-shot guarantee. These
 nulls are weaker than the matched Qwen3 sweep ($0/945$), as expected for
 single $N\!\approx\!300$--$500$ cross-family probes rather than a
 per-tier-matched design, but the pattern is consistent across both

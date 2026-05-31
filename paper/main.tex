@@ -61,14 +61,14 @@
 \begin{abstract}
 Tool-name hallucination is a known failure mode, but who does it, how
 often, and what fixes it? We define a per-call Tool Fabrication Rate
-(TFR) and measure it on BFCL multi-turn. Commercial frontiers are silent:
-across $6{,}000{+}$ opaque-baseline calls --- five Anthropic 4.x versions
-($0/2{,}592$, $\leq\!0.14\%$) and the OpenAI gpt-4.x/4o/gpt-5 tiers
-($0/2{,}117$ and $0/1{,}311$) --- we log zero fabrications. Open-weight
+(TFR) and measure it on BFCL multi-turn. Commercial frontiers are silent.
+Across $6{,}000{+}$ opaque-baseline calls (five Anthropic 4.x versions at
+$0/2{,}592$, $\leq\!0.14\%$, and the OpenAI gpt-4.x/4o/gpt-5 tiers at
+$0/2{,}117$ and $0/1{,}311$) we log zero fabrications. Open-weight
 families are not: Qwen3, Qwen2.5, and Llama fabricate at up to
 $\mathbf{10.4\%}$, and $70\%$ of those calls name execution-ready
-\emph{state-changing} actions --- fabricated \texttt{place\_order} and
-\texttt{cancel\_booking} calls --- so under a permissive executor the
+\emph{state-changing} actions such as fabricated \texttt{place\_order} and
+\texttt{cancel\_booking} calls, so under a permissive executor the
 failure is an unintended \emph{action}, not a failed lookup. We propose
 Registry-Visible Reprompting (RVR), a training-free middleware that, on a
 registry miss, returns one re-prompt wrapping a structured

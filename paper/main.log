@@ -571,18 +571,13 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-Underfull \hbox (badness 1472) in paragraph at lines 62--81
-\TU/pcr/m/n/10 BFCL multi-turn. Commercial frontiers
+Underfull \hbox (badness 1062) in paragraph at lines 62--81
+\OT1/cmr/m/n/10 70%$ \TU/pcr/m/n/10 of those calls name execution-ready
  []
 
 
-Underfull \hbox (badness 1024) in paragraph at lines 62--81
-\TU/pcr/m/n/10 middleware that, on a registry miss, re-
- []
-
-
-Underfull \hbox (badness 1478) in paragraph at lines 62--81
-\TU/pcr/m/n/10 tool_not_found envelope; it removes all
+Underfull \hbox (badness 1389) in paragraph at lines 62--81
+\TU/pcr/m/n/10 state-changing actions such as fabricated
  []
 
 (sections/01_introduction
@@ -612,7 +607,7 @@ Underfull \hbox (badness 1478) in paragraph at lines 87--104
  []
 
 ) (sections/03_method
-Underfull \vbox (badness 1253) has occurred while \output is active []
+Underfull \vbox (badness 7291) has occurred while \output is active []
 
  [3]
 (lstlang1.sty
@@ -655,33 +650,29 @@ tary archive
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 2680) has occurred while \output is active []
 
  [5]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6]
+(sections/_inbody_scaling
+File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
+<use figures/fig1_scaling_curve.pdf>
+) [6]
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
-Underfull \hbox (badness 2318) in paragraph at lines 327--349
-\TU/pcr/m/n/10 Qwen-family band. With Qwen2.5-7B-Instruct’s
- []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[7]
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 359--374
+ [7]
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 348--363
  [][] 
  []
 
 ) (sections/06_mechanism
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 1067) has occurred while \output is active []
 
  [8])
-(sections/07_limitations)
-Underfull \vbox (badness 5862) has occurred while \output is active []
-
- (main.bbl
-[9] [10]) (sections/08_llm_disclosure) (sections/A1_appendix
+(sections/07_limitations) (main.bbl [9] [10]) (sections/08_llm_disclosure)
+(sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
@@ -701,10 +692,7 @@ Underfull \hbox (badness 4060) in paragraph at lines 12--1
 \TU/pcr/m/n/10 cluster-bootstrap, Friedman+Nemenyi) are repro-
  []
 
-(sections/_inbody_scaling
-File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
-<use figures/fig1_scaling_curve.pdf>
-) (sections/_inbody_deployer
+(sections/_inbody_deployer
 Underfull \hbox (badness 4429) in paragraph at lines 25--25
 []\TU/ptm/b/n/9 Audited TFR (evi-
  []
@@ -816,34 +804,32 @@ File: figures/fig3_rvr_architecture.png Graphic file (type bmp)
 File: figures/fig4_distractor_probe.png Graphic file (type bmp)
 <figures/fig4_distractor_probe.png>
 
-Overfull \hbox (312.51326pt too wide) in paragraph at lines 48--85
+Overfull \hbox (312.51326pt too wide) in paragraph at lines 47--84
  [][] 
  []
 
 
-Underfull \hbox (badness 1092) in paragraph at lines 130--145
+Underfull \hbox (badness 1092) in paragraph at lines 129--144
 []\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 146--159
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 145--158
 []\TU/pcr/m/n/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 146--159
+Underfull \hbox (badness 10000) in paragraph at lines 145--158
 [][]\TU/pcr/m/n/10 github.com/Akasxh/tool-fabrication-rate[][] contains
  []
 
+) [12
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [11])
-[12] [13] [14] (main.aux)
+] [13] [14] (main.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 645468 bytes).
+Output written on main.xdv (14 pages, 638868 bytes).
