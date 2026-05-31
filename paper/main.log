@@ -656,23 +656,25 @@ Underfull \vbox (badness 2680) has occurred while \output is active []
 (sections/_inbody_scaling
 File: figures/fig1_scaling_curve.pdf Graphic file (type pdf)
 <use figures/fig1_scaling_curve.pdf>
-) [6]
+)
+Underfull \vbox (badness 6641) has occurred while \output is active []
+
+ [6]
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7]
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 348--363
- [][] 
- []
-
-) (sections/06_mechanism
-Underfull \vbox (badness 1067) has occurred while \output is active []
+ [7])
+(sections/06_mechanism
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [8])
-(sections/07_limitations) (main.bbl [9] [10]) (sections/08_llm_disclosure)
-(sections/A1_appendix
+(sections/07_limitations) (main.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9]
+[10]) (sections/08_llm_disclosure) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/pcr/m/n/10 with LLM-based assistance under author supervi-
  []
@@ -793,19 +795,34 @@ Underfull \hbox (badness 3240) in paragraph at lines 65--70
 \TU/ptm/b/n/9 but does not prove safety.
  []
 
-) (sections/_inbody_frontier
-Overfull \hbox (20.3679pt too wide) in paragraph at lines 23--38
- [][] 
- []
-
-)
+) (sections/_inbody_frontier)
 File: figures/fig3_rvr_architecture.png Graphic file (type bmp)
 <figures/fig3_rvr_architecture.png>
 File: figures/fig4_distractor_probe.png Graphic file (type bmp)
 <figures/fig4_distractor_probe.png>
 
-Overfull \hbox (312.51326pt too wide) in paragraph at lines 47--84
- [][] 
+Underfull \hbox (badness 2119) in paragraph at lines 54--55
+[]\TU/ptm/b/n/9 name-mismatch up to
+ []
+
+
+Underfull \hbox (badness 3428) in paragraph at lines 58--59
+[]\TU/ptm/b/n/9 single-turn, target re-
+ []
+
+
+Underfull \hbox (badness 6047) in paragraph at lines 64--65
+[]\TU/ptm/b/n/9 multi-level (no single
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
+[]\TU/ptm/b/n/9 no-tool / distractor-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
+[]\TU/ptm/b/n/9 multi-turn agentic
  []
 
 
@@ -823,13 +840,16 @@ Underfull \hbox (badness 10000) in paragraph at lines 145--158
 [][]\TU/pcr/m/n/10 github.com/Akasxh/tool-fabrication-rate[][] contains
  []
 
-) [12
+) [12] [13] [14
 
-] [13] [14] (main.aux)
+
+] [15
+
+] (main.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 638868 bytes).
+Output written on main.xdv (15 pages, 643804 bytes).

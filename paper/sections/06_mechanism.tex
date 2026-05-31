@@ -40,22 +40,45 @@ $\sim$1~pp of recovery, not with it buying nothing. The data are thus
 \emph{compatible with} a format-over-content account, the model
 responding to the message-level rejection rather than the valid names
 offered, but we do not treat zero-vs-zero as proof, and a
-registry-as-cue account is not ruled out within the $\pm$1.5~pp band. We
-settle it on a high-event cell. On Qwen2.5-7B ($\mathrm{C}_0=6.10\%$,
-$28/459$, with $28$ real fabrications to suppress), all three envelope arms
-collapse the rate: the decoy/\emph{wrong}-list $\mathrm{C}_{0.8}$ logs
-$1/405=0.25\%$, the no-list $\mathrm{C}_{0.7}$ logs $4/412=0.97\%$, the
-real-list $\mathrm{C}_1$ logs $1/320=0.31\%$. Each is far below
-$\mathrm{C}_0$ (Fisher, $p<10^{-3}$), none differs from another (pairwise
-Fisher $p>0.37$; wrong vs.\ real $p=1.0$). With events available to
-recover, the content effect the $\pm$1.5~pp Qwen3-8B bound left open does
-not appear. This is a \emph{powered} null on content: recovery is
-format-driven, and a registry of \emph{wrong} names (or no list at
-all) recovers as well as the right one. A bare retry helps but less:
-naive re-prompting ($\mathrm{C}_{0.5}$, no envelope) cuts Qwen2.5 to
-$7/410=1.71\%$ ($p=7\!\times\!10^{-4}$ vs.\ $\mathrm{C}_0$), a residual
-$\sim\!5\times$ the structured arms. That retry-vs-envelope gap
-is only suggestive at this $N$, though (Fisher vs.\ $\mathrm{C}_1$, $p=0.09$).
+registry-as-cue account is not ruled out within the $\pm$1.5~pp band.
+
+We settle it on a high-event cell. Qwen2.5-7B opens at
+$\mathrm{C}_0=6.10\%$, $28$ real fabrications to suppress, and
+Table~\ref{tab:qwen25-ablation} walks the ladder down. All three
+envelope arms collapse the rate far below $\mathrm{C}_0$ (Fisher,
+$p<10^{-3}$) and none differs from another (pairwise Fisher $p>0.37$);
+crucially, the \emph{wrong}-list arm matches the real-list arm exactly
+(Fisher $p=1.0$). With events available to recover, the content effect
+the $\pm$1.5~pp Qwen3-8B bound left open does not appear. This is a
+\emph{powered} null on content: a registry of \emph{wrong} names (or no
+list at all) recovers as well as the right one. A bare retry helps but
+less, leaving a residual $\sim\!5\times$ the structured arms, though that
+retry-vs-envelope gap is only suggestive at this $N$ (Fisher vs.\
+$\mathrm{C}_1$, $p=0.09$).
+
+\begin{table}[t]
+\caption{Qwen2.5-7B recovery ladder on the $\mathrm{C}_0$ target-removed
+probe. Cells are events\,/\,parsed calls. Every structured arm collapses
+the rate (Fisher $p<10^{-3}$ vs.\ $\mathrm{C}_0$); the arms do not differ
+from one another (pairwise $p>0.37$), and a \emph{wrong} registry recovers
+exactly as well as the real one ($\mathrm{C}_{0.8}$ vs.\ $\mathrm{C}_1$,
+Fisher $p=1.0$).}
+\label{tab:qwen25-ablation}
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llcl}
+\toprule
+Condition & Events\,/\,$N$ & TFR & Takeaway \\
+\midrule
+$\mathrm{C}_0$ (opaque)        & $28/459$ & $6.10\%$ & baseline \\
+$\mathrm{C}_{0.5}$ (retry)     & $7/410$  & $1.71\%$ & partial \\
+$\mathrm{C}_{0.7}$ (no list)   & $4/412$  & $0.97\%$ & recovers \\
+$\mathrm{C}_{0.8}$ (wrong list)& $1/405$  & $0.25\%$ & recovers \\
+$\mathrm{C}_1$ (real list)     & $1/320$  & $0.31\%$ & recovers \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \paragraph{What this does not claim.}
 Format-sufficiency is a claim about \emph{recovery}, not task success. On
