@@ -59,49 +59,25 @@
 \printAffiliationsAndNotice{}
 
 \begin{abstract}
-Tool-name hallucination is a known failure mode. Who actually does it,
-how often, and what fixes it? We define a per-call Tool Fabrication
-Rate (TFR) and run it on BFCL multi-turn against two
-populations: five Anthropic 4.x versions across an eleven-month release
-window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
-(4-bit MLX). The Anthropic side is quiet. Across $2{,}592$
-opaque-baseline calls we logged zero TFR events, Clopper--Pearson 95\%
-two-sided upper bound $\leq\!0.14\%$. Commercial models across the OpenAI gpt-4.1
-and gpt-4o tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.18\%$).
-The open-weight Qwen3 family isn't quiet: it logs non-zero TFR, peaking
-at $1.64\%$ (14B); across open lineages worst-case per-arm rates reach
-$10.4\%$ (Qwen2.5). And the invented calls are not
-harmless: $70\%$ name state-changing actions carrying concrete arguments
-(fabricated \texttt{place\_order} and \texttt{cancel\_booking} calls), so
-under a permissive executor the failure is an unintended \emph{action},
-not a failed lookup. We
-propose Registry-Visible Reprompting (RVR), a
-training-free middleware that, on a registry miss, returns one re-prompt
-wrapping a structured \texttt{tool\_not\_found} envelope. RVR removes all
-twenty pooled Qwen3 fabrications in the matched per-tier subset
-(Fisher's exact one-sided, $p=3.5\!\times\!10^{-5}$ on $20/1{,}417$ vs.\
-$0/945$). A secondary, deliberately hedged ablation asks where the fix
-lives. Dropping the registry listing from the envelope
-($\mathrm{C}_{0.7}$; $0/448$ on Qwen3-8B) and even filling it with
-\emph{wrong} tool names ($\mathrm{C}_{0.8}$; $0/410$) both stay at zero,
-matching the real list ($\mathrm{C}_1$; $0/258$). We do not read this as
-proof that content is irrelevant: all three arms are zero-event, so this
-is absence of evidence, not evidence of equivalence. At this sample size
-we detect no content effect; the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$
-difference is bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp ---
-consistent with content buying up to $\sim$1~pp, not proof it buys
-nothing. On a high-event cell (Qwen2.5, $\mathrm{C}_0=6.10\%$) the
-ablation is powered: a \emph{wrong} registry list recovers as well as the
-real one ($\mathrm{C}_{0.8}$ vs.\ $\mathrm{C}_1$, Fisher $p=1.0$; both
-$\sim\!20$--$24\times$ below baseline), so recovery is format-driven, echoing
-Min et al.~\citep{min2022rethinking}. Descriptively, Qwen3's rate is non-monotone in scale,
-climbing from $0\%$ at $0.6$B to $\mathbf{1.64\%}$ at $14$B and back to
-$0\%$ at $32$B; six points are not a curve. A precision ladder
-(4-bit/8-bit/bf16) shows the fabrication persists at full precision, so
-it is not a quantization artefact, and a second open family
-(Llama-3.1-8B) reproduces the gap.
-On Anthropic's zero-event regime RVR also logs zero, but the strict-pass
-subset slips at $N\!=\!60$; we recommend tier-conditional deployment.
+Tool-name hallucination is a known failure mode, but who does it, how
+often, and what fixes it? We define a per-call Tool Fabrication Rate
+(TFR) and measure it on BFCL multi-turn. Commercial frontiers are silent:
+across $6{,}000{+}$ opaque-baseline calls --- five Anthropic 4.x versions
+($0/2{,}592$, $\leq\!0.14\%$) and the OpenAI gpt-4.x/4o/gpt-5 tiers
+($0/2{,}117$ and $0/1{,}311$) --- we log zero fabrications. Open-weight
+families are not: Qwen3, Qwen2.5, and Llama fabricate at up to
+$\mathbf{10.4\%}$, and $70\%$ of those calls name execution-ready
+\emph{state-changing} actions --- fabricated \texttt{place\_order} and
+\texttt{cancel\_booking} calls --- so under a permissive executor the
+failure is an unintended \emph{action}, not a failed lookup. We propose
+Registry-Visible Reprompting (RVR), a training-free middleware that, on a
+registry miss, returns one re-prompt wrapping a structured
+\texttt{tool\_not\_found} envelope; it removes all twenty pooled Qwen3
+fabrications (Fisher's exact, $p=3.5\!\times\!10^{-5}$ on $20/1{,}417$
+vs.\ $0/945$). A powered ablation locates the fix: a \emph{wrong}
+registry list recovers as well as the real one (Fisher $p=1.0$), so
+recovery is driven by the rejection's format, not the registry's content.
+We release the harness, traces, and per-call labels.
 \end{abstract}
 
 \input{sections/01_introduction}
