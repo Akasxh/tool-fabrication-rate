@@ -102,7 +102,7 @@ rather than per call.
 
 The $14$B$\to\!32$B drop, $1.64\%$ to $0\%$, is our central
 intra-family result (Table~\ref{tab:qwen3-scale}; plotted in
-Figure~\ref{fig:scaling}). Pooled per-call TFR
+Appendix Figure~\ref{fig:scaling}). Pooled per-call TFR
 rises from $0\%$ ($0/75$, $\leq\!4.80\%$) at $0.6$B, peaks at $14$B
 ($6/366=1.64\%$), and collapses back to $0\%$ ($0/224$,
 $\leq\!1.63\%$) at $32$B. That $32$B upper bound is wide enough to
@@ -110,8 +110,6 @@ overlap the $14$B point estimate, so ``collapse'' here should be read
 as ``not-detected at this $N$,'' not as emergent capability. The per-arm
 peak also shifts with scale (bold cells, Table~\ref{tab:qwen3-scale}):
 near\_name at $1.7$B, matched\_random at $4$--$8$B, synonym at $14$B.
-
-\input{sections/_inbody_scaling}
 
 \begin{table}[t]
 \caption{Qwen3 scaling curve under $\mathrm{C}_0$ (target removed).
@@ -137,12 +135,12 @@ Size & near & syn. & match. & unrel. & Pooled \\
 A same-family check strengthens the picture. Qwen2.5-7B-Instruct on the
 same probe gives $28/459 = 6.10\%$, higher than any Qwen3 size at any
 arm. This is not an apples-to-apples generation comparison (different
-post-training, different tokenizer), but it says the failure mode is not
-a Qwen3-specific artefact of one release. The lineage carries it.
+post-training and tokenizer), but it says the failure mode is not a
+Qwen3-specific artefact of one release. The lineage carries it.
 
 \paragraph{The zero-event frontier is broad; the non-zero band is
 open-weight.} Commercial models track the Anthropic null rather than
-the Qwen3 band (Table~\ref{tab:frontier}). On the same probe the five
+the Qwen3 band (Table~\ref{tab:frontier}, appendix). On the same probe the five
 OpenAI gpt-4.1 and gpt-4o tiers also log $0\%$ TFR, pooling to
 $0/2{,}117$ at $\leq\!0.18\%$, alongside the five Anthropic~4.x versions
 at $0/2{,}592$ ($\leq\!0.14\%$; Section~\ref{sec:results:probe}). Every
@@ -163,13 +161,11 @@ $0/1{,}311$ ($\leq\!0.28\%$), all $0\%$ TFR; we keep it out of the
 locked $0/2{,}117$ OpenAI headline pool and report it only as a
 robustness check (Appendix~\ref{sec:appendix:prereg}).
 
-\input{sections/_inbody_frontier}
-
 We treat the shape itself as the result. Most readers would guess
 that $14$B fabricates less than $1.7$B. It does not. The traces
-suggest why. At $1.7$B the model rarely emits well-formed tool calls,
-leaving little surface to fabricate on. At $14$B it formats calls
-fluently but does not check the registry. At $32$B it does both. Six
+suggest why: at $1.7$B the model rarely emits well-formed tool calls,
+leaving little surface to fabricate on; at $14$B it formats calls
+fluently but does not check the registry; at $32$B it does both. Six
 points do not support a fitted scaling law, but the shape is consistent:
 at each scale the dominant failure is whichever distractor that scale is
 best primed to mimic.
@@ -193,16 +189,15 @@ argument object}---no empty or malformed calls. Eleven name
 \texttt{cancel\_order} ($3$), \texttt{cancel\_booking} ($3$), and
 \texttt{create\_ticket} ($1$). Their payloads are fully specified---e.g.\
 a fabricated \texttt{place\_order} with
-\texttt{quantity=150, price=25.5, order\_type="buy"} and a fabricated
-\texttt{cancel\_booking} carrying a (synthetic BFCL-fixture)
-\texttt{booking\_id} and \texttt{card\_id}---a $150$-share purchase and a
-booking cancellation,
-each ready to execute.
+\texttt{quantity=150, price=25.5, order\_type="buy"} (a $150$-share
+purchase), and a fabricated \texttt{cancel\_booking} carrying a (synthetic
+BFCL-fixture) \texttt{booking\_id} and \texttt{card\_id}---each ready to
+execute.
 
 In our harness these calls are caught because the tool is absent from the
-registry. The exposure surfaces under a \emph{permissive} executor:
-frameworks that fuzzy-match a requested tool to the nearest registered one,
-or auto-register tools on first use, would route a fabricated
+registry. The exposure surfaces under a \emph{permissive} executor that
+fuzzy-matches a requested tool to the nearest registered one or
+auto-registers tools on first use, routing a fabricated
 \texttt{place\_order} to whatever real order tool exists. We demonstrate no
 such exploit; we report that the fabrications are well-formed,
 argument-complete, and disproportionately state-changing, so the failure
@@ -304,8 +299,7 @@ where a one-shot \texttt{mv\_recursive()} would have been fabricated.
 Across $30$ near-name probe traces, agents reach for other in-registry
 tools rather than the removed target's or the distractor's name. RVR
 adds zero provider round-trips on hits, one on misses; the rendered
-registry is $\sim$100--200 tokens at $\leq$25 tools (under 5\% of
-context).
+registry is $\sim$100--200 tokens at $\leq$25 tools (under 5\% of context).
 
 % =========================================================================
 \subsection{Cross-family and precision controls}
@@ -315,7 +309,7 @@ context).
 Two objections target the open-weight result: that the Qwen3 band is a
 4-bit MLX quantization artefact, and that it reflects a single open
 family. We address both on the same $\mathrm{C}_0$ target-removed probe
-(Table~\ref{tab:controls}). All intervals are Clopper--Pearson $95\%$
+(Table~\ref{tab:controls}); all intervals are Clopper--Pearson $95\%$
 two-sided.
 
 \paragraph{Precision ladder.} We re-ran Qwen3-8B at three precisions.
@@ -324,37 +318,34 @@ $[0.08, 2.27]$, alongside 8-bit $2/435=0.46\%$ $[0.06, 1.65]$ and 4-bit
 $9/623=1.44\%$ $[0.66, 2.72]$.\footnote{This 4-bit cell ($9/623$) is the
 precision-control acquisition; the scaling-sweep 8B cell ($9/615$,
 Table~\ref{tab:qwen3-scale}) is a separate run with the same nine
-fabrication events over marginally fewer parsed calls.} Point estimates trend downward as
-precision rises, but all three intervals overlap, so we do not claim a
-precision effect. The load-bearing fact is the floor: \textbf{tool
-fabrication persists at full precision and is therefore not a
+fabrication events over marginally fewer parsed calls.} Point estimates
+trend downward as precision rises, but all three intervals overlap, so we
+claim no precision effect. The load-bearing fact is the floor:
+\textbf{tool fabrication persists at full precision and is therefore not a
 quantization artefact}.
 
 \paragraph{Second open family.} Llama-3.1-8B-Instruct (4-bit), a
 lineage independent of Qwen, fabricates at $5/400=1.25\%$ $[0.41, 2.89]$
-on the same probe --- squarely inside the Qwen-family band. With
+on the same probe --- inside the Qwen-family band. With
 Qwen2.5-7B-Instruct's $28/459=6.10\%$ (Section~\ref{sec:results:scaling}),
-the open-weight gap now appears in two distinct lineages, not one.
+the open-weight gap appears in two distinct lineages, not one.
 RVR generalizes across the boundary too, though not to a clean zero.
 The $\mathrm{C}_1$ registry-visible re-prompt cuts Llama-3.1-8B from
-$1.25\%$ to $2/487=0.41\%$ $[0.05, 1.48]$ (a threefold reduction) and
+$1.25\%$ to $2/487=0.41\%$ $[0.05, 1.48]$ (threefold) and
 Qwen2.5-7B from $6.10\%$ to $1/320=0.31\%$ $[0.01, 1.73]$ (roughly
-twentyfold). In each case the handful of residual emissions
+twentyfold). In each case the residual emissions
 (\texttt{mkdir} and \texttt{cancel\_order} on Llama, \texttt{mkdir} on
 Qwen2.5) were intercepted by RVR's \texttt{tool\_not\_found} rejection
-layer rather than reaching the environment. So across two lineages
-outside Qwen, RVR's two stages both fire: the registry-visible prompt
-removes most fabrications and the rejection safety net catches the
-rest --- defense-in-depth, not a single-shot guarantee. These are
-weaker per-call nulls than the matched Qwen3 sweep ($0/945$), as expected
-for single $N\!\approx\!300$--$500$ cross-family probes rather than a
+layer rather than reaching the environment: both RVR stages fire --- the
+registry-visible prompt removes most fabrications, the rejection net
+catches the rest --- defense-in-depth, not a single-shot guarantee. These
+nulls are weaker than the matched Qwen3 sweep ($0/945$), as expected for
+single $N\!\approx\!300$--$500$ cross-family probes rather than a
 per-tier-matched design, but the pattern is consistent across both
-families. Mistral-7B-v0.3 was also probed but emitted no
-parseable tool calls under our harness (zero parsed calls across all
-arms), so it yields no TFR denominator and is excluded. Four further open
-families (Mistral-7B-v0.3, Gemma-2-9B, Phi-3.5-mini,
-DeepSeek-R1-Distill-7B) were also probed and emitted no parseable tool
-calls (Section~\ref{sec:limitations}).
+families. Four further open families (Mistral-7B-v0.3, Gemma-2-9B,
+Phi-3.5-mini, DeepSeek-R1-Distill-7B) emitted no parseable tool calls
+under our harness and yield no TFR denominator
+(Section~\ref{sec:limitations}).
 
 \begin{table}[t]
 \caption{Cross-family and precision controls on the $\mathrm{C}_0$
