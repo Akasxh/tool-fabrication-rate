@@ -191,8 +191,9 @@ argument object}---no empty or malformed calls. Eleven name
 \texttt{create\_ticket} ($1$). Their payloads are fully specified---e.g.\
 a fabricated \texttt{place\_order} with
 \texttt{quantity=150, price=25.5, order\_type="buy"} and a fabricated
-\texttt{cancel\_booking} carrying a \texttt{booking\_id} and
-\texttt{card\_id}---a $150$-share purchase and a booking cancellation,
+\texttt{cancel\_booking} carrying a (synthetic BFCL-fixture)
+\texttt{booking\_id} and \texttt{card\_id}---a $150$-share purchase and a
+booking cancellation,
 each ready to execute.
 
 In our harness these calls are caught because the tool is absent from the
@@ -235,7 +236,7 @@ $\mathrm{C}_1$ is the registry-visible re-prompt arm.}
 \setlength{\tabcolsep}{8pt}
 \begin{tabular}{lccc}
 \toprule
-Tier & $\mathrm{C}_0$ & $\mathrm{C}_1$ & Prevented \\
+Tier & $\mathrm{C}_0$ & $\mathrm{C}_1$ & $\Delta$ events \\
 \midrule
 Qwen3-1.7B & 2/210 & 0/200 & 2/2 \\
 Qwen3-4B   & 3/226 & 0/228 & 3/3 \\
@@ -345,12 +346,12 @@ rest --- defense-in-depth, not a single-shot guarantee. These are
 weaker per-call nulls than the matched Qwen3 sweep ($0/945$), as expected
 for single $N\!\approx\!300$--$500$ cross-family probes rather than a
 per-tier-matched design, but the pattern is consistent across both
-families. Mistral-7B-Instruct-v0.3 was also probed but emitted no
+families. Mistral-7B-v0.3 was also probed but emitted no
 parseable tool calls under our harness (zero parsed calls across all
-arms), so it yields no TFR denominator and is excluded. We will add more
-open lineages in a later revision.\footnote{Mistral-7B-v0.3 produced no
-parseable tool calls under our text-parse path, hence no denominator and
-no rate.}
+arms), so it yields no TFR denominator and is excluded. Four further open
+families (Mistral-7B-v0.3, Gemma-2-9B, Phi-3.5-mini,
+DeepSeek-R1-Distill-7B) were also probed and emitted no parseable tool
+calls (Section~\ref{sec:limitations}).
 
 \begin{table}[t]
 \caption{Cross-family and precision controls on the $\mathrm{C}_0$

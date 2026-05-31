@@ -67,8 +67,9 @@ window, and the Qwen3-Instruct family at six sizes from $0.6$B to $32$B
 opaque-baseline calls we logged zero TFR events, Clopper--Pearson 95\%
 two-sided upper bound $\leq\!0.14\%$. Commercial models across the OpenAI gpt-4.1
 and gpt-4o tiers also log $0\%$ TFR ($0/2{,}117$ pooled, $\leq\!0.18\%$).
-The open-weight Qwen3 family isn't quiet: it logs non-zero TFR, reaching
-$10.4\%$ on the worst per-arm cell. And the invented calls are not
+The open-weight Qwen3 family isn't quiet: it logs non-zero TFR, peaking
+at $1.64\%$ (14B); across open lineages worst-case per-arm rates reach
+$10.4\%$ (Qwen2.5). And the invented calls are not
 harmless: $70\%$ name state-changing actions carrying concrete arguments
 (fabricated \texttt{place\_order} and \texttt{cancel\_booking} calls), so
 under a permissive executor the failure is an unintended \emph{action},
@@ -91,7 +92,7 @@ consistent with content buying up to $\sim$1~pp, not proof it buys
 nothing. On a high-event cell (Qwen2.5, $\mathrm{C}_0=6.10\%$) the
 ablation is powered: a \emph{wrong} registry list recovers as well as the
 real one ($\mathrm{C}_{0.8}$ vs.\ $\mathrm{C}_1$, Fisher $p=1.0$; both
-$\sim\!24\times$ below baseline), so recovery is format-driven, echoing
+$\sim\!20$--$24\times$ below baseline), so recovery is format-driven, echoing
 Min et al.~\citep{min2022rethinking}. Descriptively, Qwen3's rate is non-monotone in scale,
 climbing from $0\%$ at $0.6$B to $\mathbf{1.64\%}$ at $14$B and back to
 $0\%$ at $32$B; six points are not a curve. A precision ladder

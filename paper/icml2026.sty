@@ -404,7 +404,9 @@ the offending package(s), or layout-changing commands and try again.
 }
 
 % set running title header
-\fancyhead[C]{\small\bf\@icmltitlerunning}
+% Suppressed: centered running title collides with the left-aligned
+% accepted-notice banner at \small in the 6.75in headwidth.
+% \fancyhead[C]{\small\bf\@icmltitlerunning}
 % SCALE-ICML 2026 workshop camera-ready banner (left header).
 \fancyhead[L]{\small Published as a workshop paper at SCALE - ICML 2026}
 

@@ -33,8 +33,9 @@ Why a per-call existence rate matters: a fabricated name is not just a
 failed call, it is an attack surface. \citet{spracklen2025packages}
 audited package hallucinations in code-generating LLMs and found
 open-source models invent non-existent dependencies at $\sim\!21.7\%$
-against $\sim\!5.2\%$ for commercial ones, an open-vs-closed gap that
-mirrors the Qwen-vs-Anthropic split we report and that an adversary can
+against $\sim\!5.2\%$ for commercial ones, an open-vs-closed gap directionally consistent with (though an order of
+magnitude larger than, and in a different domain from) the
+Qwen-vs-Anthropic split we report, and one that an adversary can
 turn into ``slopsquatting'' by registering the hallucinated name and
 waiting for the model to reach for it. Tool registries are the same
 shape of target. We make no exploitation claim, and measure existence
@@ -61,8 +62,9 @@ window~\citep{wei2022ushaped,mckenzie2023inversescaling} --- but six
 points isn't a curve, and we say so. The $0\%$ endpoints at $0.6$B and
 $32$B bracket the $1.64\%$ peak at the same 4-bit MLX precision, which
 is weakly suggestive that the arc is not a pure compression artifact;
-but we cannot yet disentangle scale from 4-bit quantization, and a
-full-precision (bf16) control is forthcoming. We do not claim the
+and a full-precision (bf16) control confirms the floor: fabrication
+persists at bf16 (2/316; Section~\ref{sec:results:controls}), so the arc
+is not a pure quantization artefact. We do not claim the
 endpoints settle the question.
 
 RVR is training-free: intercept the proposed call, check
@@ -79,8 +81,9 @@ sample size --- the $\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$ difference is
 bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp, consistent with
 content buying up to $\sim$1~pp. A format-over-content reading
 (\S\ref{sec:mechanism}) is plausible and echoes
-Min et al.~\citep{min2022rethinking}, but powering it on a high-event
-cell is the right next step and is in progress. On the
+Min et al.~\citep{min2022rethinking}, and we power it on a high-event cell (Qwen2.5,
+$\mathrm{C}_0=6.10\%$): a wrong list recovers as well as the right one
+(Fisher $p=1.0$; \S\ref{sec:mechanism}). On the
 Anthropic zero-event regime RVR holds at zero, but strict-pass slips
 (Sonnet $60\!\to\!53/60$; Haiku $60\!\to\!56/60$); a Newcombe-hybrid
 TOST at $N\!=\!60$ is underpowered for a $5$-pp non-inferiority margin,
