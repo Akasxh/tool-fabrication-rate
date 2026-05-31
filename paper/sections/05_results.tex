@@ -182,7 +182,10 @@ best primed to mimic.
 A per-call rate understates the exposure if the invented calls are
 harmless stubs. They are not. We classified each of the $53$ open-weight
 fabrication events from the $\mathrm{C}_0$ target-removed pools
-(Qwen3~$20$, Qwen2.5~$28$, Llama~$5$) by the effect of the named tool.
+(Qwen3~$20$, Qwen2.5~$28$, Llama~$5$) by the effect of the named tool ---
+\emph{state-changing} if it mutates filesystem, account, or transaction
+state, else \emph{read-only}; the per-event labels are released with the
+code.
 \textbf{Thirty-seven ($70\%$) name state-changing actions} rather than
 read-only queries, and \textbf{all $37$ carry a concrete, execution-ready
 argument object}---no empty or malformed calls. Eleven name

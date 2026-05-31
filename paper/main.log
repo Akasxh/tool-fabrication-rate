@@ -637,8 +637,8 @@ Underfull \hbox (badness 2261) in paragraph at lines 37--1
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--1
-[][]\TU/ptm/m/it/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
+Underfull \hbox (badness 1448) in paragraph at lines 37--1
+[][]\TU/ptm/m/it/10 github.com/Akasxh/icml-paper-plan[][] holds the har-
  []
 
 
@@ -661,23 +661,21 @@ Overfull \hbox (20.3679pt too wide) in paragraph at lines 23--38
  []
 
 )
-Underfull \hbox (badness 1281) in paragraph at lines 182--198
-\TU/ptm/m/it/10 vented calls are harmless stubs. They are not.
- []
-
-
 Underfull \vbox (badness 1024) has occurred while \output is active []
 
- [7]
 File: figures/fig2_ablation_ladder.pdf Graphic file (type pdf)
 <use figures/fig2_ablation_ladder.pdf>
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7]
 [8]
-Overfull \hbox (7.01733pt too wide) in paragraph at lines 365--380
+Overfull \hbox (7.01733pt too wide) in paragraph at lines 368--383
  [][] 
  []
 
-) (sections/06_mechanism) (sections/07_limitations (sections/_inbody_deployer
+) (sections/06_mechanism) (sections/07_limitations [9]
+(sections/_inbody_deployer
 Underfull \hbox (badness 4429) in paragraph at lines 25--25
 []\TU/ptm/b/n/9 Audited TFR (evi-
  []
@@ -778,15 +776,11 @@ Underfull \hbox (badness 3240) in paragraph at lines 65--70
 \TU/ptm/b/n/9 but does not prove safety.
  []
 
-
+))
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [9]))
-(main.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [10]
-[11]) (sections/08_llm_disclosure) (sections/A1_appendix
+ (main.bbl
+[10] [11]) (sections/08_llm_disclosure) (sections/A1_appendix
 Underfull \hbox (badness 1248) in paragraph at lines 12--1
 \TU/ptm/m/it/10 with LLM-based assistance under author supervi-
  []
@@ -820,27 +814,19 @@ Underfull \hbox (badness 1092) in paragraph at lines 126--141
 []\TU/ptm/m/it/10 The pre-registered protocol is locked in git com-
  []
 
-)
-Underfull \hbox (badness 10000) in paragraph at lines 142--119
+
+Underfull \hbox (badness 10000) in paragraph at lines 142--155
 []\TU/ptm/m/it/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 142--119
-[][]\TU/ptm/m/it/10 anonymous.4open.science/r/icml-tehr-scale-2026[][]
+Underfull \hbox (badness 10000) in paragraph at lines 142--155
+[][]\TU/ptm/m/it/10 github.com/Akasxh/icml-paper-plan[][] contains the
  []
 
+) [12] [13
 
-Underfull \hbox (badness 1694) in paragraph at lines 142--119
-\TU/ptm/m/it/10 the aggregator and statistical scripts, the repro-
- []
-
-
-Underfull \hbox (badness 1596) in paragraph at lines 142--119
-\TU/ptm/m/it/10 Distractor-injection RNG uses a SHA-256-derived
- []
-
-[12] [13] [14
+] [14] [15
 
 
 ] (main.aux)
@@ -850,4 +836,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (14 pages, 648996 bytes).
+Output written on main.xdv (15 pages, 667432 bytes).
