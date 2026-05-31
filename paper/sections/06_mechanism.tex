@@ -54,7 +54,11 @@ $p>0.37$; wrong vs.\ real $p=1.0$). With events available to recover, a
 content effect of the size the $\pm$1.5~pp Qwen3-8B bound left open does
 not appear. This is a \emph{powered} null on content: recovery is
 format-driven, and a registry of \emph{wrong} names---or no list at
-all---recovers as well as the right one.
+all---recovers as well as the right one. A bare retry helps but less:
+naive re-prompting ($\mathrm{C}_{0.5}$, no envelope) cuts Qwen2.5 to
+$7/410=1.71\%$ ($p=7\!\times\!10^{-4}$ vs.\ $\mathrm{C}_0$), a residual
+$\sim\!5\times$ the structured arms --- though that retry-vs-envelope gap
+is only suggestive at this $N$ (Fisher vs.\ $\mathrm{C}_1$, $p=0.09$).
 
 \paragraph{What this does not claim.}
 Format-sufficiency is a claim about \emph{recovery}, not task success. A decoy
