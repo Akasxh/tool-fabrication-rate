@@ -9,31 +9,14 @@ One finding, two regimes.
 % =========================================================================
 
 Per-call TFR for Sonnet~4.6 and Haiku~4.5 across the three BFCL
-multi-turn splits under $\mathrm{C}_0$ is in Table~\ref{tab:regime}.
+multi-turn splits under $\mathrm{C}_0$ is in Appendix Table~\ref{tab:regime}.
 Every cell in the regime grid is $\boldsymbol{0/N}$ (C0 calls only).
-Among the six C0 cells displayed in Table~\ref{tab:regime}, the widest
+Among the six C0 cells in Appendix Table~\ref{tab:regime}, the widest
 Clopper--Pearson $95\%$ two-sided per-cell upper bound is $\leq\!4.45\%$
 (the $0/81$ long-context Sonnet cell); pooled over the $661$ C0 regime
 calls, $\leq\!0.56\%$ (the \texttt{miss\_func} split, designed to elicit
 fabrication, also stays $0/N$; both Anthropic models chain smaller
 in-registry calls instead, trace in Section~\ref{sec:results:trace-inspection}).
-
-\begin{table}[t]
-\caption{Regime-test TFR by model and BFCL split under $\mathrm{C}_0$.
-Cells are events / parsed calls.}
-\label{tab:regime}
-\centering
-\small
-\setlength{\tabcolsep}{8pt}
-\begin{tabular}{lccc}
-\toprule
-Model & base & miss\_func & long\_ctx \\
-\midrule
-Sonnet 4.6 & 0/116 & 0/128 & 0/81 \\
-Haiku 4.5  & 0/109 & 0/120 & 0/107 \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 % =========================================================================
 \subsection{Anthropic stability check across $5$ model versions}
@@ -47,45 +30,21 @@ Four distractor types (near-name, synonym, matched-random, unrelated) are
 tested on $N\!=\!15$ \texttt{multi\_turn\_base} tasks where $\mathrm{C}_0$
 already passes. We ran five Anthropic 4.x versions over an $11$-month window
 across the Opus, Sonnet, and Haiku families. On this probe every cell
-is $\boldsymbol{0/N}$ (Table~\ref{tab:anth-temporal};
-$95\%$ two-sided pooled upper bound $\leq\!0.19\%$). Combine the regime cells
+is $\boldsymbol{0/N}$ (per-version breakdown in Appendix
+Table~\ref{tab:anth-temporal}; $95\%$ two-sided pooled upper bound
+$\leq\!0.19\%$). Combine the regime cells
 with the probe cells and the $\mathrm{C}_0$ Anthropic audit pools to
 \textbf{$\boldsymbol{0/2{,}592}$} (probe $1{,}931$ $+$ regime $661$;
 per-call aggregator, deduplicated across overlapping run-ids), or
 $\leq\!0.14\%$.
 
-\begin{table}[t]
-\caption{Anthropic 4.x distractor probe with target removed ($\mathrm{C}_0$).
-Pooled $\mathrm{C}_0$ over regime $+$ probe is $0/2{,}592$,
-$\leq\!0.14\%$; the $\mathrm{C}_1$ subset adds $0/659$ at
-$\leq\!0.56\%$.}
-\label{tab:anth-temporal}
-\centering
-\small
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{lrc}
-\toprule
-Model & $N$ & TFR \\
-\midrule
-Opus 4.7        & 293   & 0 \\
-Sonnet 4.6      & 561   & 0 \\
-Sonnet 4.5      & 285   & 0 \\
-Sonnet 4        & 253   & 0 \\
-Haiku 4.5       & 539   & 0 \\
-\midrule
-Pooled probe & \textbf{1{,}931} & \textbf{0} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-On this benchmark, Anthropic models do not invent tool names. Five
-versions, eleven months, the same null. Two readings fit the data and
-we cannot separate them: post-training hardened against fabrication, or
-BFCL's redundant tool basket lets the agent route around a missing tool
-rather than guess at one. Both likely contribute. The gap with
-prior work is less mysterious once you remember that older models had no
-tool-use post-training and that prior benchmarks aggregated per task
-rather than per call.
+On this benchmark, Anthropic models do not invent tool names: five
+versions, eleven months, the same null. Two readings fit and we cannot
+separate them: post-training hardened against fabrication, or BFCL's
+redundant tool basket lets the agent route around a missing tool rather
+than guess. Both likely contribute. The gap with prior work shrinks once
+you recall that older models had no tool-use post-training and that prior
+benchmarks aggregated per task, not per call.
 
 % =========================================================================
 \subsection{Qwen3 scaling curve: TFR is non-monotonic across $0.6$B--$32$B}
@@ -101,7 +60,10 @@ $\leq\!1.63\%$) at $32$B. That $32$B upper bound is wide enough to
 overlap the $14$B point estimate, so ``collapse'' here should be read
 as ``not-detected at this $N$,'' not as emergent capability. The per-arm
 peak also shifts with scale (bold cells, Table~\ref{tab:qwen3-scale}):
-near\_name at $1.7$B, matched\_random at $4$--$8$B, synonym at $14$B.
+near\_name at $1.7$B, matched\_random at $4$--$8$B, synonym at $14$B. A
+Friedman exact permutation test on this drift is underpowered
+($\chi^2_{(3)}\!=\!3.0$, $p\!=\!0.46$; $n\!=\!4$ sizes), so we read it as
+phenomenology, not inference.
 
 \input{sections/_inbody_scaling}
 
@@ -150,14 +112,13 @@ $0/1{,}311$ ($\leq\!0.28\%$), all $0\%$ TFR; we keep it out of the
 locked $0/2{,}117$ OpenAI headline pool and report it only as a
 robustness check (Appendix~\ref{sec:appendix:prereg}).
 
-We treat the shape itself as the result. Most readers would guess
-that $14$B fabricates less than $1.7$B. It does not. The traces
-suggest why: at $1.7$B the model rarely emits well-formed tool calls,
-leaving little surface to fabricate on; at $14$B it formats calls
-fluently but does not check the registry; at $32$B it does both. Six
-points do not support a fitted scaling law, but the shape is consistent:
-at each scale the dominant failure is whichever distractor that scale is
-best primed to mimic.
+We treat the shape itself as the result: one would expect $14$B to
+fabricate less than $1.7$B, and it does not. The traces suggest why: at
+$1.7$B the model rarely emits well-formed calls, leaving little surface to
+fabricate on; at $14$B it formats fluently but does not check the
+registry; at $32$B it does both. Six points do not fit a scaling law, but
+the shape is consistent: at each scale the dominant failure is whichever
+distractor that scale is best primed to mimic.
 
 % =========================================================================
 \subsection{What gets fabricated: execution-ready state-changing actions}
@@ -245,19 +206,8 @@ neither non-inferiority nor inferiority. RVR stays zero-event on the
 Anthropic frontier; the strict-pass cost is undetermined at this
 $N$ (Section~\ref{sec:limitations:rvr-null}).
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.62\linewidth]{figures/fig2_ablation_ladder}
-\caption{Qwen3-8B 4-condition ablation. The structured-error
-envelope ($\mathrm{C}_{0.7}$) already takes TFR to zero; adding the
-registry list ($\mathrm{C}_1$) yields no further \emph{detectable}
-reduction (both arms zero-event; see \S\ref{sec:mechanism} for why this
-bounds rather than proves a format-over-content account).}
-\label{fig:ablation}
-\end{figure}
-
 The four-condition ladder on Qwen3-8B walks down a clean gradient
-(Figure~\ref{fig:ablation}). Opaque baseline $1.46\%$ ($9/615$), naive
+(Appendix Figure~\ref{fig:ablation}). Opaque baseline $1.46\%$ ($9/615$), naive
 retry $0.39\%$ ($1/258$), structured envelope $\mathrm{C}_{0.7}$ $0/448$
 ($\leq\!0.82\%$), full RVR $\mathrm{C}_1$ $0/258$. The structured
 envelope alone already takes TFR to zero; stacking the registry list on
@@ -298,8 +248,8 @@ registry is $\sim$100--200 tokens at $\leq$25 tools (under 5\% of context).
 Two objections target the open-weight result: that the Qwen3 band is a
 4-bit MLX quantization artefact, and that it reflects a single open
 family. We address both on the same $\mathrm{C}_0$ target-removed probe
-(Table~\ref{tab:controls}); all intervals are Clopper--Pearson $95\%$
-two-sided.
+(visualized in Appendix Figure~\ref{fig:controls}); all intervals are
+Clopper--Pearson $95\%$ two-sided.
 
 \paragraph{Precision ladder.} We re-ran Qwen3-8B at three precisions.
 Fabrication does not vanish at full precision: bf16 logs $2/316=0.63\%$
@@ -324,40 +274,14 @@ $1.25\%$ to $2/487=0.41\%$ $[0.05, 1.48]$ (threefold) and
 Qwen2.5-7B from $6.10\%$ to $1/320=0.31\%$ $[0.01, 1.73]$ (roughly
 twentyfold). In each case the residual emissions
 (\texttt{mkdir} and \texttt{cancel\_order} on Llama, \texttt{mkdir} on
-Qwen2.5) were intercepted by RVR's \texttt{tool\_not\_found} rejection
-layer rather than reaching the environment. Both RVR stages fire (the
-registry-visible prompt removes most fabrications, the rejection net
-catches the rest): defense-in-depth, not a single-shot guarantee. These
-nulls are weaker than the matched Qwen3 sweep ($0/945$), as expected for
-single $N\!\approx\!300$--$500$ cross-family probes rather than a
-per-tier-matched design, but the pattern is consistent across both
+Qwen2.5) were caught by RVR's \texttt{tool\_not\_found} rejection layer
+rather than reaching the environment: both stages fire (prompt removes
+most, rejection net catches the rest), defense-in-depth, not a
+single-shot guarantee. These nulls are weaker than the matched Qwen3
+sweep ($0/945$), as expected for single $N\!\approx\!300$--$500$ probes
+rather than a per-tier-matched design, but consistent across both
 families. Four further open families (Mistral-7B-v0.3, Gemma-2-9B,
 Phi-3.5-mini, DeepSeek-R1-Distill-7B) emitted no parseable tool calls
 under our harness and yield no TFR denominator
 (Section~\ref{sec:limitations}).
 
-\begin{table}[t]
-\caption{Cross-family and precision controls on the $\mathrm{C}_0$
-target-removed probe. Cells are events / parsed calls with TFR and
-Clopper--Pearson $95\%$ two-sided intervals. Bottom rows are the
-$\mathrm{C}_1$ RVR arms on Llama and Qwen2.5.}
-\label{tab:controls}
-\centering
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{llc}
-\toprule
-Model (precision) & Events/$N$ & TFR [95\% CI] \\
-\midrule
-Qwen3-8B (bf16)    & 2/316  & 0.63\% [0.08, 2.27] \\
-Qwen3-8B (8-bit)   & 2/435  & 0.46\% [0.06, 1.65] \\
-Qwen3-8B (4-bit)   & 9/623  & 1.44\% [0.66, 2.72] \\
-\midrule
-Llama-3.1-8B (4-bit)   & 5/400  & 1.25\% [0.41, 2.89] \\
-Qwen2.5-7B             & 28/459 & 6.10\% [4.09, 8.70] \\
-\midrule
-Llama-3.1-8B, $\mathrm{C}_1$ (RVR) & 2/487 & 0.41\% [0.05, 1.48] \\
-Qwen2.5-7B, $\mathrm{C}_1$ (RVR)   & 1/320 & 0.31\% [0.01, 1.73] \\
-\bottomrule
-\end{tabular}
-\end{table}

@@ -3,8 +3,7 @@
 
 Does recovery use the \emph{content} of the echoed registry, or only the
 \emph{format} of a structured rejection? The condition ladder speaks to
-this, though, as we stress below, it bounds the content effect rather
-than resolving it, because every arm is zero-event.
+this, but only bounds the effect, because every arm is zero-event.
 
 \paragraph{The ablation is suggestive, not decisive.}
 On Qwen3-8B the structured error $\mathrm{C}_{0.7}$, a
@@ -12,92 +11,51 @@ On Qwen3-8B the structured error $\mathrm{C}_{0.7}$, a
 drives fabrications to zero, matching full RVR
 (Section~\ref{sec:results:rvr}). If the model needed to \emph{read} the
 registry to recover, removing it might cost something; within this
-experiment's resolution we see no such cost. But both arms are
-zero-event, so this bounds rather than excludes a content contribution.
+experiment's resolution we see no such cost.
 
 \paragraph{The decoy arm sharpens, but does not close, the question.}
 $\mathrm{C}_{0.7}$ removes the list; it does not test a list present but
-\emph{wrong}. A registry-as-cue account predicts a decoy list (correctly
-formatted, count-matched, but populated with non-existent tools) should
-fail to recover, with no valid name to copy. A format-only account
-predicts it recovers anyway, since the constraint ``your last call was
-rejected; choose from this set'' need not be truthful to suppress the
-out-of-registry call. The $\mathrm{C}_{0.8}$ condition runs this contrast:
-the $\mathrm{C}_1$ envelope prose held verbatim, only the listed names
-swapped for guaranteed-absent decoys.
+\emph{wrong}. A registry-as-cue account predicts a decoy list (formatted,
+count-matched, populated with non-existent tools) fails to recover, with
+no valid name to copy; a format-only account predicts it recovers anyway,
+since ``your last call was rejected; choose from this set'' need not be
+truthful to suppress the call. The $\mathrm{C}_{0.8}$ condition runs this
+contrast, holding the $\mathrm{C}_1$ envelope prose verbatim and swapping
+only the listed names for guaranteed-absent decoys.
 
-The decoy list logs $0/410$ (Clopper--Pearson 95\% two-sided upper bound
-$\leq\!0.90\%$) across all four probe arms (near\_name $0/97$, synonym
-$0/106$, matched\_random $0/107$, unrelated $0/100$), matching the
-no-list envelope ($\mathrm{C}_{0.7}$, $0/448$) and the real list
-($\mathrm{C}_1$, $0/258$ on 8B). All three arms are zero-event, so we
-\emph{detect no content effect at this sample size}: absence of
+The decoy list logs $0/410$ (CP 95\% upper bound $\leq\!0.90\%$;
+near\_name $0/97$, synonym $0/106$, matched\_random $0/107$, unrelated
+$0/100$), matching the no-list envelope ($\mathrm{C}_{0.7}$, $0/448$) and
+the real list ($\mathrm{C}_1$, $0/258$ on 8B). All three are zero-event,
+so we \emph{detect no content effect at this sample size}: absence of
 evidence, not evidence of equivalence. The
-$\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$ difference is bounded by a Newcombe
-95\% CI of $[-1.5, +1.4]$~pp, and $\mathrm{C}_1\!-\!\mathrm{C}_{0.8}$
-similarly; these are consistent with the registry content buying up to
-$\sim$1~pp of recovery, not with it buying nothing. The data are thus
-\emph{compatible with} a format-over-content account, the model
-responding to the message-level rejection rather than the valid names
-offered, but we do not treat zero-vs-zero as proof, and a
+$\mathrm{C}_1\!-\!\mathrm{C}_{0.7}$ and $\mathrm{C}_1\!-\!\mathrm{C}_{0.8}$
+differences are bounded by a Newcombe 95\% CI of $[-1.5, +1.4]$~pp,
+consistent with the registry content buying up to $\sim$1~pp of recovery,
+not nothing. The data are thus \emph{compatible with} format-over-content,
+the model responding to the message-level rejection rather than the valid
+names offered, but we do not treat zero-vs-zero as proof, and a
 registry-as-cue account is not ruled out within the $\pm$1.5~pp band.
 
 We settle it on a high-event cell. Qwen2.5-7B opens at
-$\mathrm{C}_0=6.10\%$, $28$ real fabrications to suppress, and
-Table~\ref{tab:qwen25-ablation} walks the ladder down. All three
+$\mathrm{C}_0=6.10\%$ ($28/459$), and the recovery ladder
+(Appendix Figure~\ref{fig:qwen25-ablation}) walks it down to $0.31\%$ at
+$\mathrm{C}_1$. All three
 envelope arms collapse the rate far below $\mathrm{C}_0$ (Fisher,
 $p<10^{-3}$) and none differs from another (pairwise Fisher $p>0.37$);
 the \emph{wrong}-list arm matches the real-list arm exactly
-(Fisher $p=1.0$). With events available to recover, the content effect
-the $\pm$1.5~pp Qwen3-8B bound left open does not appear. This is a
-\emph{powered} null on content: a registry of \emph{wrong} names (or no
-list at all) recovers as well as the right one. A bare retry helps but
-less, leaving a residual $\sim\!5\times$ the structured arms, though that
-retry-vs-envelope gap is only suggestive at this $N$ (Fisher vs.\
-$\mathrm{C}_1$, $p=0.09$).
+(Fisher $p=1.0$). With events to recover, the content effect left open by
+the $\pm$1.5~pp Qwen3-8B bound does not appear: a \emph{powered} null
+where a \emph{wrong} registry (or none) recovers as well as the right one.
+A bare retry ($\mathrm{C}_{0.5}$) helps but less, leaving a residual
+$\sim\!5\times$ the structured arms ($p=0.09$ vs.\ $\mathrm{C}_1$).
 
-\begin{table}[t]
-\caption{Qwen2.5-7B recovery ladder on the $\mathrm{C}_0$ target-removed
-probe. Cells are events\,/\,parsed calls. Every structured arm collapses
-the rate (Fisher $p<10^{-3}$ vs.\ $\mathrm{C}_0$); the arms do not differ
-from one another (pairwise $p>0.37$), and a \emph{wrong} registry recovers
-exactly as well as the real one ($\mathrm{C}_{0.8}$ vs.\ $\mathrm{C}_1$,
-Fisher $p=1.0$).}
-\label{tab:qwen25-ablation}
-\centering
-\small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{llcl}
-\toprule
-Condition & Events\,/\,$N$ & TFR & Takeaway \\
-\midrule
-$\mathrm{C}_0$ (opaque)        & $28/459$ & $6.10\%$ & baseline \\
-$\mathrm{C}_{0.5}$ (retry)     & $7/410$  & $1.71\%$ & partial \\
-$\mathrm{C}_{0.7}$ (no list)   & $4/412$  & $0.97\%$ & recovers \\
-$\mathrm{C}_{0.8}$ (wrong list)& $1/405$  & $0.25\%$ & recovers \\
-$\mathrm{C}_1$ (real list)     & $1/320$  & $0.31\%$ & recovers \\
-\bottomrule
-\end{tabular}
-\end{table}
 
 \paragraph{What this does not claim.}
-Format-sufficiency is a claim about \emph{recovery}, not task success. On
-TFR alone RVR matches any structured rejection: a hard reject also
-yields $0$ by construction. RVR's distinction is that it is
-\emph{recovery-preserving}, returning the live registry so the agent can
-re-select a valid tool instead of aborting. A decoy list suppresses the
-fabricated call but offers no valid target, so where the real tool was
-removed the model must still decline or redirect; the value of the
-\emph{true} registry shows up in task-completion rate, not in TFR, the
-quantity the rejection signal governs. Nor does format-sufficiency hold at
-every scale: it is established only on tiers where C0 fabrications exist
-to suppress (1.7--14B); the 0.6B and 32B tiers carry no signal to recover.
-
-\paragraph{The scale curve, descriptively.}
-The dominant distractor type drifts with scale
-(Section~\ref{sec:results:scaling}), but a Friedman exact permutation test is
-underpowered ($\chi^2_{(3)}\!=\!3.0$, $p\!=\!0.46$; $n\!=\!4$ sizes), so we read
-the drift as phenomenology, not inference. The content-vs-format question rests
-not on this matrix but on the $\mathrm{C}_{0.7}$/$\mathrm{C}_{0.8}$
-ablations, powered on Qwen2.5 above: a wrong registry recovers as
-well as the right one.
+Format-sufficiency is about \emph{recovery}, not task success: on TFR
+alone RVR matches any structured rejection (a hard reject also yields
+$0$), but RVR is \emph{recovery-preserving}, returning the live registry
+so the agent re-selects a valid tool rather than aborting. The value of
+the \emph{true} registry thus shows up in task-completion rate, not TFR.
+And the result holds only on tiers with $\mathrm{C}_0$ fabrications to
+suppress (1.7--14B); 0.6B and 32B carry no signal to recover.

@@ -6,6 +6,47 @@
 \input{sections/_inbody_deployer}
 \input{sections/_inbody_frontier}
 
+\begin{table}[tb]
+\caption{Regime-test TFR by model and BFCL split under $\mathrm{C}_0$.
+Cells are events / parsed calls.}
+\label{tab:regime}
+\centering
+\small
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{lccc}
+\toprule
+Model & base & miss\_func & long\_ctx \\
+\midrule
+Sonnet 4.6 & 0/116 & 0/128 & 0/81 \\
+Haiku 4.5  & 0/109 & 0/120 & 0/107 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[tb]
+\caption{Anthropic 4.x distractor probe with target removed ($\mathrm{C}_0$).
+Pooled $\mathrm{C}_0$ over regime $+$ probe is $0/2{,}592$,
+$\leq\!0.14\%$; the $\mathrm{C}_1$ subset adds $0/659$ at
+$\leq\!0.56\%$.}
+\label{tab:anth-temporal}
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrc}
+\toprule
+Model & $N$ & TFR \\
+\midrule
+Opus 4.7        & 293   & 0 \\
+Sonnet 4.6      & 561   & 0 \\
+Sonnet 4.5      & 285   & 0 \\
+Sonnet 4        & 253   & 0 \\
+Haiku 4.5       & 539   & 0 \\
+\midrule
+Pooled probe & \textbf{1{,}931} & \textbf{0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/figA_commercial_open}
@@ -147,6 +188,17 @@ Haiku 4.5                         & \pmark\,648 & \rmark\,107 & \rmark\,120 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.62\linewidth]{figures/fig2_ablation_ladder}
+\caption{Qwen3-8B 4-condition ablation. The structured-error
+envelope ($\mathrm{C}_{0.7}$) already takes TFR to zero; adding the
+registry list ($\mathrm{C}_1$) yields no further \emph{detectable}
+reduction (both arms zero-event; see \S\ref{sec:mechanism} for why this
+bounds rather than proves a format-over-content account).}
+\label{fig:ablation}
+\end{figure}
 
 \begin{figure}[tb]
 \centering
