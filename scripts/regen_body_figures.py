@@ -45,7 +45,7 @@ ax.errorbar(sizes, rates, yerr=yerr, fmt="o-", color="#b2182b", ecolor="#d6a0a6"
             elinewidth=1.0, capsize=2.5, markersize=5, markerfacecolor="#b2182b",
             markeredgecolor="white", zorder=3, lw=1.6)
 ax.axhline(0.14, ls="--", color="#2166ac", lw=1.0, zorder=1)
-ax.text(0.62, 0.21, "Anthropic 4.x $C_0$: 0/2{,}592, $\\leq$0.14%",
+ax.text(1.05, 0.21, "Anthropic 4.x $C_0$: 0/2,592, $\\leq$0.14%",
         color="#2166ac", fontsize=6.3, va="bottom")
 for x, y, e, n in zip(sizes, rates, events, ns):
     ax.annotate("%d/%d" % (e, n), (x, y), textcoords="offset points",
