@@ -3,7 +3,7 @@
 A per-call study of tool-name fabrication in tool-using LLM agents, with a training-free fix.
 
 > **Who Hallucinates Tools, How Often, and What Fixes It: A Per-Call Study Across Anthropic 4.x and Qwen3**
-> S Akash and Shine Gupta — Indian Institute of Technology Patna, India
+> S Akash and Shine Gupta 
 > Accepted at **SCALE @ ICML 2026**.
 > Paper: [`paper/main.pdf`](paper/main.pdf)
 
