@@ -6,7 +6,20 @@
 \input{sections/_inbody_deployer}
 \input{sections/_inbody_frontier}
 
-\begin{figure}[t]
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/figA_commercial_open}
+\caption{Commercial versus open-weight TFR on the target-removed
+$\mathrm{C}_0$ probe. Five Anthropic 4.x versions ($0/2{,}592$), the
+OpenAI gpt-4.x/4o tiers ($0/2{,}117$), and the gpt-5 generation
+($0/1{,}311$) log zero fabrications; open-weight lineages fabricate at
+$1.25$ to $6.10\%$, with the worst per-arm cell at $10.4\%$ (Qwen2.5,
+synonym distractor). Error bars are Clopper--Pearson $95\%$ upper
+bounds.}
+\label{fig:commercial-open}
+\end{figure}
+
+\begin{figure}[tb]
 \centering
 \includegraphics[width=\linewidth]{figures/fig3_rvr_architecture}
 \caption{RVR middleware. An $O(1)$ membership check runs in-process
@@ -18,7 +31,7 @@ single retry.}
 \label{fig:rvr-arch}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[tb]
 \centering
 \includegraphics[width=0.82\linewidth]{figures/fig4_distractor_probe}
 \caption{The distractor probe. Starting from a registry where the
@@ -28,7 +41,18 @@ the similarity profile of the distractor.}
 \label{fig:probe}
 \end{figure}
 
-\begin{table*}[t]
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/figB_severity}
+\caption{What gets fabricated. Of the $53$ open-weight $\mathrm{C}_0$
+fabrication events, $37$ ($70\%$) name state-changing actions, $11$ of
+them irreversible business transactions (\texttt{place\_order},
+\texttt{cancel\_order}, \texttt{cancel\_booking}, \texttt{create\_ticket});
+the remaining $16$ are read-only queries.}
+\label{fig:severity}
+\end{figure}
+
+\begin{table*}[tb]
 \caption{Prior tool-hallucination measurements versus TFR. \emph{Granularity}
 is the denominator each metric divides by; \emph{existence-clean?} asks whether
 the metric isolates registry-membership violations (a called name is absent from
@@ -85,7 +109,7 @@ Reliability align.\ \citep{cao2025reliability}
 
 \newcommand{\pmark}{\ensuremath{\bullet}}
 \newcommand{\rmark}{\ensuremath{\circ}}
-\begin{table}[t]
+\begin{table}[tb]
 \caption{Model $\times$ BFCL-split coverage. Cells are no-intervention (C0)
 calls; a glyph marks the experiment design that produced them. \pmark{}: the
 five-distractor probe grid (target removed, per-call existence scored).
@@ -99,6 +123,7 @@ pooled Anthropic $\mathrm{C}_0$ total $2{,}592$.}
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.1}
 \begin{tabular}{lccc}
 \toprule
  & \multicolumn{3}{c}{BFCL split (C0 calls)} \\
@@ -123,6 +148,17 @@ Haiku 4.5                         & \pmark\,648 & \rmark\,107 & \rmark\,120 \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/figC_qwen25_ablation}
+\caption{Qwen2.5 ablation ladder. A bare retry ($\mathrm{C}_{0.5}$) only
+halves the $6.10\%$ baseline, while the structured \texttt{tool\_not\_found}
+envelope cuts it about $20\times$; a \emph{wrong} registry list
+($\mathrm{C}_{0.8}$) recovers as well as the real one ($\mathrm{C}_1$;
+Fisher $p=1.0$), so recovery is format-driven.}
+\label{fig:qwen25-ablation}
+\end{figure}
+
 \section{Pre-Registration and Reproducibility}
 \label{sec:appendix:prereg}
 
@@ -141,6 +177,16 @@ was run at scale on Qwen3-8B only, not on Anthropic. Holm--Bonferroni
 correction across the three primary tests (Fisher's exact, Friedman,
 TOST): only Fisher's clears $\alpha\!=\!0.05$ at
 $p_{\mathrm{Holm}} = 1.0\!\times\!10^{-4}$.
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=\linewidth]{figures/figD_controls}
+\caption{Controls. Left: the precision ladder (Qwen3-8B at
+4-bit/8-bit/bf16) shows fabrication persists at full precision, so it is
+not a quantization artefact. Right: the $\mathrm{C}_0$ fabrication rate
+across open lineages.}
+\label{fig:controls}
+\end{figure}
 
 The supplementary repository at
 \href{https://github.com/Akasxh/tool-fabrication-rate}{github.com/Akasxh/tool-fabrication-rate}

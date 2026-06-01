@@ -796,54 +796,78 @@ Underfull \hbox (badness 3240) in paragraph at lines 65--70
  []
 
 ) (sections/_inbody_frontier)
+File: figures/figA_commercial_open.pdf Graphic file (type pdf)
+<use figures/figA_commercial_open.pdf>
 File: figures/fig3_rvr_architecture.png Graphic file (type bmp)
 <figures/fig3_rvr_architecture.png>
 File: figures/fig4_distractor_probe.png Graphic file (type bmp)
 <figures/fig4_distractor_probe.png>
+File: figures/figB_severity.pdf Graphic file (type pdf)
+<use figures/figB_severity.pdf>
 
-Underfull \hbox (badness 2119) in paragraph at lines 54--55
+Underfull \hbox (badness 2119) in paragraph at lines 78--79
 []\TU/ptm/b/n/9 name-mismatch up to
  []
 
 
-Underfull \hbox (badness 3428) in paragraph at lines 58--59
+Underfull \hbox (badness 3428) in paragraph at lines 82--83
 []\TU/ptm/b/n/9 single-turn, target re-
  []
 
 
-Underfull \hbox (badness 6047) in paragraph at lines 64--65
+Underfull \hbox (badness 6047) in paragraph at lines 88--89
 []\TU/ptm/b/n/9 multi-level (no single
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
+Underfull \hbox (badness 10000) in paragraph at lines 92--93
 []\TU/ptm/b/n/9 no-tool / distractor-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--80
+Underfull \hbox (badness 10000) in paragraph at lines 103--104
 []\TU/ptm/b/n/9 multi-turn agentic
  []
 
+File: figures/figC_qwen25_ablation.pdf Graphic file (type pdf)
+<use figures/figC_qwen25_ablation.pdf>
 
-Underfull \hbox (badness 1092) in paragraph at lines 129--144
+Underfull \hbox (badness 1005) in paragraph at lines 158--158
+\TU/ptm/m/sc/9 only halves the $\OT1/cmr/m/n/9 6\OML/cmm/m/it/9 :\OT1/cmr/m/n/9
+ 10%$ \TU/ptm/m/sc/9 baseline, while the structured
+ []
+
+
+Underfull \hbox (badness 1092) in paragraph at lines 165--180
 []\TU/pcr/m/n/10 The pre-registered protocol is locked in git com-
  []
 
-[11]
-Underfull \hbox (badness 10000) in paragraph at lines 145--158
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [11]
+File: figures/figD_controls.pdf Graphic file (type pdf)
+<use figures/figD_controls.pdf>
+
+Underfull \hbox (badness 10000) in paragraph at lines 191--204
 []\TU/pcr/m/n/10 The supplementary repository at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 145--158
+Underfull \hbox (badness 10000) in paragraph at lines 191--204
 [][]\TU/pcr/m/n/10 github.com/Akasxh/tool-fabrication-rate[][] contains
  []
 
-) [12] [13] [14
+
+Underfull \vbox (badness 2326) has occurred while \output is active []
+
+ [12])
+[13
+
+] [14] [15
 
 
-] [15
+] [16
 
 ] (main.aux)
 
@@ -852,4 +876,4 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  )
-Output written on main.xdv (15 pages, 643804 bytes).
+Output written on main.xdv (16 pages, 654028 bytes).
