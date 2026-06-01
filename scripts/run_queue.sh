@@ -42,7 +42,7 @@ log "===== QUEUE START ====="
 
 # 1) 8B full 5-condition ablation (incl. C0_8 decoy) — spotlight ablation
 for C in C0_8 C0_7 C1 C0 C0_5; do run_cell s1ab8b  mlx-community/Qwen3-8B-4bit  "$C" 25; done
-# 2) 14B curve N-expansion (tighten the 1.87% peak)
+# 2) 14B curve N-expansion (tighten the peak; locked at 1.64% = 6/366)
 run_cell s2c14b mlx-community/Qwen3-14B-4bit C0 50
 # 3) 32B curve N-expansion (tighten the 0% collapse)
 run_cell s3c32b mlx-community/Qwen3-32B-4bit C0 50

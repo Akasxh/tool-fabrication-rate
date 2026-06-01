@@ -7,4 +7,25 @@ results/
 **/.DS_Store
 .playwright-mcp/
 *.png
+# Required build figures consumed by paper/main.tex (un-ignore despite blanket *.png):
+!paper/figures/fig3_rvr_architecture.png
+!paper/figures/fig4_distractor_probe.png
 paper/_pages/
+
+# Locks, temp run state, and scheduler artifacts
+*.lock
+.claude/scheduled_tasks.lock
+.claude/*.lock
+# Partial / in-progress tau-lean run outputs (the locked tau dirs are tracked explicitly)
+results_tau/taulean_*/
+**/*.tmp
+.claude/
+/research/
+/paper-review-toolkit/
+paper/_staging/
+/LOOP_PLAN.md
+/PROGRESS.md
+/REVISION_SPEC.md
+/PHASE0/
+/PAPER_PLAN*.md
+/ADDENDUM_R1.md

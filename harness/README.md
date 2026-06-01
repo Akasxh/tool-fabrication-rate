@@ -1,7 +1,7 @@
 # tehr-harness
 
 ## What this is
-Experimental harness for the **TEHR** (Tool-Existence Hallucination Rate) study
+Experimental harness for the **TFR** (Tool Fabrication Rate; formerly TEHR) study
 submitted to **SCALE @ ICML 2026**. It runs a fixed matrix of (model × benchmark
 × condition) cells against BFCL v4 multi-turn and τ-bench retail, emits per-turn
 JSONL traces, and computes the headline statistics (paired McNemar mid-p,
@@ -48,10 +48,10 @@ harness/
   bench_loaders/   BFCL + τ-bench
   intervention/    RVR, naive retry, framework-default
   runner/          ReAct loop, condition dispatch, CLI
-  stats/           TEHR, paired McNemar, TOST, bootstrap, Friedman
+  stats/           TFR, paired McNemar, TOST, bootstrap, Friedman
   tests/           pytest suite + fixtures
 ```
 
 ## License
 
-Apache-2.0 (placeholder; verify before camera-ready).
+Apache-2.0; see the repo-root [`LICENSE`](../LICENSE) file.
